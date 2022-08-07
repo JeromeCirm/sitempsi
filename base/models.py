@@ -1,3 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Utilisateur(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    date_demande=models.DateField(null=True,blank=True,default=None)
+    csrf_token=models.TextField(null=True,blank=True,default=None)
+    en_attente_confirmation=models.BooleanField(default=True,blank=True) # lien envoyé et non validé par mail
+    reinitialisation_password=models.BooleanField(default=False,blank=True)

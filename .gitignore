@@ -1,2 +1,4 @@
 *__pycache__*
 db.sqlite3
+config_perso.py
+base/config_mail_perso.py
