@@ -65,7 +65,6 @@ def recuperation_password(request):
 
 def demande_reinitialisation(request,login=None,lehash=None):
     if request.method=='POST':
-        # print("here")
         context={**reinitialise_mot_de_passe(request)}
     elif login==None:
         context={ "msg" : "Le lien n'est pas valide"}
@@ -75,5 +74,5 @@ def demande_reinitialisation(request,login=None,lehash=None):
 
 def home(request):
     context={}
-    #envoie_mail(['jerome.99@hotmail.fr'],'test',' premier envoi de mail')
+    envoie_mail(['jerome.99@hotmail.fr'],'test',' premier envoi de mail')
     return render(request,'base/home.html',context)

@@ -6,11 +6,15 @@ import datetime
 from string import digits,ascii_letters
 from re import match
 from random import choice
+from sitempsi.settings import SECURE_SSL_REDIRECT
 
 # à faire : interdire réinitialisation pour admin 
 
 def envoie_mail(liste_destinataire,sujet,corps_mail): 
-    send_mail(subject=sujet,message=corps_mail,from_email=EMAIL_HOST_USER,recipient_list=liste_destinataire)
+    if SECURE_SSL_REDIRECT:
+        send_mail(subject=sujet,message=corps_mail,from_email=EMAIL_HOST_USER,recipient_list=liste_destinataire)
+    else: 
+        print(sujet+"\n"+corps_mail)
 
 def hash(n=40):
     #renvoie 40 lettres/chiffres aléatoires
