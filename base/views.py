@@ -74,5 +74,4 @@ def demande_reinitialisation(request,login=None,lehash=None):
 
 def home(request):
     context={}
-    envoie_mail(['jerome.99@hotmail.fr'],'test',' premier envoi de mail')
     return render(request,'base/home.html',context)
