@@ -50,7 +50,7 @@ def demande_creation_compte(request):
         new_user=User.objects.create_user(username=login,first_name=prenom,last_name=nom,email=mail,password=password)
         new_user.save()
         le_hash=hash()
-        new_utilisateur=Utilisateur(user=new_user,csrf_token=le_hash,date_demande=datetime.datetime.now())
+        new_utilisateur=Utilisateur(user=new_user,csrf_token=le_hash,date_demande=datetime.datetime.now(),en_attente_confirmation=True)
         new_utilisateur.save()
     except:
         return False,"erreur lors de la création de compte"

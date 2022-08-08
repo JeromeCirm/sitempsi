@@ -11,5 +11,5 @@ urlpatterns = [
     re_path(r'validation_comptea*',views.validation_compte,name='validation_compte_erreur'),
     path('demande_reinitialisation/<str:login>/<str:lehash>',views.demande_reinitialisation,name='demande_reinitialisation'),
     re_path(r'demande_reinitialisationa*',views.demande_reinitialisation,name='demande_reinitialisation_erreur'),
-    #re_path(r'a*', views.home,name='home'),    
+    re_path(r'a*', views.home,name='home'),    
     ]

@@ -27,11 +27,11 @@ def connexion(request):
                 utilisateur=Utilisateur.objects.get(user=user)
                 if not utilisateur.en_attente_confirmation:
                     login(request,user)
-                    return redirect('creneaux')
+                    return redirect('home')
                 #compte en attente si on arrive ici
             except:
                 pass
-    context={}
+    context={ "creation" : AUTORISE_CREATION, "recuperation" : AUTORISE_RECUPERATION}
     return render(request,'base/connexion.html',context)
 
 def deconnexion(request):
@@ -39,6 +39,7 @@ def deconnexion(request):
     return redirect('')
 
 def creation_compte(request):
+    if not AUTORISE_CREATION: return redirect('home')
     context={}
     if request.method=="POST":
         reussi,err=demande_creation_compte(request)
@@ -51,6 +52,7 @@ def creation_compte(request):
     return render(request,'base/creation_compte.html',context)
 
 def validation_compte(request,login=None,lehash=None):
+    if not AUTORISE_CREATION: return redirect('home')
     if login==None:
         context={ "msg" : "Le lien n'est pas valide"}
     else:
@@ -58,12 +60,14 @@ def validation_compte(request,login=None,lehash=None):
     return render(request,'base/validation_compte.html',context)
 
 def recuperation_password(request):
+    if not AUTORISE_RECUPERATION: return redirect('home')
     context={}
     if request.method=="POST":   
         context["msg"]=envoie_mail_recuperation_mot_de_passe(request)
     return render(request,'base/recuperation_password.html',context)
 
 def demande_reinitialisation(request,login=None,lehash=None):
+    if not AUTORISE_RECUPERATION: return redirect('home')
     if request.method=='POST':
         context={**reinitialise_mot_de_passe(request)}
     elif login==None:
