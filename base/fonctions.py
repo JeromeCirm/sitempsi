@@ -1,17 +1,36 @@
 from django.core.mail import send_mail
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import login
+from django.shortcuts import redirect
 from .models import *
 from .settings_mail import *
 import datetime
 from string import digits,ascii_letters
 from re import match
 from random import choice
-from sitempsi.settings import SECURE_SSL_REDIRECT
 
 # à faire : interdire réinitialisation pour admin 
 
+# préfixe pour une "view"
+# n'autorise la view que si l'utilisateur est dans un des groupes de la liste
+# redirige vers la page de connexion sinon
+# renseigner None à la place des groupes pour imposer une authentification
+#    sans imposer de groupe
+def auth(group_list=[]):
+    def teste(func):
+        def nouvelle_func(request,*args,**kwargs):
+            if request.user.is_authenticated:
+                if group_list==None:
+                    return func(request,*args,**kwargs)
+                lesgroupes=request.user.groups.all()
+                for x in group_list:
+                    if x in lesgroupes:
+                        return func(request,*args,**kwargs)
+            return redirect('connexion')
+        return nouvelle_func
+    return teste
+
 def envoie_mail(liste_destinataire,sujet,corps_mail): 
-    if SECURE_SSL_REDIRECT:
+    if ENVOIE_MAIL:
         send_mail(subject=sujet,message=corps_mail,from_email=EMAIL_HOST_USER,recipient_list=liste_destinataire)
     else: 
         print(sujet+"\n"+corps_mail)

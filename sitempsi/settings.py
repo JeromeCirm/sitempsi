@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',    
+    'gestionmenu.apps.GestionmenuConfig', 
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'sitempsi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'base/templates/base'],
+        'DIRS': [BASE_DIR/'base/templates/base',BASE_DIR/'gestionmenu/templates/gestionmenu'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,8 +118,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-#STATICFILES_DIRS = [    # à commenter en dev
+STATIC_URL = '/static/'
+#STATICFILES_DIRS = [    
 #    BASE_DIR/'static'
 #]
 STATIC_ROOT = MY_STATIC_ROOT

@@ -2,3 +2,5 @@
 db.sqlite3
 config_perso.py
 base/config_mail_perso.py
+private_files/*
+gestionmenu/donnees_perso.py

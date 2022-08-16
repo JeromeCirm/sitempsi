@@ -1,0 +1,36 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+<style>       
+    ul{
+      list-style-type: none;
+    }
+</style>
+<h1>Paramètres du compte</h1> {% if msg %} <span style="color:red">{{ msg }}</span><BR><BR> {% endif %}
+{% if changepassword %}
+    {% if changepasswordreussi %}
+    <span style="color:green">Changement de mot de passe réussi</span><BR>
+    {% else %}
+    <span style="color:red">Erreur lors du changement de mot de passe</span><BR>
+    {% endif %}
+{% endif%}
+<BR>
+<form class="form" method="POST" action="">
+    {% csrf_token %}
+    <div >
+        <label for="password">Ancien mot de passe : </label>
+        <input name="password" type="password"/>
+      </div>
+      <div >
+        <label for="newpassword">Nouveau mot de passe : </label>
+        <input name="newpassword" type="password"/>
+      </div>
+      <div >
+        <label for="newpasswordconfirm">Confirmer le nouveau mot de passe : </label>
+        <input name="newpasswordconfirm" type="password"/>
+      </div><BR>
+      <input type="submit" value="changer le mot de passe">
+</form>
+
+
+{% endblock body %}

@@ -1,0 +1,18 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+<h1> gestion du fichier {{ nom_fichier }} </h1>
+<hr>
+
+<form method="POST" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    {{formdescription.as_p}}
+    <input type="submit" value="Soumettre le changement de description"/>
+</form>
+
+<form method="POST" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    {{formfichier.as_p}}
+    <input type="submit" value="Soumettre le changement de fichier"/>
+</form>
+{% endblock body %}

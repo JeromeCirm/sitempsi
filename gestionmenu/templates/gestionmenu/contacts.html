@@ -1,0 +1,28 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+
+<BR>
+<DIV style="text-align:center">
+{% if eleves %}
+<DIV style="text-align:center">  Liste des mails des groupes d'élèves:<BR>
+    <DIV style="padding : 10px;display:inline-block;text-align:left">
+        {% for ungroupe in eleves %}
+        <input name="alire" size=6 value="groupe {{ ungroupe.numero }}" disabled>    
+        <input name="alire" size=140 value="{% for uneleve in ungroupe.eleves.all %} {{ uneleve.email }};{% endfor %}" disabled>    <BR>
+            {% endfor %}
+    </DIV>
+</DIV>  {% endif %}  
+{% if profs %}     
+<DIV style="text-align:center">  Liste des mails pour contacter les colleurs/profs :<BR>
+    <DIV style="padding : 10px;display:inline-block;text-align:left">
+        {% for unitem in profs %}
+            <input name="alire" size=20 value="{{ unitem.username }}" disabled>    
+            <input name="alire" size=40 value="{{ unitem.email }}" disabled>    <BR>
+        {% endfor %}
+    </DIV>
+</DIV>    
+{% endif %}
+</DIV>
+
+{% endblock body %}

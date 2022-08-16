@@ -1,20 +1,6 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import logout
+from django.contrib.auth import logout,authenticate
 from .fonctions import *
-
-def auth(group_list=[]):
-    def teste(func):
-        def nouvelle_func(request,*args,**kwargs):
-            if request.user.is_authenticated:
-                if group_list==[]:
-                    return func(request,*args,**kwargs)
-                lesgroupes=request.user.groups.all()
-                for x in group_list:
-                    if x in lesgroupes:
-                        return func(request,*args,**kwargs)
-            return connexion(request)
-        return nouvelle_func
-    return teste
 
 def connexion(request):
     if request.method=='POST':
@@ -27,7 +13,7 @@ def connexion(request):
                 utilisateur=Utilisateur.objects.get(user=user)
                 if not utilisateur.en_attente_confirmation:
                     login(request,user)
-                    return redirect('home')
+                    return redirect('/home')
                 #compte en attente si on arrive ici
             except:
                 pass
@@ -36,10 +22,10 @@ def connexion(request):
 
 def deconnexion(request):
     logout(request)
-    return redirect('')
+    return redirect('/')
 
 def creation_compte(request):
-    if not AUTORISE_CREATION: return redirect('home')
+    if not AUTORISE_CREATION: return redirect('/home')
     context={}
     if request.method=="POST":
         reussi,err=demande_creation_compte(request)
@@ -52,7 +38,7 @@ def creation_compte(request):
     return render(request,'base/creation_compte.html',context)
 
 def validation_compte(request,login=None,lehash=None):
-    if not AUTORISE_CREATION: return redirect('home')
+    if not AUTORISE_CREATION: return redirect('/home')
     if login==None:
         context={ "msg" : "Le lien n'est pas valide"}
     else:
@@ -60,14 +46,14 @@ def validation_compte(request,login=None,lehash=None):
     return render(request,'base/validation_compte.html',context)
 
 def recuperation_password(request):
-    if not AUTORISE_RECUPERATION: return redirect('home')
+    if not AUTORISE_RECUPERATION: return redirect('/home')
     context={}
     if request.method=="POST":   
         context["msg"]=envoie_mail_recuperation_mot_de_passe(request)
     return render(request,'base/recuperation_password.html',context)
 
 def demande_reinitialisation(request,login=None,lehash=None):
-    if not AUTORISE_RECUPERATION: return redirect('home')
+    if not AUTORISE_RECUPERATION: return redirect('/home')
     if request.method=='POST':
         context={**reinitialise_mot_de_passe(request)}
     elif login==None:
@@ -76,6 +62,11 @@ def demande_reinitialisation(request,login=None,lehash=None):
         context={ **verifie_lien_reinitialisation(login,lehash)}
     return render(request,'base/demande_reinitialisation.html',context)
 
+import gestionmenu.views as my_view
+
+@auth(None)
 def home(request):
+    # à changer pour mettre la vue générale à la place
+    return   my_view.home(request) 
     context={}
     return render(request,'base/home.html',context)

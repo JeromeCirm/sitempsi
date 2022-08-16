@@ -1,0 +1,84 @@
+{% extends 'gestionmenu/base.html' %}
+{% load gestionmenutags %}
+
+{% block body %}
+<style>       
+    ul{
+      list-style-type: none;
+    }
+</style>
+<BR>
+    <DIV style="text-align:center">  Colloscope : version générale. <BR> <BR>
+    Chaque élève regarde la colonne associée à son numéro de groupe de colle. Chaque ligne lui indique alors les deux créneaux pour la semaine.
+    <style>
+    
+    table{
+        border-collapse: collapse;
+    }
+    #table1 td{
+        border: 1px solid black;
+        border-collapse: collapse;
+       padding: 6px
+    }
+    </style>
+    
+    <CENTER>
+    <TABLE id="table1">
+      <TBODY>
+      <TR> <BR> <BR>
+        <TD> semaine\ gr de colle </TD>  {% for ungroupe in lesgroupes %} <TD> {{ ungroupe.numero }} </TD>  {% endfor %}   </TR>
+      <TR>
+
+        {% for uneligne in tableau %}
+        <TR> <TD> {{ uneligne.semaine.numero }} débute le {{ uneligne.semaine.date }} </TD> 
+        {% for item in uneligne.ligne %}<TD> {{ item }}  </TD>{% endfor %} 
+        </TR>{% endfor %}
+</TBODY></TABLE></CENTER> <BR>
+    
+
+<TABLE>
+    <TBODY>
+        <TR>
+            <TD>
+                <PRE>  <B>                        GROUPES DE COLLE:  </B>       
+<DIV style="padding : 0px;display:inline-block;text-align:left">
+ <ul>{% for ungroupe in lesgroupes %} <li> {{ ungroupe.numero }} : {% for eleve in ungroupe.eleves.all %} {{ eleve.username }},{% endfor %}</li><BR>{% endfor %}
+</ul>
+</DIV>
+                </PRE>
+            </TD>      
+            <TD>
+                <PRE><B>              COLLEURS de math:   </B>          
+<DIV style="padding : 0px;display:inline-block;text-align:left">
+<ul>{% for creneau in colleurmath %}<li> {{ creneau.numero }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}      
+</ul>
+</DIV>
+                </PRE>
+            </TD>      
+            <TD>
+                <PRE><B>             COLLEURS de physique(minuscule)-anglais(majuscule) :   </B>          
+<DIV style="padding : 0px;display:inline-block;text-align:left">
+<ul>{% for creneau in colleurphysique %}<li> {{  creneau.numero|tempchr:96 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
+</ul>
+<ul>{% for creneau in colleuranglais %}<li> {{  creneau.numero|tempchr:64 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
+</ul>
+</DIV>
+                </PRE>
+            </TD>
+        </TR>
+    </TBODY>
+</TABLE><BR>  <!--
+        TD de math: <BR>
+           à 16h la semaine de colle d'anglais  et à 14h la semaine de colle de physique <BR> <BR>
+          TP d'informatique : <BR>
+              groupes pairs, la semaine de colle d'anglais : à 13h sauf si vous avez PELLICER (15h dans ce cas) <BR>
+              groupes impairs, la semaine de colle d'anglais sauf si vous avez BOUISSOU entre 13 et 15h ou FAGET la semaine suivante! (TP à 15h la semaine de physique dans ce cas) <BR>
+          <BR>
+          TD de SI : <BR>
+              à 11h si vous avez colle de physique sauf si vous avez Nizon à 11h <BR>
+              à 12h si vous avez colle d'anglais sauf si vous avez Pellicer à 13h
+              <BR><BR>--> 
+      <BR>
+
+
+{% endblock body %}

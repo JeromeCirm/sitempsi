@@ -1,0 +1,29 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+
+<form id="form" method="POST" value="">
+    {% csrf_token %}
+    <button onclick="go('maj_comptes_profs')"> mise à jour des comptes profs</button><BR><BR>
+    <button onclick="go('maj_comptes_colleurs')"> mise à jour des comptes des colleurs</button><BR><BR>
+    <button onclick="go('reinitialisation_eleves')"> reinitialisation des comptes élèves</button><BR><BR>
+    <button onclick="go('creation_groupes_colles_s1')"> création des groupes de colles s1 (efface l'existant)</button><BR><BR>
+    <button onclick="go('creation_groupes_colles_s2')"> création des groupes de colles s2 (garde les groupes s1)</button><BR><BR>
+    <button onclick="go('creation_creneaux_colles')"> création des créneaux de colles (efface l'existant)</button><BR><BR>
+    <button onclick="go('creation_colloscope')"> création du colloscope (efface l'existant)</button><BR><BR>
+    <button onclick="go('export_renseignements')"> exporter la base de renseignements</button><BR><BR>
+
+
+    <input id="action" type="hidden" name="action" value="">
+</form><BR>
+{{ msg }}
+<script>
+let form=document.getElementById('form')
+let action=document.getElementById('action')
+
+function go(valeur) {
+    action.value=valeur
+    form.submit()
+}
+</script>
+{% endblock body %}

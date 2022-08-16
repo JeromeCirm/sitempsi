@@ -1,0 +1,13 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+<h1> Fiche de renseignement : </h1>
+<hr>
+
+<form method="POST" action="">
+    {{ msg }}
+    <input type="submit" value="Validation des modifications"/>
+    {% csrf_token %}
+    {{form.as_p}}
+</form>
+{% endblock body %}
