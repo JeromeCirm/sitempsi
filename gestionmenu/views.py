@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from base.fonctions import auth
 from .models import Menu
-from .forms import FichierForm,FichierFormDescription,FichierFormFichier,MenuFormSimple,MenuForm,FichierUniqueForm
+from .forms import *
 from django.db.models import Max
 from wsgiref.util import FileWrapper
 from django.http.response import HttpResponse
@@ -18,7 +18,7 @@ liste_menu=liste_generic + liste_classe+['fichier_unique']
 @auth(None)
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
-    if True:#try:
+    if True: #try:
         lemenu=Menu.objects.get(pk=numero)
         if autorise_menu(request.user,lemenu):
             nom_fonction=str(lemenu.fonction)
@@ -293,6 +293,73 @@ def recupere_eleves(request):
         response_data = {"eleves":[]}
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+def auth_prog_colle_math(request):
+    try:
+        menu=Menu.objects.get(fonction="programme_colle_math")
+        return est_gestionnaire_menu(request.user,menu)
+    except:
+        return False
+
+def ajout_prog_colle_math(request):
+    if auth_prog_colle_math(request):
+        context={"menu":menu_navigation(request)}
+        form=ProgColleMathForm()
+        context['form']=form
+        if request.method=="POST":
+            obj=ProgColleMath.objects.create(description="bidon",numero=0)
+            form=ProgColleMathForm(request.POST,request.FILES,instance=obj)
+            if form.is_valid():
+                form.save()
+                return redirect('/menu/'+str(Menu.objects.get(fonction="programme_colle_math").id))
+        return render(request,'gestionmenu/ajout_prog_colle_math.html',context)
+    return redirect('/home')
+
+def supprime_prog_colle_math(request,pk):
+    if auth_prog_colle_math(request):
+        context={"menu":menu_navigation(request)}
+        if request.method=="POST":
+            obj=ProgColleMath.objects.get(id=pk)
+            obj.delete()
+            return redirect('/menu/'+str(Menu.objects.get(fonction="programme_colle_math").id))
+        context['obj']="programme de colle n° "+str(pk)
+        return render(request,'gestionmenu/delete.html',context)
+    return redirect('/home')
+
+def modifie_prog_colle_math(request,pk):
+    # attention : fichiers non supprimés lors de la suppression d'un 
+    # programme de colle
+    if auth_prog_colle_math(request):
+        context={"menu":menu_navigation(request)}
+        obj=ProgColleMath.objects.get(id=pk)
+        if request.method=="POST":
+            if 'description' in request.POST:
+                form=ProgColleMathForm(request.POST,instance=obj)
+                if form.is_valid():
+                    form.save()
+            if 'programme' in request.FILES:
+                form=ProgColleMathForm({'description':obj.description,'numero':obj.numero},request.FILES,instance=obj)
+                if obj.programme!=None:
+                    obj.programme.delete()
+                if form.is_valid():
+                    form.save()  
+            if 'exercices' in request.FILES:
+                form=ProgColleMathForm({'description':obj.description,'numero':obj.numero},request.FILES,instance=obj)
+                if obj.exercices!=None:
+                    obj.exercices.delete()
+                if form.is_valid():
+                    form.save()  
+            return redirect('/menu/'+str(Menu.objects.get(fonction="programme_colle_math").id))
+        context['id']=obj.id
+        formdescription=ProgColleMathFormDescription(instance=obj)
+        formprogramme=ProgColleMathFormProgramme(instance=obj)
+        formexercices=ProgColleMathFormExercices(instance=obj)
+        context['formprogdescription']=formdescription
+        context['formprogprogramme']=formprogramme
+        context['formprogexercices']=formexercices
+        return render(request,'gestionmenu/modifie_prog_math.html',context)
+    else :
+        return redirect('/home')
+
 def download(request,letype,pk):
     def extension(nomfichier):
         l=nomfichier.split(".")
@@ -309,7 +376,6 @@ def download(request,letype,pk):
                 return response
         except: #fichier absent avec icone téléchargement?
             return redirect('/home')
-    return redirect('/home')
     if letype=='prog':
         try:
             obj=ProgColleMath.objects.get(id=pk)
@@ -328,6 +394,7 @@ def download(request,letype,pk):
             return response
         except: #fichier absent avec icone téléchargement?
             return redirect('/home')
+    return redirect('/home')
     if letype=='generic':  # ne fonctionne pas. A changer pour autoriser un iframe en affichage
         try:
             document = open('private_files/'+pk,'rb')

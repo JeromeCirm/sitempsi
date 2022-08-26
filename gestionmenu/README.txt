@@ -1,6 +1,6 @@
 
 
-Gestion de site : à besoin de la partie "base"
+Gestion de site : a besoin de la partie "base"
   
   à mettre dans urls.py du projet général avant 'base.urls':
            path('', include('gestionmenu.urls')),

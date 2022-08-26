@@ -4,7 +4,9 @@
 from .donnees_perso import *
 
 liste_eleves=perso_liste_eleves # login des élèves
-liste_profs=perso_liste_profs # login des profs
+prof_avec_colles =perso_prof_avec_colles # dictionnaire {"prof" : "nom_groupe_colleur"}
+# pour les matières avec colle
+liste_profs=perso_liste_autres_profs+list(prof_avec_colles.keys()) # login des profs
 liste_colleurs_math=perso_liste_colleurs_math # login des colleurs de math
 liste_colleurs_physique=perso_liste_colleurs_physique # login des colleurs de physique
 liste_colleurs_anglais=perso_liste_colleurs_anglais # login des colleurs d'anglais

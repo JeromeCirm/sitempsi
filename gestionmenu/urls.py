@@ -14,5 +14,9 @@ urlpatterns = [
     path('modifie_ordre_menu/<int:pk>/<str:up>',views.modifie_ordre_menu,name='modifie_ordre_menu'),
     path('modifie_fichier_unique/<int:pk>',views.modifie_fichier_unique,name='modifie_fichier_unique'),
     path('download/<int:pk>',views.download,{'letype':'file'},name='download'),
-    path('recupere_eleves',views.recupere_eleves,name='recupere_eleves'),
+    path('download/prog<int:pk>',views.download,{'letype':'prog'},name='download'),
+    path('download/exos<int:pk>',views.download,{'letype':'exos'},name='download'),    path('recupere_eleves',views.recupere_eleves,name='recupere_eleves'),
+    path('ajout_prog_colle_math',views.ajout_prog_colle_math,name='ajout_prog_colle_math'),
+    path('supprime_prog_colle_math/<int:pk>',views.supprime_prog_colle_math,name='supprime_prog_colle_math'),
+    path('modifie_prog_colle_math/<int:pk>',views.modifie_prog_colle_math,name='modifie_prog_colle_math'),
     ]

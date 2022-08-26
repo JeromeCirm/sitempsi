@@ -41,7 +41,9 @@ liste sans choix : {% for item in optionrienlist %} {{ item.login }}, {% endfor 
   <a href="{% url 'supprime_fichier' x.id %}">
     <svg class="svg-icon" style="width: 2em; height: 2em;vertical-align: middle;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>supprimer</title><path d="M408 448h48v320h-48zM568 448h48v320h-48z"  /><path d="M808 336a88.064 88.064 0 0 0-88-88h-104V224c0-39.68-32.32-72-72-72h-64c-39.68 0-72 32.32-72 72v24H304a88.064 88.064 0 0 0-88 88v56.032h64V872h464V392.032h64V336z m-352-112c0-13.216 10.784-24 24-24h64c13.216 0 24 10.784 24 24v24h-112V224z m240 600h-368V392.032h368V824z m64-479.968H264V336c0-22.048 17.952-40 40-40h416c22.048 0 40 17.952 40 40v8.032z"  /></svg>
   </a>, {% endfor %} {% endif %}
-<div>
+<div><BR>
+    <label for="mail"> Mail : </label>
+    <input type="email" id="mail" name="mail" value="{{ mail }}">
     {{ donnees.as_p }}
 </div>
 <script>

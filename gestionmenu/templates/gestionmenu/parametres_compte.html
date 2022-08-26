@@ -15,7 +15,7 @@
     {% endif %}
 {% endif%}
 <BR>
-<form class="form" method="POST" action="">
+  <form class="form" method="POST" action="">
     {% csrf_token %}
     <div >
         <label for="password">Ancien mot de passe : </label>
@@ -32,5 +32,14 @@
       <input type="submit" value="changer le mot de passe">
 </form>
 
+<form class="form" method="POST" action="">
+  {% csrf_token %}<BR>
+  <div >
+      <label for="mail"> mail : </label>
+      <input name="mail" type="email" value="{{ mail }}"/>
+  </div>
+    <BR>
+    <input type="submit" value="Mettre à jour les paramètres">
+</form>
 
 {% endblock body %}

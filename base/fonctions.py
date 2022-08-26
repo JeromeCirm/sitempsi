@@ -13,7 +13,7 @@ from random import choice
 # préfixe pour une "view"
 # n'autorise la view que si l'utilisateur est dans un des groupes de la liste
 # redirige vers la page de connexion sinon
-# renseigner None à la place des groupes pour imposer une authentification
+# renseigner None à la place de la liste des groupes pour imposer une authentification
 #    sans imposer de groupe
 def auth(group_list=[]):
     def teste(func):

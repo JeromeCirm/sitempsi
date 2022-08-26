@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Fichier,Renseignements,Menu
+from .models import Fichier,Renseignements,Menu,ProgColleMath
 from django import forms
 from django.contrib.auth.models import Group, User
 
@@ -39,3 +39,23 @@ class MenuFormSimple(ModelForm):
     class Meta:
         model=Menu
         fields=['nom']
+
+class ProgColleMathForm(ModelForm):
+    class Meta:
+        model=ProgColleMath
+        fields=['numero','description','programme','exercices'] 
+
+class ProgColleMathFormDescription(ModelForm):
+    class Meta:
+        model=ProgColleMath
+        fields=['numero','description'] 
+
+class ProgColleMathFormProgramme(ModelForm):
+    class Meta:
+        model=ProgColleMath
+        fields=['programme'] 
+
+class ProgColleMathFormExercices(ModelForm):
+    class Meta:
+        model=ProgColleMath
+        fields=['exercices'] 

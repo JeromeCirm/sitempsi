@@ -2,17 +2,10 @@
 # fonctions du menu de gestion 
 from sqlalchemy import create_engine
 import pandas as pd
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from .donnees_classe import *
-from .generic import creation_compte
+from .generic import *
 from .models import *
-
-groupe_eleves=Group.objects.get(name='eleves')
-groupe_profs=Group.objects.get(name='profs')
-groupe_colleurs_math=Group.objects.get(name='colleurs_math')
-groupe_colleurs_physique=Group.objects.get(name='colleurs_physique')
-groupe_colleurs_anglais=Group.objects.get(name='colleurs_anglais')
-groupe_colleurs_philo=Group.objects.get(name='colleurs_philo')
 
 # on garde login déjà existants et profs,en vérifiant que ce ne sont pas des élèves
 # suppression des "vieux" login profs

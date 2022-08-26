@@ -100,3 +100,23 @@ class Renseignements(models.Model):
     choix4=models.CharField(max_length=1,choices=[['A','MP*'],['B','MP'],['C','PSI*'],['D','PSI'],['E','Réorientation']],null=True,blank=True)
     option=models.CharField(max_length=1,choices=[['I','Info'],['S','SI'],['T','SI avec TP']],null=True,blank=True)
 
+class ProgColleMath(models.Model):
+    numero=models.IntegerField()
+    description=models.CharField(max_length=5000,default="")
+    def uploadpathprog(self,filename):
+        return 'private_files/prog_math/prog'+str(self.id)+'.pdf'
+    def uploadpathexos(self,filename):
+        return 'private_files/prog_math/exos'+str(self.id)+'.pdf'
+    programme=models.FileField(null=True,blank=True,upload_to=uploadpathprog)
+    exercices=models.FileField(null=True,blank=True,upload_to=uploadpathexos)
+
+    class Meta : 
+        ordering=['-numero']
+
+class NotesColles(models.Model):
+    colleur=models.ForeignKey(User,on_delete=models.CASCADE)
+    eleve=models.ForeignKey(User,related_name='%(class)s_requests_created',on_delete=models.CASCADE) #pour eviter le clash des deux ForeignKey
+    note=models.IntegerField()
+    semaine=models.IntegerField()
+
+    

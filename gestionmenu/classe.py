@@ -1,23 +1,17 @@
 # fonctions spécifique à la gestion de classe
 # colloscope/trombi/emploi du temps/etc
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import Group
 
-from .generic import est_gestionnaire_menu
+from .generic import *
 from .donnees_classe import *
 from .special_jerome import *
 from .forms import FichierFormFichier,RenseignementsForm
+from django.db.models import Max
 
 liste_classe=['gestion_jerome','trombinoscope','emploi_du_temps','contacts','colloscope_s1',
 'programme_colle_math','rentrer_notes_colles','lire_notes_colles','lire_notes_colleurs',
 'modifier_notes_colleurs','lire_fiches_eleves','fiche_renseignements',
 'creation_fichier_pronote']
-groupe_eleves=Group.objects.get(name='eleves')
-groupe_profs=Group.objects.get(name='profs')
-groupe_colleurs_math=Group.objects.get(name='colleurs_math')
-groupe_colleurs_physique=Group.objects.get(name='colleurs_physique')
-groupe_colleurs_anglais=Group.objects.get(name='colleurs_anglais')
-groupe_colleurs_philo=Group.objects.get(name='colleurs_philo')
 
 def gestion_jerome(request,id_menu,context):
     if request.method=='POST':
@@ -80,19 +74,54 @@ def colloscope_s1(request,id_menu,context):
     return render(request,'gestionmenu/colloscope.html',context)
 
 def programme_colle_math(request,id_menu,context):
-    context["msg"]="programme_colle_math"
+    # attention, ne doit apparaitre qu'une seule fois dans le menu !
+    # sinon problème pour connaitre le gestionnaire
+    progs=ProgColleMath.objects.values()
+    context["contenu"]=progs
+    context['gestionnaire']=est_gestionnaire_menu(request.user,Menu.objects.get(id=id_menu))
+    return render(request,'gestionmenu/prog_colles_math.html',context)
+
+def lire_notes_colles(request,id_menu,context):
+    context["contenu"]=NotesColles.objects.filter(eleve=request.user).order_by("-semaine")
+    return render(request,'gestionmenu/lire_notes_colles.html',context)
+
+def lire_notes_colleurs(request,id_menu,context):
+    if request.user.username in  prof_avec_colles:
+        groupe=Group.objects.get(name=prof_avec_colles[request.user.username])
+        liste_colleurs=User.objects.filter(groups=groupe)
+    else:
+        return redirect('/home/')
+    maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
+    if request.method=="POST":
+        semaine=int(request.POST["semaine"])
+        if semaine<1:
+            semaine=1
+        if semaine>maxsemaines:
+            semaine=maxsemaines
+    else :
+        semaine=int(Divers.objects.get(label="semaine").contenu)
+    context["semaine"]=semaine
+    context["semaines"]=range(1,1+maxsemaines)
+    groupeeleve=Group.objects.get(name="eleve")
+    leseleves=User.objects.filter(groups=groupeeleve).order_by("username")
+    lesnotes=[]
+    enplus=[]
+    for x in leseleves:
+        lanote=NotesColles.objects.filter(semaine=semaine,colleur__in=liste_colleurs,eleve=x)
+        if len(lanote)>=1:
+            lesnotes.append(lanote[0])
+            if len(lanote)>1:
+                enplus+=lanote[1:]
+        elif len(lanote)==0:        
+            lesnotes.append({"eleve":x.username,"note":"","colleur":""})
+    context["lesnotes"]=lesnotes
+    context["enplus"]=enplus
+    return render(request,'base/notes_colles_semaine.html',context)
+    context["msg"]="lire_notes_colleurs"
     return render(request,'gestionmenu/home.html',context)
 
 def rentrer_notes_colles(request,id_menu,context):
     context["msg"]="rentrer_notes_colles"
-    return render(request,'gestionmenu/home.html',context)
-
-def lire_notes_colles(request,id_menu,context):
-    context["msg"]="lire_notes_colles"
-    return render(request,'gestionmenu/home.html',context)
-
-def lire_notes_colleurs(request,id_menu,context):
-    context["msg"]="lire_notes_colleurs"
     return render(request,'gestionmenu/home.html',context)
 
 def modifier_notes_colleurs(request,id_menu,context):
@@ -128,7 +157,7 @@ def lire_fiches_eleves(request,id_menu,context):
     context["annee"]=annee_courante
     context["selection"]="false"
     if request.method=="POST":
-        if True: #try:
+        try:
             context["selection"]="true"
             menu=Menu.objects.get(pk=id_menu)
             login=request.POST['eleve']
@@ -154,23 +183,34 @@ def lire_fiches_eleves(request,id_menu,context):
             context["donnees"]=donnees
             context["gestionnaire"]=est_gestionnaire_menu(request.user,menu=menu)
             context["pdf"]=eleve.pdf
-        #except:
+            if context["annee"]==annee_courante:
+                try:
+                    user=User.objects.get(username=login)
+                    context["mail"]=user.email
+                except:
+                    pass
+        except:
             pass
     return render(request,'gestionmenu/lire_renseignements.html',context)
 
 def fiche_renseignements(request,id_menu,context):
     try:
         obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
+        context["msg"]="Ne pas oublier de valider les modifications si besoin : "
         if request.method=="POST":
             form=RenseignementsForm(request.POST,instance=obj)
             if form.is_valid():
                 form.save()
+                request.user.email=request.POST["mail"]
+                request.user.save()
                 context["msg"]="modifications enregistrées ! "
                 context['form']=form
+                context["mail"]=request.user.email
                 return render(request,'gestionmenu/fiche_renseignements.html',context)
+            context["msg"]="erreur dans le formulaire"
         form=RenseignementsForm(instance=obj)
         context['form']=form
-        context["msg"]="Ne pas oublier de valider les modifications si besoin : "
+        context["mail"]=request.user.email
     except:
         return redirect('/home')
     return render(request,'gestionmenu/fiche_renseignements.html',context)
