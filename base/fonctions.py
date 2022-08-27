@@ -112,15 +112,15 @@ def envoie_mail_recuperation_mot_de_passe(request):
         lehash=hash()
         utilisateur=Utilisateur.objects.get(user=user)
         utilisateur.csrf_token=lehash
-        utilisateur.date=datetime.datetime.now()
+        utilisateur.date_demande=datetime.datetime.now()
         utilisateur.reinitialisation_password=True
         utilisateur.save()
         msg_mail="Bonjour "+user.first_name+",\n\n"
-        msg_mail+="Une demande de réinitialisation de mail vient d'être envoyé pour ton compte SSA\n"
+        msg_mail+="Une demande de réinitialisation de mail vient d'être envoyé pour ton compte.\n"
         msg_mail+="clique sur ce lien pour changer de mot de passe : "
         msg_mail+=URL_COMPLETE+"demande_reinitialisation/"+login+"/"+lehash
-        msg_mail+="\n\nL'équipe SSA"
-        envoie_mail([mail],'Demande de récupération de compte SSA',msg_mail)
+        msg_mail+="\n\nNe pas répondre, mail automatique."
+        envoie_mail([mail],'Demande de récupération de compte, site MPSI',msg_mail)
         return msg
     except:
         return msg
