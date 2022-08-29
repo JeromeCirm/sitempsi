@@ -1,0 +1,91 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+<h1> Récapitulatif des notes de colles </h1>
+<hr>
+
+<div style="text-align:center">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label>Semaine en cours : </label>
+        <select id="semaine" name="semaine" onchange="recupere_notes()" type="select">
+            {% for item in semaines %}
+            <option value="{{ item }}" {% if item == semaine %}selected="selected"{% endif %}>{{ item }}</option> {% endfor %}
+        </select>
+    </form><BR>
+
+    <div id="lesnotes" style="padding : 30px;display:inline-block;text-align:left">
+    </div>
+<BR><BR>
+    liste des élèves notés plusieurs fois cette semaine:<BR>
+    <div id="doublons">
+    </div>  
+</div>
+<BR><BR>
+<script>
+let semaine=document.getElementById("semaine")
+let lesnotes=document.getElementById("lesnotes")
+let doublons=document.getElementById("doublons")
+
+function recupere_notes() {
+    var formData = new FormData();
+	formData.append('semaine', semaine.value);
+    formData.append('colleur','all')
+    csrf=document.getElementsByName('csrfmiddlewaretoken')[0]
+    formData.append('csrfmiddlewaretoken',csrf.value)
+    fetch("/recuperation_notes_colles", {
+	  method : 'POST',
+	  headers : {
+		'Accept': 'application/json, text/plain, */*',
+  	  },
+  	  body: formData
+	}).then(function(res){ return res.json();})
+	  .then(function(res){
+        affiche_note(res["lesnotes"],res["doublons"])
+ 	  })
+  	  .catch(function(err){ console.log('Erreur requête', err);});
+}
+
+function affiche_note(lesnotesliste,doublonsliste) {
+    /* ordonner les élèves par usename */
+    lesnotes.innerHTML=""
+    for (item in lesnotesliste) {
+        let colleur=""
+        let note=""
+        if (lesnotesliste[item]!='') {
+            colleur="avec "+lesnotesliste[item]["colleur"]
+            note=lesnotesliste[item]["note"]
+        }
+        let label=document.createElement('input')
+        label.setAttribute('size',20)
+        label.value=item
+        lesnotes.appendChild(label)
+        let label2=document.createElement('input')
+        label2.setAttribute('size',2)
+        label2.value=note
+        lesnotes.appendChild(label2)
+        let label3=document.createElement('input')
+        label3.setAttribute('size',20)
+        label3.value=colleur
+        lesnotes.appendChild(label3)
+    }
+    doublons.innerHTML=""
+    for (item in doublonsliste) {
+        for (x in doublonsliste[item]) {
+            unenote=doublonsliste[item][x]
+            note=unenote["note"]
+            colleur=unenote["colleur"]
+            doublons.innerHTML+=item+" : "+note+" avec "+colleur+", "
+        }
+    }
+}
+
+recupere_notes()
+</script>
+{% endblock body %}
+
+{% for item in enplus %}
+    <input name="nomeleve" size=20 value="{{ item.eleve }}" disabled>
+    <input name="note" size=2 value="{{ item.note }}" disabled> avec
+    <input name="colleur" size=20 value="{{ item.colleur }}" disabled>
+{% endfor %} 

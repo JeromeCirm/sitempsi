@@ -19,4 +19,6 @@ urlpatterns = [
     path('ajout_prog_colle_math',views.ajout_prog_colle_math,name='ajout_prog_colle_math'),
     path('supprime_prog_colle_math/<int:pk>',views.supprime_prog_colle_math,name='supprime_prog_colle_math'),
     path('modifie_prog_colle_math/<int:pk>',views.modifie_prog_colle_math,name='modifie_prog_colle_math'),
+    path('recuperation_notes_colles',views.recuperation_notes_colles,name='recuperation_notes_colles'),
+    path('maj_notes_colles',views.maj_notes_colles,name='maj_notes_colles'),
     ]

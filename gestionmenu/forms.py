@@ -27,6 +27,21 @@ class RenseignementsForm(ModelForm):
     class Meta:
         model=Renseignements
         fields = '__all__'
+        labels= {
+            "nomusage" : "Nom d'usage",
+            "prenomusage" : "Prénom d'usage",
+            "naissance" : "Date de naissance",
+            "tempstrajet" : "Temps de trajet Lycée-domicile (aller)",
+            "seullogement" : "Es-tu seul(e) dans ton logement ?",
+            "motivationprepa" : "Pourquoi avoir choisi MPSI?",
+            "lyceeorigine" : "Nom du lycée d'origine",
+            "villelyceeorigine" : "Ville du lycée d'origine",
+            "professionparents" : "Professions des parents",
+            "freressoeurs" : "Renseignements sur les frères/soeurs",
+            "calculatrice" : "Type de calculatrice utilisée",
+            "accessordinateur" : "as-tu accès à un ordinateur personnel ?",
+            "connexioninternet" : "as-tu possibilité de te connecter régulièrement à internet ?"
+        }
         exclude=('login','année','option','choix1','choix2','choix3','choix4','pdf')
 
 class MenuForm(ModelForm):

@@ -9,6 +9,7 @@ from .models import Menu,Fichier
 from base.models import Utilisateur
 from django.contrib.auth.models import User,Group
 from django.db.models import Case,When
+from .donnees_classe import *
 
 liste_generic = ['liste_fichiers','parametres_compte','gestion_menu']
 
@@ -125,6 +126,21 @@ def gestion_menu(request,numero,context):
     context['menus_unique']=lesmenus_unique
     return render(request,'gestionmenu/gestion_menu.html',context)
 
+def est_colleur(user):
+    # user est-il un colleur?
+    for nom_groupe in prof_avec_colles.values():
+        groupe=Group.objects.get(name=nom_groupe)
+        if groupe in user.groups.all():
+            return True
+    return False
 
-
+def est_gestionnaire_colle(user,colleur_name):
+    # colleur_name es-il un colleur pour user?
+    for prof,nom_groupe in prof_avec_colles.items():
+        if user.username==prof:
+            groupe=Group.objects.get(name=nom_groupe)
+            colleur=User.objects.get(username=colleur_name)
+            if groupe in colleur.groups.all():
+                return True
+    return False
  

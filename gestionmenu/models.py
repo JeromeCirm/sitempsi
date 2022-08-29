@@ -117,6 +117,6 @@ class NotesColles(models.Model):
     colleur=models.ForeignKey(User,on_delete=models.CASCADE)
     eleve=models.ForeignKey(User,related_name='%(class)s_requests_created',on_delete=models.CASCADE) #pour eviter le clash des deux ForeignKey
     note=models.IntegerField()
-    semaine=models.IntegerField()
+    semaine=models.ForeignKey(Semaines,on_delete=models.CASCADE)
 
     

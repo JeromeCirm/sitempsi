@@ -25,6 +25,14 @@ class ColloscopeAdmin(admin.ModelAdmin):
 class RenseignementsAdmin(admin.ModelAdmin):
     list_display=('login','année','prenomusage','nomusage')
 
+class DiversAdmin(admin.ModelAdmin):
+    pass
+
+class NotesCollesAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(NotesColles,NotesCollesAdmin)
+admin.site.register(Divers,DiversAdmin)
 admin.site.register(Menu,MenuAdmin)
 admin.site.register(Fichier,FichierAdmin)
 admin.site.register(Semaines,SemainesAdmin)

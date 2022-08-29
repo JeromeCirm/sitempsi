@@ -86,47 +86,32 @@ def lire_notes_colles(request,id_menu,context):
     return render(request,'gestionmenu/lire_notes_colles.html',context)
 
 def lire_notes_colleurs(request,id_menu,context):
-    if request.user.username in  prof_avec_colles:
+    if request.user.username in prof_avec_colles:
         groupe=Group.objects.get(name=prof_avec_colles[request.user.username])
         liste_colleurs=User.objects.filter(groups=groupe)
     else:
-        return redirect('/home/')
+        return redirect('/home')
     maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
-    if request.method=="POST":
-        semaine=int(request.POST["semaine"])
-        if semaine<1:
-            semaine=1
-        if semaine>maxsemaines:
-            semaine=maxsemaines
-    else :
-        semaine=int(Divers.objects.get(label="semaine").contenu)
-    context["semaine"]=semaine
-    context["semaines"]=range(1,1+maxsemaines)
-    groupeeleve=Group.objects.get(name="eleve")
-    leseleves=User.objects.filter(groups=groupeeleve).order_by("username")
-    lesnotes=[]
-    enplus=[]
-    for x in leseleves:
-        lanote=NotesColles.objects.filter(semaine=semaine,colleur__in=liste_colleurs,eleve=x)
-        if len(lanote)>=1:
-            lesnotes.append(lanote[0])
-            if len(lanote)>1:
-                enplus+=lanote[1:]
-        elif len(lanote)==0:        
-            lesnotes.append({"eleve":x.username,"note":"","colleur":""})
-    context["lesnotes"]=lesnotes
-    context["enplus"]=enplus
-    return render(request,'base/notes_colles_semaine.html',context)
-    context["msg"]="lire_notes_colleurs"
-    return render(request,'gestionmenu/home.html',context)
+    context["semaines"]=range(1,1+maxsemaines) 
+    context["semaine"]=maxsemaines 
+    return render(request,'gestionmenu/notes_colles_semaine.html',context)
 
 def rentrer_notes_colles(request,id_menu,context):
-    context["msg"]="rentrer_notes_colles"
-    return render(request,'gestionmenu/home.html',context)
+    maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
+    context["semaine"]=maxsemaines 
+    context["semaines"]=range(1,1+maxsemaines) 
+    return render(request,'gestionmenu/rentrer_notes_colles.html',context)
 
 def modifier_notes_colleurs(request,id_menu,context):
-    context["msg"]="modifier_notes_colleurs"
-    return render(request,'gestionmenu/home.html',context)
+    if request.user.username in prof_avec_colles:
+        groupe=Group.objects.get(name=prof_avec_colles[request.user.username])
+        context["listecolleurs"]=User.objects.filter(groups=groupe).order_by("username")
+    else:
+        return redirect('/home')
+    maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
+    context["semaines"]=range(1,1+maxsemaines) 
+    context["semaine"]=maxsemaines 
+    return render(request,'gestionmenu/rentrer_notes_colles.html',context)
 
 def lire_fiches_eleves(request,id_menu,context):
     annee=annee_courante
@@ -202,6 +187,8 @@ def fiche_renseignements(request,id_menu,context):
             if form.is_valid():
                 form.save()
                 request.user.email=request.POST["mail"]
+                request.user.first_name=request.POST["prenomusage"]
+                request.user.last_name=request.POST["nomusage"]
                 request.user.save()
                 context["msg"]="modifications enregistrées ! "
                 context['form']=form

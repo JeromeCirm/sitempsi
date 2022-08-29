@@ -1,0 +1,161 @@
+{% extends 'gestionmenu/base.html' %}
+
+{% block body %}
+<h1> Saisie des notes de colles </h1>
+<hr>
+
+<div style="text-align:center">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label> Semaine : </label>
+        <select id="semaine" onchange="maj_information()" name="semaine" type="select">
+            {% for item in semaines %}
+            <option value="{{ item }}" {% if item == semaine %}selected="selected"{% endif %}>{{ item }}</option> {% endfor %}
+        </select> {% if listecolleurs %} <label> avec pour colleur </label>
+        <select id="colleur" onchange="maj_information()" name="colleur" type="select">
+            {% for item in listecolleurs %}
+            <option value="{{ item.username }}"> {{ item.username }}</option> {% endfor %}
+        </select> {% endif %}
+    </form><BR>
+
+    <form  method="POST" action="">
+        {% csrf_token %}
+        Eleves de la semaine selon le planning de colles : <BR>
+        <div id="notessemaine" style="padding : 30px;display:inline-block;text-align:left">
+        </div><BR>    
+    Autres élèves de la classe : <BR>
+        <div id="autresnotes" style="padding : 30px;display:inline-block;text-align:left">
+        </div>
+    <BR>
+    </form>
+</div>
+
+<style>
+select {
+    margin : 5px;
+}
+</style>
+<script>
+    let semaine=document.getElementById("semaine")
+    let colleur=document.getElementById("colleur")
+    let notessemainediv=document.getElementById("notessemaine")
+    let autresnotesdiv=document.getElementById("autresnotes")
+
+    function maj_information() {
+        var formData = new FormData();
+        formData.append('semaine', semaine.value);
+        if (colleur == null) {
+            formData.append('colleur','')
+        } else {
+            formData.append('colleur',colleur.value)
+        }
+        csrf=document.getElementsByName('csrfmiddlewaretoken')[0]
+        formData.append('csrfmiddlewaretoken',csrf.value)
+        fetch("/recuperation_notes_colles", {
+          method : 'POST',
+          headers : {
+            'Accept': 'application/json, text/plain, */*',
+            },
+            body: formData
+        }).then(function(res){ return res.json();})
+          .then(function(res){
+            affiche_note(res["notessemaine"],res["autresnotes"])
+           })
+            .catch(function(err){ console.log('Erreur requête', err);});
+    }
+    
+    function maj_note(eleve) {
+        noteselect=document.getElementById('select_'+eleve)
+        note=noteselect.options[noteselect.selectedIndex].value
+        var formData = new FormData();
+        formData.append('semaine', semaine.value);
+        formData.append('eleve', eleve);
+        formData.append('note', note);
+        if (colleur == null) {
+            formData.append('colleur','')
+        } else {
+            formData.append('colleur',colleur.value)
+        }
+        csrf=document.getElementsByName('csrfmiddlewaretoken')[0]
+        formData.append('csrfmiddlewaretoken',csrf.value)
+        fetch("/maj_notes_colles", {
+          method : 'POST',
+          headers : {
+            'Accept': 'application/json, text/plain, */*',
+            },
+            body: formData
+        }).then(function(res){ return res.json();})
+          .then(function(res){
+            maj_information()
+           })
+            .catch(function(err){ console.log('Erreur requête', err);});
+    }
+
+    function affiche_note(notessemaine,autresnotes) {
+        /* ordonner les élèves par usename */
+        notessemainediv.innerHTML=""
+        elevessemaines=[]
+        for (item in notessemaine) {
+            let label=document.createElement('label')
+            label.innerHTML="groupe "+item.toString()+" : "
+            notessemainediv.appendChild(label)
+            for (x in notessemaine[item]) {
+                record=notessemaine[item][x]
+                let label=document.createElement('input')
+                label.setAttribute('size',20)
+                label.value=record.eleve+" : "
+                notessemainediv.appendChild(label)
+                let select=document.createElement('select')
+                let option=document.createElement('option')
+                option.setAttribute('value','')
+                option.innerHTML=''
+                select.appendChild(option)
+                for (let note=20;note>0;note--) {
+                    let option=document.createElement('option')
+                    option.setAttribute('value',note)
+                    option.innerHTML=note
+                    if (note==record.note) {
+                        option.setAttribute('selected','selected')
+                    }
+                    select.appendChild(option)
+                }
+                select.setAttribute('id','select_'+record.eleve)
+                select.setAttribute('onchange','maj_note("'+record.eleve+'")')
+                notessemainediv.appendChild(select)
+                elevessemaines.push(record.eleve)
+            }
+            notessemainediv.appendChild(document.createElement('BR'))
+        }
+        autresnotesdiv.innerHTML=""
+        for (eleve in autresnotes) {
+            lanote=autresnotes[eleve]
+            if (!elevessemaines.includes(eleve)) {
+                let label=document.createElement('input')
+                label.setAttribute('size',20)
+                label.value=eleve+" : "
+                autresnotesdiv.appendChild(label)
+                let select=document.createElement('select')
+                let option=document.createElement('option')
+                option.setAttribute('value','')
+                option.innerHTML=''
+                select.appendChild(option)
+                for (let note=20;note>0;note--) {
+                    let option=document.createElement('option')
+                    option.setAttribute('value',note)
+                    option.innerHTML=note
+                    if (note==lanote) {
+                        option.setAttribute('selected','selected')
+                    }
+                    select.appendChild(option)
+                }
+                select.setAttribute('id','select_'+eleve)
+                select.setAttribute('onchange','maj_note("'+eleve+'")')
+                autresnotesdiv.appendChild(select)
+            }
+        }
+
+    }
+
+maj_information()
+    </script>
+{% endblock body %}

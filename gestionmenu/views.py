@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from django.shortcuts import render,redirect
 from base.fonctions import auth
 from .models import Menu
@@ -45,8 +46,11 @@ def home(request):
                 annonce.contenu=request.POST.get('annonce')
                 annonce.save()  
             except:
-                annonce=Divers.objects.create(label='annonce',contenu=request.POST.get('annonce'))
-                annonce.save() 
+                try:
+                    annonce=Divers.objects.create(label='annonce',contenu=request.POST.get('annonce'))
+                    annonce.save() 
+                except:
+                    pass
         context["prof"]=True
         try:
             context["annonce"]=Divers.objects.get(label="annonce").contenu
@@ -359,6 +363,121 @@ def modifie_prog_colle_math(request,pk):
         return render(request,'gestionmenu/modifie_prog_math.html',context)
     else :
         return redirect('/home')
+
+def maj_notes_colles(request):
+    response_data = {"resultat" : "erreur"}
+    try:
+        if request.POST["colleur"]=="":
+            # un colleur modifie une de ses notes
+            colleur=request.user
+        else:
+            # un gestionnaire modifie une note
+            colleur_name=request.POST["colleur"]
+            if est_gestionnaire_colle(request.user,colleur_name):
+                colleur=User.objects.get(username=colleur_name)
+            else:
+                return redirect('\home')
+        # phase de modification de la note
+        eleve=User.objects.get(username=request.POST["eleve"])
+        semaine=Semaines.objects.get(numero=request.POST["semaine"])
+        note=request.POST["note"]
+        try:
+            # la note existe déjà
+            notecolle=NotesColles.objects.get(colleur=colleur,eleve=eleve,semaine=semaine)
+            if note=="":
+                notecolle.delete()
+            else:
+                notecolle.note=note
+                notecolle.save()
+        except:
+            # la note n'existe pas
+            if note!="": # else impossible normalement
+                notecolle=NotesColles(colleur=colleur,eleve=eleve,semaine=semaine,note=note)
+                notecolle.save()
+    except:
+        print("erreur")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")    
+
+
+def recuperation_notes_colles(request):
+    # attention : droits à gérer
+    response_data = {}
+    try:
+        if request.method=="POST" and "semaine" in request.POST and "colleur" in request.POST:
+            semaine=Semaines.objects.get(numero=int(request.POST["semaine"]))
+            if request.POST["colleur"]=="all":
+                # un gestionnaire récupère toutes les colles
+                # de la semaine
+                if request.user.username in prof_avec_colles:
+                    groupe=Group.objects.get(name=prof_avec_colles[request.user.username])
+                    tousleseleves=User.objects.filter(groups=groupe_eleves).order_by('username')
+                    lesnotes={ item.username : '' for item in tousleseleves}
+                    notes=NotesColles.objects.filter(semaine=semaine,colleur__groups=groupe)
+                    doublons={}
+                    for x in notes:
+                        if lesnotes[x.eleve.username]=='':
+                            lesnotes[x.eleve.username]={"colleur":x.colleur.username,"note":x.note}
+                        else:
+                            if x.eleve.username not in doublons: doublons[x.eleve.username]=[]
+                            doublons[x.eleve.username].append({"colleur":x.colleur.username,"note":x.note})
+                    response_data["lesnotes"]=lesnotes
+                    response_data["doublons"]=doublons
+            elif request.POST["colleur"]=="" and est_colleur(request.user):
+                # un colleur récupère ses colles pour la semaine
+                notessemaine={}
+                autresnotes={}                
+                notes=NotesColles.objects.filter(semaine=semaine,colleur=request.user)
+                creneaux=CreneauxColleurs.objects.filter(colleur=request.user)
+                groupes=Colloscope.objects.filter(semaine=semaine,creneau__in=creneaux)
+                for item in groupes:
+                    notessemaine[item.groupe.numero]=[]
+                    for eleve in item.groupe.eleves.all().order_by("username"):
+                        try:
+                            lanote=notes.get(eleve=User.objects.get(username=eleve.username))
+                            notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":lanote.note})
+                        except:
+                            notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":''})
+                for eleve in User.objects.filter(groups=groupe_eleves).order_by("username"):
+                    if eleve.username not in notessemaine:
+                        try:
+                            lanote=notes.get(eleve=eleve)
+                            autresnotes[eleve.username]=lanote.note
+                        except:
+                            autresnotes[eleve.username]=''
+                response_data["notessemaine"]=notessemaine
+                response_data["autresnotes"]=autresnotes
+            else:
+                # un gestionnaire récupère les notes d'un colleur
+                # quasiment la même chose que le else précédent : 
+                # à mettre en fonction
+                notessemaine={}
+                autresnotes={}   
+                colleur_name=request.POST["colleur"]   
+                if est_gestionnaire_colle(request.user,colleur_name): 
+                    colleur=User.objects.get(username=colleur_name)         
+                    notes=NotesColles.objects.filter(semaine=semaine,colleur=colleur)
+                    creneaux=CreneauxColleurs.objects.filter(colleur=colleur)
+                    groupes=Colloscope.objects.filter(semaine=semaine,creneau__in=creneaux)
+                    for item in groupes:
+                        notessemaine[item.groupe.numero]=[]
+                        for eleve in item.groupe.eleves.all().order_by("username"):
+                            try:
+                                lanote=notes.get(eleve=User.objects.get(username=eleve.username))
+                                notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":lanote.note})
+                            except:
+                                notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":''})
+                    for eleve in User.objects.filter(groups=groupe_eleves).order_by("username"):
+                        if eleve.username not in notessemaine:
+                            try:
+                                lanote=notes.get(eleve=eleve)
+                                autresnotes[eleve.username]=lanote.note
+                            except:
+                                autresnotes[eleve.username]=''
+                    response_data["notessemaine"]=notessemaine
+                    response_data["autresnotes"]=autresnotes
+    except:
+        print("erreur")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")    
 
 def download(request,letype,pk):
     def extension(nomfichier):
