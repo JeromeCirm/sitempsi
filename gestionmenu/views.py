@@ -18,14 +18,14 @@ liste_menu=liste_generic + liste_classe+['fichier_unique']
 @auth(None)
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
-    if True: #try:
+    try:
         lemenu=Menu.objects.get(pk=numero)
         if autorise_menu(request.user,lemenu):
             nom_fonction=str(lemenu.fonction)
             if nom_fonction in liste_menu:
                 return globals()[str(nom_fonction)](request,numero,context)
         return redirect('/home')
-    #except:
+    except:
         return redirect('/home')
 
 @auth(None)

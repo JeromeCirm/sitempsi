@@ -53,7 +53,10 @@ def menu_navigation(request):
             subtableau=[]
             for subitem in liste : 
                 if subitem.parent==item.id and autorise_menu(request.user,subitem):
-                    subtableau.append((subitem.nom,subitem.id,subitem.fonction))
+                    if subitem.fonction[0:4]=="lien":
+                        subtableau.append((subitem.nom,subitem.id,subitem.fonction[4:],True))
+                    else:
+                        subtableau.append((subitem.nom,subitem.id,subitem.fonction,False))
             tableau.append((item.nom,item.id,item.fonction,subtableau))
     return tableau
 

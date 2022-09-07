@@ -25,7 +25,7 @@
                 {% for item in menu %}
                 <li class="deroulant"><a {% if item.2 != -1 %} href="{% url 'menu' item.1 %}" {% endif %}>{{item.0}}</a>                                                
                     {% if item.3|length %}<ul class="sous">
-                        {% for subitem in item.3 %}<li><a href="{% url 'menu' subitem.1 %}">{{subitem.0}}</a></li>
+                        {% for subitem in item.3 %}<li><a href="{% if subitem.3 %} {{subitem.2}} {% else %}{% url 'menu' subitem.1 %}{% endif %}">{{subitem.0}}</a></li>
                         {% endfor %}</ul>{% endif %}</li>{% endfor %}
             </ul>
             </div>

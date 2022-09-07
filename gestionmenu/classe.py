@@ -11,7 +11,7 @@ from django.db.models import Max
 liste_classe=['gestion_jerome','trombinoscope','emploi_du_temps','contacts','colloscope_s1',
 'programme_colle_math','rentrer_notes_colles','lire_notes_colles','lire_notes_colleurs',
 'modifier_notes_colleurs','lire_fiches_eleves','fiche_renseignements',
-'creation_fichier_pronote']
+'creation_fichier_pronote','lien_bashton']
 
 def gestion_jerome(request,id_menu,context):
     if request.method=='POST':
