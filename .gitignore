@@ -4,3 +4,4 @@ config_perso.py
 base/config_mail_perso.py
 private_files/*
 gestionmenu/donnees_perso.py
+gestionmenu/hors_git.py

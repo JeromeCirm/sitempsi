@@ -15,6 +15,12 @@ from .classe import *
 # qui correspond à un menu générique créé par un gestionnaire de menu
 liste_menu=liste_generic + liste_classe+['fichier_unique']
 
+try:
+    from .hors_git import *
+    liste_menu+=liste_hors_git
+except:
+    pass
+
 @auth(None)
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
