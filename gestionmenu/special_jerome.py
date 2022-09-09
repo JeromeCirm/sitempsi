@@ -119,27 +119,22 @@ def creation_colloscope(context):
     lessemaines=Semaines.objects.all()
     for lasemaine in lessemaines:
         semaine=lasemaine.numero
-        for groupe in range(1,16):
+        for groupe in range(1,17):
             legroupe=GroupeColles.objects.get(numero=groupe)
-            # ici +1 partout pour aligner le groupe fantome et les TP d'info
-            valeurphysique=(semaine+1+groupe-2)%16+1
-            valeurmath=valeurphysique
-            # colleur 9=colleur 14 en math, à remplacer par celui du groupe 16 inexistant si pair
-            if (groupe%2==0) and ((valeurmath==9) or (valeurmath==14)):
-                valeurmath=(semaine+1-2)%16+1
-            # groupe 7=groupe fantôme en physique
-            if (groupe%2==0) and (valeurphysique==7):
-                valeurphysique=(semaine+1-2)%16+1
-            # groupe 16=groupe fantôme en anglais
-            if (groupe%2==0) and (valeurphysique==16):
-                valeurphysique=(semaine+1-2)%16+1
+            valeurmath=(semaine+groupe-2)%16+1
+            valeurautre=valeurmath
+
             collemath=CreneauxColleurs.objects.get(numero=valeurmath,matière="math")
             item=Colloscope(creneau=collemath,groupe=legroupe,semaine=lasemaine)
             item.save()
-            if valeurphysique%2==1:
-                autrecolle=CreneauxColleurs.objects.get(numero=(valeurphysique+1)//2,matière="physique")
+            if valeurautre%2==1: # colle de physique
+                autrecolle=CreneauxColleurs.objects.get(numero=(valeurautre+1)//2,matière="physique")
             else:
-                autrecolle=CreneauxColleurs.objects.get(numero=valeurphysique//2,matière="anglais")
+                if groupe==1:
+                    valeurautre=18  # le groupe 1 a allemand et non anglais
+                if groupe%2==1 and valeurautre==10:
+                    valeurautre=(semaine-1)%16+1 # prend la place du groupe 1
+                autrecolle=CreneauxColleurs.objects.get(numero=valeurautre//2,matière="anglais")
             item=Colloscope(creneau=autrecolle,groupe=legroupe,semaine=lasemaine)
             item.save()
     context["msg"]="colloscope créé"

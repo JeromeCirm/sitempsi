@@ -102,9 +102,13 @@ def parametres_compte(request,numero,context):
                     login(request,user)
         if (not (request.user.is_superuser) ) and request.method=="POST" and "mail" in request.POST:
             request.user.email=request.POST["mail"]
+            request.user.first_name=request.POST["prenomusage"]
+            request.user.last_name=request.POST["nomusage"]
             request.user.save()
             context["msg"]="paramètres mis à jour"
         context["mail"]=request.user.email
+        context["prenomusage"]=request.user.first_name
+        context["nomusage"]=request.user.last_name
         return render(request,'gestionmenu/parametres_compte.html',context)
     except:
         return redirect('/home')

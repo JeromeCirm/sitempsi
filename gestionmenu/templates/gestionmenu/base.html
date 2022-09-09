@@ -32,7 +32,7 @@
         </nav>
 
           {% if request.user.is_authenticated %}
-          <h3 class="pasmobile"> Bonjour {{ request.user.first_name }} ! <h3>
+          <h3 class="pasmobile"> Bonjour {% if request.user.first_name %}{{ request.user.first_name }} {% else %} {{ request.user.username }} {% endif %}! <h3>
 
           <div >
               <a href="{% url 'deconnexion' %}" class="dropdown-link"

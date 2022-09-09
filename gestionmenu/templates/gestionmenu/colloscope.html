@@ -56,11 +56,11 @@
                 </PRE>
             </TD>      
             <TD>
-                <PRE><B>             COLLEURS de physique(minuscule)-anglais(majuscule) :   </B>          
+                <PRE><B>             COLLEURS de physique(majuscule)-anglais(minuscule) :   </B>          
 <DIV style="padding : 0px;display:inline-block;text-align:left">
-<ul>{% for creneau in colleurphysique %}<li> {{  creneau.numero|tempchr:96 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
+<ul>{% for creneau in colleurphysique %}<li> {{  creneau.numero|tempchr:64 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
 </ul>
-<ul>{% for creneau in colleuranglais %}<li> {{  creneau.numero|tempchr:64 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
+<ul>{% for creneau in colleuranglais %}<li> {{  creneau.numero|tempchr:96 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
 </ul>
 </DIV>
                 </PRE>
