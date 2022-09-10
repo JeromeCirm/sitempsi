@@ -30,7 +30,7 @@
       <TR>
 
         {% for uneligne in tableau %}
-        <TR> <TD> {{ uneligne.semaine.numero }} débute le {{ uneligne.semaine.date }} </TD> 
+        <TR> <TD> n°- {{ uneligne.semaine.numero }} débute le {{ uneligne.semaine.date }} </TD> 
         {% for item in uneligne.ligne %}<TD> {{ item }}  </TD>{% endfor %} 
         </TR>{% endfor %}
 </TBODY></TABLE></CENTER> <BR>
@@ -67,16 +67,15 @@
             </TD>
         </TR>
     </TBODY>
-</TABLE><BR>  <!--
+</TABLE><BR>  
         TD de math: <BR>
-           à 16h la semaine de colle d'anglais  et à 14h la semaine de colle de physique <BR> <BR>
+           à 14h la semaine de colle d'anglais  et à 16h la semaine de colle de physique <BR> <BR>
           TP d'informatique : <BR>
-              groupes pairs, la semaine de colle d'anglais : à 13h sauf si vous avez PELLICER (15h dans ce cas) <BR>
-              groupes impairs, la semaine de colle d'anglais sauf si vous avez BOUISSOU entre 13 et 15h ou FAGET la semaine suivante! (TP à 15h la semaine de physique dans ce cas) <BR>
-          <BR>
-          TD de SI : <BR>
-              à 11h si vous avez colle de physique sauf si vous avez Nizon à 11h <BR>
-              à 12h si vous avez colle d'anglais sauf si vous avez Pellicer à 13h
+              semaine impaire, 14h si vous avez 3,4,8,13,16 en colle de math <BR>
+              semaine impaire, 16h si vous avez 1,2,6,9,10,11 colle de math <BR>
+              semaine paire, 14h si vous avez 6,8,13,15,16 en colle de math <BR>
+                    <BR>
+          TD de SI : la semaine de colle de physique<BR>
               <BR><BR>--> 
       <BR>
 

@@ -9,7 +9,8 @@ from django.http import FileResponse
 import json
 from .generic import *
 from .classe import *
-
+import locale
+locale.setlocale(locale.LC_ALL,'fr_FR')
 # liste des fonctions correspondant à un menu perso
 # à cela, on ajouter la fonction "liste_fichier" 
 # qui correspond à un menu générique créé par un gestionnaire de menu
@@ -40,6 +41,8 @@ def home(request):
     lesgroupes=request.user.groups.all()
     if groupe_eleves in lesgroupes:
         context["eleve"]=True
+        lessemaines=Semaines.objects.all().order_by("numero")
+        context["lessemaines"]=[{"numero":x.numero,"date":date_fr(x.date,True)} for x in lessemaines]
         try:
             context["annonce"]=Divers.objects.get(label="annonce").contenu
         except:
@@ -484,6 +487,48 @@ def recuperation_notes_colles(request):
         print("erreur")
     return HttpResponse(json.dumps(response_data), content_type="application/json")    
 
+def recuperation_informations_home(request):
+    response_data = {}
+    try:
+        lesgroupes=request.user.groups.all()
+        if groupe_eleves in lesgroupes:
+            lasemaine=Semaines.objects.get(numero=request.POST["semaine"])   
+            groupe=GroupeColles.objects.get(eleves=request.user)
+            colles=Colloscope.objects.filter(semaine=lasemaine,groupe=groupe)
+            msg=[]
+            info="pas d'informatique cette semaine"
+            for x in colles:
+                complement_jour=""
+                if x.creneau.matière=="physique": td="physique"
+                if x.creneau.matière=="anglais" or x.creneau.matière=="allemand": td="lv1"
+                if x.creneau.matière=="math":
+                    if x.creneau.jour=="lundi":
+                        complement_jour=" (le "+date_fr(lasemaine.date+datetime.timedelta(days=7))+" donc)"
+                    if lasemaine.numero%2==1:
+                        if x.creneau.numero in [3,4,8,13,16]: info="TP d'informatique mardi à 14h"
+                        if x.creneau.numero in [1,2,6,9,10,11]: info="TP d'informatique mardi à 16h"
+                    if lasemaine.numero%2==0:
+                        if x.creneau.numero in [6,8,13,15,16]: info="TP d'informatique mardi à 14h"
+                msg.append("colle de "+x.creneau.matière+" avec "+x.creneau.colleur.username+" "+x.creneau.jour+complement_jour+" à "+x.creneau.horaire+" en "+x.creneau.salle)
+            if td=="physique":
+                msg.append("TD de math lundi à 16h, pas de TD de SI")
+            else: 
+                msg.append("TD de math lundi à 14h, TD de SI cette semaine")
+            msg.append(info)
+            try:
+                semaineprécédente=Semaines.objects.get(numero=lasemaine.numero-1)
+                colles=Colloscope.objects.filter(semaine=semaineprécédente,groupe=groupe)
+                for colle in colles:
+                    if colle.creneau.jour=="lundi":
+                        msg.append("rappel: colle de math lundi "+date_fr(lasemaine.date)+" avec "+colle.creneau.colleur.username+" à "+colle.creneau.horaire+" en "+colle.creneau.salle)
+            except:
+                pass
+            response_data["informations"]=msg
+    except:
+        print("erreur")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")    
+
+
 def download(request,letype,pk):
     def extension(nomfichier):
         l=nomfichier.split(".")
@@ -519,20 +564,4 @@ def download(request,letype,pk):
         except: #fichier absent avec icone téléchargement?
             return redirect('/home')
     return redirect('/home')
-    if letype=='generic':  # ne fonctionne pas. A changer pour autoriser un iframe en affichage
-        try:
-            document = open('private_files/'+pk,'rb')
-            #response = HttpResponse(FileWrapper(document),content_type='application/octet-stream')
-            #response['Content-Disposition'] = 'attachment; filename="'+pk+'"'
-            return FileResponse(document, content_type='application/pdf')#response
-        except: #fichier absent avec icone téléchargement?
-            return redirect('/home')
-    if letype=='genericdownload':  # ne fonctionne pas. A changer pour autoriser un iframe en affichage
-        try:
-            document = open('private_files/'+pk,'rb')
-            response = HttpResponse(FileWrapper(document),content_type='application/octet-stream')
-            response['Content-Disposition'] = 'attachment; filename="'+pk+'"'
-            return response
-        except: #fichier absent avec icone téléchargement?
-            return redirect('/home')
-    return redirect('/home')
+

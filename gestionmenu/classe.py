@@ -7,6 +7,7 @@ from .donnees_classe import *
 from .special_jerome import *
 from .forms import FichierFormFichier,RenseignementsForm
 from django.db.models import Max
+import datetime
 
 liste_classe=['gestion_jerome','trombinoscope','emploi_du_temps','contacts','colloscope_s1',
 'programme_colle_math','rentrer_notes_colles','lire_notes_colles','lire_notes_colleurs',
@@ -65,7 +66,7 @@ def colloscope_s1(request,id_menu,context):
                 if colle.creneau.matière=="anglais":
                     anglais="-"+chr(96+colle.creneau.numero)
             ligne.append(math+physique+anglais)
-        tableau.append({"semaine" : semaine,"ligne" : ligne})
+        tableau.append({"semaine" : {"numero":semaine.numero,"date":date_fr(semaine.date,True)},"ligne" : ligne})
     context["tableau"]=tableau
     context["lesgroupes"]=lesgroupes
     context["colleurmath"]=CreneauxColleurs.objects.filter(matière="math").order_by('numero')
@@ -201,6 +202,31 @@ def fiche_renseignements(request,id_menu,context):
     except:
         return redirect('/home')
     return render(request,'gestionmenu/fiche_renseignements.html',context)
+
+def semaine_en_cours():
+    # cherche la semaine en cours. Renvoi la première sinon
+    try:
+        semaine=Semaines.objects.filter(date__lte=datetime.date.today()).order_by('-date')
+        if len(semaine)>0:
+            # on renvoie la dernière semaine commençant avant aujourd'hui
+            return semaine[0]
+        else:
+            # on renvoie la première semaine
+            semaine=Semaines.objects.all().order_by('date')
+            return semaine[0]
+    except:
+        # pas de semaines créées pour l'instant
+        return None
+
+def informations_semaine(request):
+    # renvoie une list de messages à afficher concernant les colles de la semaine, les TD, etc.. de l'éleve
+    semaine=semaine_en_cours() # on récupère la semaine en cours
+    groupe=GroupeColles.objects.get(eleves=request.user)
+    colles=Colloscope.objects.filter(semaine=semaine,groupe=groupe)
+    msg=[]
+    for x in colles:
+        msg.append("colle de "+x.creneau.matière+" avec "+x.creneau.colleur.username+" "+x.creneau.jour+" à "+x.creneau.horaire+" en "+x.creneau.salle)
+    return msg 
 
 def creation_fichier_pronote(request,id_menu,context):
     context["msg"]="creation_fichier_pronote"

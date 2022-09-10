@@ -10,6 +10,7 @@ from base.models import Utilisateur
 from django.contrib.auth.models import User,Group
 from django.db.models import Case,When
 from .donnees_classe import *
+import datetime
 
 liste_generic = ['liste_fichiers','parametres_compte','gestion_menu']
 
@@ -19,6 +20,13 @@ groupe_colleurs_math=Group.objects.get(name='colleurs_math')
 groupe_colleurs_physique=Group.objects.get(name='colleurs_physique')
 groupe_colleurs_anglais=Group.objects.get(name='colleurs_anglais')
 groupe_colleurs_philo=Group.objects.get(name='colleurs_philo')
+
+def date_fr(date,annee=False):
+    # transforme la date en francais, avec ou sans l'année
+    if annee: 
+        return date.strftime("%d/%m/%y")
+    else:
+        return date.strftime("%d/%m")
 
 # échange deux éléments d'un requete liste selon le champ ordre
 def echange(liste,ordre1,ordre2): 
