@@ -519,7 +519,7 @@ def recuperation_informations_home(request):
                 semaineprécédente=Semaines.objects.get(numero=lasemaine.numero-1)
                 colles=Colloscope.objects.filter(semaine=semaineprécédente,groupe=groupe)
                 for colle in colles:
-                    if colle.creneau.jour=="lundi":
+                    if colle.creneau.jour=="lundi"and colle.creneau.matière=="math":
                         msg.append("rappel: colle de math lundi "+date_fr(lasemaine.date)+" avec "+colle.creneau.colleur.username+" à "+colle.creneau.horaire+" en "+colle.creneau.salle)
             except:
                 pass
