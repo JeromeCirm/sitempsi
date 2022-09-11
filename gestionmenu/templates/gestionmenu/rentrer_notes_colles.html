@@ -9,8 +9,8 @@
         {% csrf_token %}
         <label> Semaine : </label>
         <select id="semaine" onchange="maj_information()" name="semaine" type="select">
-            {% for item in semaines %}
-            <option value="{{ item }}" {% if item == semaine %}selected="selected"{% endif %}>{{ item }}</option> {% endfor %}
+            {% for item in lessemaines %}
+            <option value="{{ item.numero }}" {% if item.numero == semaine.numero %}selected="selected"{% endif %}>n°- {{ item.numero }} commençant le {{ item.date }}</option> {% endfor %}
         </select> {% if listecolleurs %} <label> avec pour colleur </label>
         <select id="colleur" onchange="maj_information()" name="colleur" type="select">
             {% for item in listecolleurs %}

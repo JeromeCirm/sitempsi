@@ -9,8 +9,8 @@
         {% csrf_token %}
         <label>Semaine en cours : </label>
         <select id="semaine" name="semaine" onchange="recupere_notes()" type="select">
-            {% for item in semaines %}
-            <option value="{{ item }}" {% if item == semaine %}selected="selected"{% endif %}>{{ item }}</option> {% endfor %}
+            {% for item in lessemaines %}
+            <option value="{{ item.numero }}" {% if item.numero == semaine.numero %}selected="selected"{% endif %}>n°- {{ item.numero }} commençant le {{ item.date }}</option> {% endfor %}
         </select>
     </form><BR>
 
@@ -83,9 +83,3 @@ function affiche_note(lesnotesliste,doublonsliste) {
 recupere_notes()
 </script>
 {% endblock body %}
-
-{% for item in enplus %}
-    <input name="nomeleve" size=20 value="{{ item.eleve }}" disabled>
-    <input name="note" size=2 value="{{ item.note }}" disabled> avec
-    <input name="colleur" size=20 value="{{ item.colleur }}" disabled>
-{% endfor %} 

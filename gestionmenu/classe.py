@@ -87,20 +87,17 @@ def lire_notes_colles(request,id_menu,context):
     return render(request,'gestionmenu/lire_notes_colles.html',context)
 
 def lire_notes_colleurs(request,id_menu,context):
-    if request.user.username in prof_avec_colles:
-        groupe=Group.objects.get(name=prof_avec_colles[request.user.username])
-        liste_colleurs=User.objects.filter(groups=groupe)
-    else:
+    if request.user.username not in prof_avec_colles:
         return redirect('/home')
-    maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
-    context["semaines"]=range(1,1+maxsemaines) 
-    context["semaine"]=maxsemaines 
+    context["semaine"]=semaine_en_cours() 
+    lessemaines=Semaines.objects.all().order_by("numero")
+    context["lessemaines"]=[{"numero":x.numero,"date":date_fr(x.date,True)} for x in lessemaines]
     return render(request,'gestionmenu/notes_colles_semaine.html',context)
 
 def rentrer_notes_colles(request,id_menu,context):
-    maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
-    context["semaine"]=maxsemaines 
-    context["semaines"]=range(1,1+maxsemaines) 
+    context["semaine"]=semaine_en_cours() 
+    lessemaines=Semaines.objects.all().order_by("numero")
+    context["lessemaines"]=[{"numero":x.numero,"date":date_fr(x.date,True)} for x in lessemaines]
     return render(request,'gestionmenu/rentrer_notes_colles.html',context)
 
 def modifier_notes_colleurs(request,id_menu,context):
@@ -109,9 +106,9 @@ def modifier_notes_colleurs(request,id_menu,context):
         context["listecolleurs"]=User.objects.filter(groups=groupe).order_by("username")
     else:
         return redirect('/home')
-    maxsemaines=Semaines.objects.aggregate(Max('numero'))['numero__max']
-    context["semaines"]=range(1,1+maxsemaines) 
-    context["semaine"]=maxsemaines 
+    context["semaine"]=semaine_en_cours() 
+    lessemaines=Semaines.objects.all().order_by("numero")
+    context["lessemaines"]=[{"numero":x.numero,"date":date_fr(x.date,True)} for x in lessemaines]
     return render(request,'gestionmenu/rentrer_notes_colles.html',context)
 
 def lire_fiches_eleves(request,id_menu,context):
