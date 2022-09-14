@@ -14,12 +14,15 @@ import datetime
 
 liste_generic = ['liste_fichiers','parametres_compte','gestion_menu']
 
-groupe_eleves=Group.objects.get(name='eleves')
-groupe_profs=Group.objects.get(name='profs')
-groupe_colleurs_math=Group.objects.get(name='colleurs_math')
-groupe_colleurs_physique=Group.objects.get(name='colleurs_physique')
-groupe_colleurs_anglais=Group.objects.get(name='colleurs_anglais')
-groupe_colleurs_philo=Group.objects.get(name='colleurs_philo')
+try:
+    groupe_eleves=Group.objects.get(name='eleves')
+    groupe_profs=Group.objects.get(name='profs')
+    groupe_colleurs_math=Group.objects.get(name='colleurs_math')
+    groupe_colleurs_physique=Group.objects.get(name='colleurs_physique')
+    groupe_colleurs_anglais=Group.objects.get(name='colleurs_anglais')
+    groupe_colleurs_philo=Group.objects.get(name='colleurs_philo')
+except:
+    print('attention il faut créer les groupes utilisateurs indiqués dans generic.py !')
 
 def date_fr(date,annee=False):
     # transforme la date en francais, avec ou sans l'année

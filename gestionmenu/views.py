@@ -29,15 +29,15 @@ except:
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
     context["titresite"]=TITRE_SITE
-    if True: #try:
+    try:
         lemenu=Menu.objects.get(pk=numero)
         if autorise_menu(request.user,lemenu):
             nom_fonction=str(lemenu.fonction)
             if nom_fonction in liste_menu:
                 return globals()[str(nom_fonction)](request,numero,context)
         return redirect('/home')
-    #except:
-        print('erreur dans la fonction')
+    except:
+        print('erreur dans la fonction : enlever try except de la fonction menu de views.py')
         return redirect('/home')
 
 @auth(None)
