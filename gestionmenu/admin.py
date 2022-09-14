@@ -11,7 +11,7 @@ class SemainesAdmin(admin.ModelAdmin):
     list_display=('numero','date')
 
 class CreneauxColleursAdmin(admin.ModelAdmin):
-    list_display=('numero','colleur','jour','horaire','salle')
+    list_display=('numero','colleur','jour','horaire','matière','salle')
 
 class GroupeCollesAdmin(admin.ModelAdmin):
     list_display=('numero','get_eleves')

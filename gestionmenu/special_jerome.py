@@ -121,9 +121,17 @@ def creation_colloscope(context):
         semaine=lasemaine.numero
         for groupe in range(1,17):
             legroupe=GroupeColles.objects.get(numero=groupe)
-            valeurmath=(semaine+groupe-2)%16+1
+            # 1+ pour éviter que le groupe d'allemand ait Zoé au début
+            valeurmath=(1+semaine+groupe-2)%16+1
             valeurautre=valeurmath
-
+            # on évite la colle lundi 17h pour le groupe 1
+            if groupe==1 and valeurmath==11: valeurmath=5
+            if groupe==9 and valeurmath==5: valeurmath=11
+            # on évite la colle lundi 18h pour les groupes 2- qui ont LV2
+            listlv2=[2,3,4]
+            if groupe in listlv2 and valeurmath==9: valeurmath=1
+            if groupe-8 in listlv2 and valeurmath==1: valeurmath=9
+            print("groupe : ",groupe,valeurmath,valeurautre)
             collemath=CreneauxColleurs.objects.get(numero=valeurmath,matière="math")
             item=Colloscope(creneau=collemath,groupe=legroupe,semaine=lasemaine)
             item.save()
@@ -133,7 +141,8 @@ def creation_colloscope(context):
                 if groupe==1:
                     valeurautre=18  # le groupe 1 a allemand et non anglais
                 if groupe%2==1 and valeurautre==10:
-                    valeurautre=(semaine-1)%16+1 # prend la place du groupe 1
+                    valeurautre=(1+semaine-1)%16+1 # prend la place du groupe 1
+                print(valeurautre)
                 autrecolle=CreneauxColleurs.objects.get(numero=valeurautre//2,matière="anglais")
             item=Colloscope(creneau=autrecolle,groupe=legroupe,semaine=lasemaine)
             item.save()

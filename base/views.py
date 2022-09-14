@@ -1,6 +1,9 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import logout,authenticate
 from .fonctions import *
+import sys
+sys.path.append("..")
+from config_generale import *
 
 def connexion(request):
     if request.method=='POST':
@@ -18,6 +21,7 @@ def connexion(request):
             except:
                 pass
     context={ "creation" : AUTORISE_CREATION, "recuperation" : AUTORISE_RECUPERATION}
+    context["titresite"]=TITRE_SITE
     return render(request,'base/connexion.html',context)
 
 def deconnexion(request):
@@ -35,6 +39,7 @@ def creation_compte(request):
             context["echec"]=True
             context["err"]=err
             context["ancien"]=request.POST
+    context["titresite"]=TITRE_SITE
     return render(request,'base/creation_compte.html',context)
 
 def validation_compte(request,login=None,lehash=None):
@@ -43,11 +48,12 @@ def validation_compte(request,login=None,lehash=None):
         context={ "msg" : "Le lien n'est pas valide"}
     else:
         context={ "msg" : verifie_lien_validation(login,lehash)}
+    context["titresite"]=TITRE_SITE
     return render(request,'base/validation_compte.html',context)
 
 def recuperation_password(request):
     if not AUTORISE_RECUPERATION: return redirect('/home')
-    context={}
+    context={"titresite" : TITRE_SITE}
     if request.method=="POST":   
         context["msg"]=envoie_mail_recuperation_mot_de_passe(request)
     return render(request,'base/recuperation_password.html',context)
@@ -60,6 +66,7 @@ def demande_reinitialisation(request,login=None,lehash=None):
         context={ "msg" : "Le lien n'est pas valide"}
     else:
         context={ **verifie_lien_reinitialisation(login,lehash)}
+    context["titresite"]=TITRE_SITE
     return render(request,'base/demande_reinitialisation.html',context)
 
 import gestionmenu.views as my_view

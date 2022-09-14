@@ -11,6 +11,9 @@ from .generic import *
 from .classe import *
 import locale
 locale.setlocale(locale.LC_ALL,'fr_FR')
+import sys
+sys.path.append("..")
+from config_generale import *
 # liste des fonctions correspondant à un menu perso
 # à cela, on ajouter la fonction "liste_fichier" 
 # qui correspond à un menu générique créé par un gestionnaire de menu
@@ -25,19 +28,22 @@ except:
 @auth(None)
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
-    try:
+    context["titresite"]=TITRE_SITE
+    if True: #try:
         lemenu=Menu.objects.get(pk=numero)
         if autorise_menu(request.user,lemenu):
             nom_fonction=str(lemenu.fonction)
             if nom_fonction in liste_menu:
                 return globals()[str(nom_fonction)](request,numero,context)
         return redirect('/home')
-    except:
+    #except:
+        print('erreur dans la fonction')
         return redirect('/home')
 
 @auth(None)
 def home(request):
     context={"menu":menu_navigation(request)}
+    context["titresite"]=TITRE_SITE
     lesgroupes=request.user.groups.all()
     if groupe_eleves in lesgroupes:
         context["eleve"]=True
@@ -102,6 +108,7 @@ def ajout_fichier(request,pk):
             new_fichier.save()
             return redirect('/menu/'+str(pk))
     context={"menu":menu_navigation(request)}
+    context["titresite"]=TITRE_SITE
     context['form']=form
     context['idmenu']=pk
     return render(request,'gestionmenu/ajout_fichier.html',context)
@@ -129,6 +136,7 @@ def modifie_fichier(request,pk):
                         new_record.save()  
                 return redirect('/menu/'+str(menu.id))
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         context['nom_fichier']=obj.nomfichier
         formdescription=FichierFormDescription(instance=obj)
         formfichier=FichierFormFichier(instance=obj)
@@ -169,6 +177,7 @@ def supprime_fichier(request,pk):
             obj.delete()
             return redirect('/menu/'+str(menu.id))
     context={"menu":menu_navigation(request)}
+    context["titresite"]=TITRE_SITE
     context['obj']="le fichier "+str(obj.nomfichier)
     return render(request,'gestionmenu/delete.html',context)
 
@@ -201,6 +210,7 @@ def ajout_menu(request,pk):
                 context={"menu":menu_navigation(request)}
                 return gestion_menu(request,0,context)
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         context['form']=form
         context['idmenu']=menu.nom
         return render(request,'gestionmenu/ajout_menu.html',context)
@@ -220,6 +230,7 @@ def modifie_menu(request,pk):
                 context={"menu":menu_navigation(request)}
                 return gestion_menu(request,0,context)               
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         context['idmenu']=parent.nom
         form=MenuFormSimple(instance=menu)
         context['form']=form
@@ -242,6 +253,7 @@ def modifie_ordre_menu(request,pk,up="True"):
         if i<len(listemenus)-1 and up=="False": 
             echange(listemenus,listemenus[i].ordre,listemenus[i+1].ordre) 
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         return gestion_menu(request,0,context)
     except:
         return redirect('/home')
@@ -261,6 +273,7 @@ def supprime_menu(request,pk):
                 context["msg"]="impossible de supprimer ce menu"
             return gestion_menu(request,0,context)
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         context['obj']="le sous-menu '"+str(menu.nom)+"' de "+str(parent.nom)
         return render(request,'gestionmenu/delete.html',context)
     except:
@@ -269,6 +282,7 @@ def supprime_menu(request,pk):
 def modifie_fichier_unique(request,pk):
     try:
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         menu=Menu.objects.get(id=pk)
         if not (est_gestionnaire_menu(request.user,menu) and menu.fonction=="fichier_unique"):
             return redirect('/home')
@@ -315,6 +329,7 @@ def auth_prog_colle_math(request):
 def ajout_prog_colle_math(request):
     if auth_prog_colle_math(request):
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         form=ProgColleMathForm()
         context['form']=form
         if request.method=="POST":
@@ -329,6 +344,7 @@ def ajout_prog_colle_math(request):
 def supprime_prog_colle_math(request,pk):
     if auth_prog_colle_math(request):
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         if request.method=="POST":
             obj=ProgColleMath.objects.get(id=pk)
             obj.delete()
@@ -342,6 +358,7 @@ def modifie_prog_colle_math(request,pk):
     # programme de colle
     if auth_prog_colle_math(request):
         context={"menu":menu_navigation(request)}
+        context["titresite"]=TITRE_SITE
         obj=ProgColleMath.objects.get(id=pk)
         if request.method=="POST":
             if 'description' in request.POST:
