@@ -20,9 +20,10 @@ from config_generale import *
 liste_menu=liste_generic + liste_classe+['fichier_unique']
 
 try:
-    from .hors_git import *
+    from .hors_git.fonctions_hors_git import * 
     liste_menu+=liste_hors_git
 except:
+    print("pas d'hors-git trouvé")
     pass
 
 @auth(None)
@@ -511,35 +512,10 @@ def recuperation_informations_home(request):
         if groupe_eleves in lesgroupes:
             lasemaine=Semaines.objects.get(numero=request.POST["semaine"])   
             groupe=GroupeColles.objects.get(eleves=request.user)
-            colles=Colloscope.objects.filter(semaine=lasemaine,groupe=groupe)
-            msg=[]
-            info="pas d'informatique cette semaine"
-            for x in colles:
-                complement_jour=""
-                if x.creneau.matière=="physique": td="physique"
-                if x.creneau.matière=="anglais" or x.creneau.matière=="allemand": td="lv1"
-                if x.creneau.matière=="math":
-                    if x.creneau.jour=="lundi":
-                        complement_jour=" (le "+date_fr(lasemaine.date+datetime.timedelta(days=7))+" donc)"
-                    if lasemaine.numero%2==1:
-                        if x.creneau.numero in [3,4,8,13,16]: info="TP d'informatique mardi à 14h"
-                        if x.creneau.numero in [1,2,6,9,10,11]: info="TP d'informatique mardi à 16h"
-                    if lasemaine.numero%2==0:
-                        if x.creneau.numero in [6,8,13,15,16]: info="TP d'informatique mardi à 14h"
-                msg.append("colle de "+x.creneau.matière+" avec "+x.creneau.colleur.username+" "+x.creneau.jour+complement_jour+" à "+x.creneau.horaire+" en "+x.creneau.salle)
-            if td=="physique":
-                msg.append("TD de math lundi à 16h, pas de TD de SI")
-            else: 
-                msg.append("TD de math lundi à 14h, TD de SI cette semaine")
-            msg.append(info)
             try:
-                semaineprécédente=Semaines.objects.get(numero=lasemaine.numero-1)
-                colles=Colloscope.objects.filter(semaine=semaineprécédente,groupe=groupe)
-                for colle in colles:
-                    if colle.creneau.jour=="lundi"and colle.creneau.matière=="math":
-                        msg.append("rappel: colle de math lundi "+date_fr(lasemaine.date)+" avec "+colle.creneau.colleur.username+" à "+colle.creneau.horaire+" en "+colle.creneau.salle)
+                msg=info_page_accueil(request.user,groupe,lasemaine)
             except:
-                pass
+                msg=[]
             response_data["informations"]=msg
     except:
         print("erreur")

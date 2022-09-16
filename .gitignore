@@ -6,3 +6,4 @@ base/config_mail_perso.py
 gestionmenu/donnees_perso.py
 gestionmenu/hors_git.py
 config_generale_perso.py
+gestionmenu/hors_git/*
