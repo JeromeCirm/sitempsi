@@ -99,11 +99,12 @@ select {
             let label=document.createElement('label')
             label.innerHTML="groupe "+item.toString()+" : "
             notessemainediv.appendChild(label)
+            notessemainediv.appendChild(document.createElement('BR'))
             for (x in notessemaine[item]) {
                 record=notessemaine[item][x]
                 let label=document.createElement('input')
                 label.setAttribute('size',20)
-                label.value=record.eleve+" : "
+                label.value=record.eleve
                 notessemainediv.appendChild(label)
                 let select=document.createElement('select')
                 let option=document.createElement('option')
@@ -132,7 +133,7 @@ select {
             if (!elevessemaines.includes(eleve)) {
                 let label=document.createElement('input')
                 label.setAttribute('size',20)
-                label.value=eleve+" : "
+                label.value=eleve
                 autresnotesdiv.appendChild(label)
                 let select=document.createElement('select')
                 let option=document.createElement('option')
