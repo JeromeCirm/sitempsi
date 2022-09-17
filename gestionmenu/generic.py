@@ -24,6 +24,11 @@ try:
 except:
     print('attention il faut créer les groupes utilisateurs indiqués dans generic.py !')
 
+def joli_nom(user):  # renvoie le login ou   prénom+nom si cela a été renseigné
+    if JOLI_NOM and user.first_name!="" and user.last_name!="":
+        return user.first_name+" "+user.last_name
+    return user.username
+
 def date_fr(date,annee=False):
     # transforme la date en francais, avec ou sans l'année
     if annee: 
@@ -113,8 +118,9 @@ def parametres_compte(request,numero,context):
                     login(request,user)
         if (not (request.user.is_superuser) ) and request.method=="POST" and "mail" in request.POST:
             request.user.email=request.POST["mail"]
-            request.user.first_name=request.POST["prenomusage"]
-            request.user.last_name=request.POST["nomusage"]
+            if not(JOLI_NOM):
+                request.user.first_name=request.POST["prenomusage"]
+                request.user.last_name=request.POST["nomusage"]
             request.user.save()
             context["msg"]="paramètres mis à jour"
         context["mail"]=request.user.email

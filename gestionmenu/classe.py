@@ -194,8 +194,9 @@ def fiche_renseignements(request,id_menu,context):
             if form.is_valid():
                 form.save()
                 request.user.email=request.POST["mail"]
-                request.user.first_name=request.POST["prenomusage"]
-                request.user.last_name=request.POST["nomusage"]
+                if not (JOLI_NOM):
+                    request.user.first_name=request.POST["prenomusage"]
+                    request.user.last_name=request.POST["nomusage"]
                 request.user.save()
                 context["msg"]="modifications enregistrées ! "
                 context['form']=form

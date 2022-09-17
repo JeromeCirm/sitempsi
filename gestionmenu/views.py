@@ -437,15 +437,15 @@ def recuperation_notes_colles(request):
                 if request.user.username in prof_avec_colles:
                     groupe=Group.objects.get(name=prof_avec_colles[request.user.username])
                     tousleseleves=User.objects.filter(groups=groupe_eleves).order_by('username')
-                    lesnotes={ item.username : '' for item in tousleseleves}
+                    lesnotes={ joli_nom(item) : '' for item in tousleseleves}
                     notes=NotesColles.objects.filter(semaine=semaine,colleur__groups=groupe)
                     doublons={}
                     for x in notes:
-                        if lesnotes[x.eleve.username]=='':
-                            lesnotes[x.eleve.username]={"colleur":x.colleur.username,"note":x.note}
+                        if lesnotes[joli_nom(x.eleve)]=='':
+                            lesnotes[joli_nom(x.eleve)]={"colleur":joli_nom(x.colleur),"note":x.note}
                         else:
-                            if x.eleve.username not in doublons: doublons[x.eleve.username]=[]
-                            doublons[x.eleve.username].append({"colleur":x.colleur.username,"note":x.note})
+                            if joli_nom(x.eleve) not in doublons: doublons[joli_nom(x.eleve)]=[]
+                            doublons[joli_nom(x.eleve)].append({"colleur":joli_nom(x.colleur),"note":x.note})
                     response_data["lesnotes"]=lesnotes
                     response_data["doublons"]=doublons
             elif request.POST["colleur"]=="" and est_colleur(request.user):
@@ -460,16 +460,16 @@ def recuperation_notes_colles(request):
                     for eleve in item.groupe.eleves.all().order_by("username"):
                         try:
                             lanote=notes.get(eleve=User.objects.get(username=eleve.username))
-                            notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":lanote.note})
+                            notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":lanote.note})
                         except:
-                            notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":''})
+                            notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":''})
                 for eleve in User.objects.filter(groups=groupe_eleves).order_by("username"):
-                    if eleve.username not in notessemaine:
+                    # ici on remet tout le monde et javascript gère ça facilement
                         try:
                             lanote=notes.get(eleve=eleve)
-                            autresnotes[eleve.username]=lanote.note
+                            autresnotes[joli_nom(eleve)]=lanote.note
                         except:
-                            autresnotes[eleve.username]=''
+                            autresnotes[joli_nom(eleve)]=''
                 response_data["notessemaine"]=notessemaine
                 response_data["autresnotes"]=autresnotes
             else:
@@ -489,16 +489,16 @@ def recuperation_notes_colles(request):
                         for eleve in item.groupe.eleves.all().order_by("username"):
                             try:
                                 lanote=notes.get(eleve=User.objects.get(username=eleve.username))
-                                notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":lanote.note})
+                                notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":lanote.note})
                             except:
-                                notessemaine[item.groupe.numero].append({"eleve":eleve.username,"note":''})
+                                notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":''})
                     for eleve in User.objects.filter(groups=groupe_eleves).order_by("username"):
-                        if eleve.username not in notessemaine:
+                    # ici on remet tout le monde et javascript gère ça facilement
                             try:
                                 lanote=notes.get(eleve=eleve)
-                                autresnotes[eleve.username]=lanote.note
+                                autresnotes[joli_nom(eleve)]=lanote.note
                             except:
-                                autresnotes[eleve.username]=''
+                                autresnotes[joli_nom(eleve)]=''
                     response_data["notessemaine"]=notessemaine
                     response_data["autresnotes"]=autresnotes
     except:

@@ -3,6 +3,8 @@
 #  groupe de colles  1-16 pour s1  et 17-32 pour s2 (15,16 supprimés si besoin, s2 commence toujours à 17)
 from .donnees_perso import *
 
+JOLI_NOM=MY_JOLI_NOM # on utilise login ou prénom/nom?
+
 liste_eleves=perso_liste_eleves # login des élèves
 prof_avec_colles =perso_prof_avec_colles # dictionnaire {"prof" : "nom_groupe_colleur"}
 # pour les matières avec colle
