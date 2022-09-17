@@ -30,14 +30,14 @@ except:
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
     context["titresite"]=TITRE_SITE
-    try:
+    if True: #try:
         lemenu=Menu.objects.get(pk=numero)
         if autorise_menu(request.user,lemenu):
             nom_fonction=str(lemenu.fonction)
             if nom_fonction in liste_menu:
                 return globals()[str(nom_fonction)](request,numero,context)
         return redirect('/home')
-    except:
+    #except:
         print('erreur dans la fonction : enlever try except de la fonction menu de views.py')
         return redirect('/home')
 
@@ -521,7 +521,6 @@ def recuperation_informations_home(request):
         print("erreur")
     return HttpResponse(json.dumps(response_data), content_type="application/json")    
 
-
 def download(request,letype,pk):
     def extension(nomfichier):
         l=nomfichier.split(".")
@@ -556,5 +555,14 @@ def download(request,letype,pk):
             return response
         except: #fichier absent avec icone téléchargement?
             return redirect('/home')
+    return redirect('/home')
+
+def download_pronote(request):
+    print(request.user.username)
+    if request.user.username in prof_avec_colles:
+            document = open('private_files/'+request.user.username+'.txt','rb')
+            response = HttpResponse(FileWrapper(document),content_type='application/octet-stream')
+            response['Content-Disposition'] = 'attachment; filename="'+request.user.username+'.txt"'
+            return response
     return redirect('/home')
 

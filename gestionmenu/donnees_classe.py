@@ -11,7 +11,7 @@ liste_colleurs_math=perso_liste_colleurs_math # login des colleurs de math
 liste_colleurs_physique=perso_liste_colleurs_physique # login des colleurs de physique
 liste_colleurs_anglais=perso_liste_colleurs_anglais # login des colleurs d'anglais
 liste_colleurs_philo=perso_liste_colleurs_philo # login des colleurs de philo
-dic_pronote=perso_dic_pronote  # dictionnaire  "login : ['nom','prenom']" pour créer les fichiers PRONOTE
+dic_pronote=perso_dic_pronote  # dictionnaire  {login : "nom;prénom"} pour créer les fichiers PRONOTE
 
 # mot de passe à la création du compte
 mdp_eleves =perso_mdp_eleves     

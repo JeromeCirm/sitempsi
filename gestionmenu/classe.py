@@ -8,6 +8,11 @@ from .special_jerome import *
 from .forms import FichierFormFichier,RenseignementsForm
 from django.db.models import Max
 import datetime
+try:
+    from .hors_git.fonctions_hors_git import * 
+except:
+    print("pas d'hors-git trouvé")
+    pass
 
 liste_classe=['gestion_jerome','trombinoscope','emploi_du_temps','contacts','colloscope_s1',
 'programme_colle_math','rentrer_notes_colles','lire_notes_colles','lire_notes_colleurs',
@@ -72,6 +77,10 @@ def colloscope_s1(request,id_menu,context):
     context["colleurmath"]=CreneauxColleurs.objects.filter(matière="math").order_by('numero')
     context["colleurphysique"]=CreneauxColleurs.objects.filter(matière="physique").order_by('numero')
     context["colleuranglais"]=CreneauxColleurs.objects.filter(matière="anglais").order_by('numero')
+    try:
+        context["colloscope_informations"]=colloscope_informations()
+    except:
+        context["colloscope_informations"]=[]
     return render(request,'gestionmenu/colloscope.html',context)
 
 def programme_colle_math(request,id_menu,context):
@@ -226,6 +235,60 @@ def informations_semaine(request):
     return msg 
 
 def creation_fichier_pronote(request,id_menu,context):
-    context["msg"]="creation_fichier_pronote"
-    return render(request,'gestionmenu/home.html',context)
+    if request.user.username in prof_avec_colles:
+        liste_colleurs=User.objects.filter(groups=Group.objects.get(name=prof_avec_colles[request.user.username]))
+    else:
+        return redirect('/home/')
+    semaines=Semaines.objects.all().order_by("numero")
+    if request.method=="POST":
+        semainedep=int(request.POST["semainedep"])
+        try:
+            semainedep=Semaines.objects.get(numero=semainedep)
+        except:
+            semainedep=semaines.first()
+        semainefin=int(request.POST["semainefin"])
+        try:
+            semainefin=Semaines.objects.get(numero=semainefin)
+        except:
+            semainefin=semaines.last()
+        if request.POST["quinzaine"]=="oui":
+            quinzaine=True
+        else : 
+            quinzaine=False
+        leseleves=User.objects.filter(groups=groupe_eleves).order_by("username")
+        if quinzaine : 
+            ecart=2
+        else : 
+            ecart=1
+        txt="Nom;prenom"
+        for _ in range(semainedep.numero,semainefin.numero+1,ecart):
+            txt+=";20"
+        txt+="\n"
+        enplus=[]
+        for user in leseleves:
+            txt+=dic_pronote[user.username]
+            for lasemaine in range(semainedep.numero,semainefin.numero+1,ecart):
+                txt+=";"
+                lesnotes=NotesColles.objects.filter(colleur__in=liste_colleurs,semaine__numero__gte=lasemaine,
+                semaine__numero__lte=min(semainefin.numero,lasemaine+ecart-1),eleve=user)
+                if len(lesnotes)>0:
+                    txt+=str(lesnotes[0].note)
+                if len(lesnotes)>1:
+                    enplus+=lesnotes[1:]
+            txt+="\n"
+        txt.encode('latin1')
+        sortie=open('private_files/'+request.user.username+'.txt',"w",encoding="latin1")
+        sortie.write(txt)
+        sortie.close()
+        context["enplus"]=enplus
+        context["fichier"]=request.user.username+'.txt'
+    else :
+        semainedep=semaines.first()
+        semainefin=semaines.last()
+        quinzaine=False
+    context["semaines"]=semaines
+    context["semainedep"]=semainedep
+    context["semainefin"]=semainefin
+    context["quinzaine"]=quinzaine
+    return render(request,'gestionmenu/creation_pronote.html',context)
     
