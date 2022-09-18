@@ -4,6 +4,7 @@
 from .donnees_perso import *
 
 JOLI_NOM=MY_JOLI_NOM # on utilise login ou prénom/nom?
+# quand c'est fixé à vrai, cela interdit la modif de prenom/nom d'usage et la fiche renseignement élève
 
 liste_eleves=perso_liste_eleves # login des élèves
 prof_avec_colles =perso_prof_avec_colles # dictionnaire {"prof" : "nom_groupe_colleur"}

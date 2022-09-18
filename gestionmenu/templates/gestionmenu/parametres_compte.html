@@ -37,7 +37,7 @@
   <div >
       <label for="mail"> mail : </label>
       <input name="mail" type="email" value="{{ mail }}"/>
-  </div>
+  </div> {% if not jolinom %}
   <div >
     <label for="prenomusage"> prénom d'usage : </label>
     <input name="prenomusage"  value="{{ prenomusage }}"/>
@@ -45,7 +45,7 @@
 <div >
   <label for="nomusage"> nom d'usage : </label>
   <input name="nomusage" value="{{ nomusage }}"/>
-</div>
+</div> {% endif %}
     <BR>
     <input type="submit" value="Mettre à jour les paramètres">
 </form>

@@ -126,6 +126,7 @@ def parametres_compte(request,numero,context):
         context["mail"]=request.user.email
         context["prenomusage"]=request.user.first_name
         context["nomusage"]=request.user.last_name
+        context["jolinom"]=JOLI_NOM
         return render(request,'gestionmenu/parametres_compte.html',context)
     except:
         return redirect('/home')

@@ -92,7 +92,8 @@ def programme_colle_math(request,id_menu,context):
     return render(request,'gestionmenu/prog_colles_math.html',context)
 
 def lire_notes_colles(request,id_menu,context):
-    context["contenu"]=NotesColles.objects.filter(eleve=request.user).order_by("-semaine")
+    lesnotes=NotesColles.objects.filter(eleve=request.user).order_by("-semaine")
+    context["contenu"]=[{"semaine":item.semaine,"note":item.note,"colleur":joli_nom(item.colleur)} for item in lesnotes]
     return render(request,'gestionmenu/lire_notes_colles.html',context)
 
 def lire_notes_colleurs(request,id_menu,context):
@@ -188,8 +189,8 @@ def lire_fiches_eleves(request,id_menu,context):
 def fiche_renseignements(request,id_menu,context):
     try:
         obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
-        context["msg"]="Ne pas oublier de valider les modifications si besoin : "
-        if request.method=="POST":
+        if not (JOLI_NOM): context["msg"]="Ne pas oublier de valider les modifications si besoin : "
+        if request.method=="POST" and not (JOLI_NOM):
             form=RenseignementsForm(request.POST,instance=obj)
             if form.is_valid():
                 form.save()
@@ -201,13 +202,18 @@ def fiche_renseignements(request,id_menu,context):
                 context["msg"]="modifications enregistrées ! "
                 context['form']=form
                 context["mail"]=request.user.email
+                context["prenomusage"]=request.user.first_name
+                context["nomusage"]=request.user.last_name                
                 return render(request,'gestionmenu/fiche_renseignements.html',context)
             context["msg"]="erreur dans le formulaire"
         form=RenseignementsForm(instance=obj)
         context['form']=form
         context["mail"]=request.user.email
+        context["prenomusage"]=request.user.first_name
+        context["nomusage"]=request.user.last_name
     except:
         return redirect('/home')
+    context["jolinom"]=JOLI_NOM
     return render(request,'gestionmenu/fiche_renseignements.html',context)
 
 def semaine_en_cours():

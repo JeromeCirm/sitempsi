@@ -4,11 +4,19 @@
 <h1> Fiche de renseignement : </h1>
 <hr>
 
-<form method="POST" action="">
-    {{ msg }}
-    <input type="submit" value="Validation des modifications"/>
+<form method="POST" action=""> <BR>
+    {{ msg }}{% if not jolinom %} 
+    <input type="submit" value="Validation des modifications"/> {% endif %}
     {% csrf_token %}<BR><BR>
-    <label for="mail"> Adresse mail : </label>
+        <p >
+          <label for="prenomusage"> Prénom d'usage : </label>
+          <input name="prenomusage"  value="{{ prenomusage }}"/>
+        </p>
+      <p >
+        <label for="nomusage"> Nom d'usage : </label>
+        <input name="nomusage" value="{{ nomusage }}"/>
+      </p>   
+      <label for="mail"> Adresse mail : </label>
     <input type="email" id="mail" name="mail" value="{{ mail }}" required>
     {{form.as_p}}
 </form>

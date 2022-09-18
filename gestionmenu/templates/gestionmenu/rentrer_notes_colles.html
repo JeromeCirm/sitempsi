@@ -120,16 +120,17 @@ select {
                     }
                     select.appendChild(option)
                 }
-                select.setAttribute('id','select_'+record.eleve)
-                select.setAttribute('onchange','maj_note("'+record.eleve+'")')
+                select.setAttribute('id','select_'+record.user)
+                select.setAttribute('onchange','maj_note("'+record.user +'")')
                 notessemainediv.appendChild(select)
                 elevessemaines.push(record.eleve)
             }
             notessemainediv.appendChild(document.createElement('BR'))
         }
         autresnotesdiv.innerHTML=""
-        for (eleve in autresnotes) {
-            lanote=autresnotes[eleve]
+        for (user in autresnotes) {
+            eleve=autresnotes[user].eleve
+            lanote=autresnotes[user].note
             if (!elevessemaines.includes(eleve)) {
                 let label=document.createElement('input')
                 label.setAttribute('size',20)
@@ -149,8 +150,8 @@ select {
                     }
                     select.appendChild(option)
                 }
-                select.setAttribute('id','select_'+eleve)
-                select.setAttribute('onchange','maj_note("'+eleve+'")')
+                select.setAttribute('id','select_'+user)
+                select.setAttribute('onchange','maj_note("'+user+'")')
                 autresnotesdiv.appendChild(select)
             }
         }

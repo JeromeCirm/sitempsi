@@ -460,16 +460,16 @@ def recuperation_notes_colles(request):
                     for eleve in item.groupe.eleves.all().order_by("username"):
                         try:
                             lanote=notes.get(eleve=User.objects.get(username=eleve.username))
-                            notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":lanote.note})
+                            notessemaine[item.groupe.numero].append({"user":eleve.username,"eleve":joli_nom(eleve),"note":lanote.note})
                         except:
-                            notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":''})
+                            notessemaine[item.groupe.numero].append({"user":eleve.username,"eleve":joli_nom(eleve),"note":''})
                 for eleve in User.objects.filter(groups=groupe_eleves).order_by("username"):
                     # ici on remet tout le monde et javascript gère ça facilement
                         try:
                             lanote=notes.get(eleve=eleve)
-                            autresnotes[joli_nom(eleve)]=lanote.note
+                            autresnotes[eleve.username]={"eleve":joli_nom(eleve),"note":lanote.note}
                         except:
-                            autresnotes[joli_nom(eleve)]=''
+                            autresnotes[eleve.username]={"eleve":joli_nom(eleve),"note":''}
                 response_data["notessemaine"]=notessemaine
                 response_data["autresnotes"]=autresnotes
             else:
@@ -489,16 +489,16 @@ def recuperation_notes_colles(request):
                         for eleve in item.groupe.eleves.all().order_by("username"):
                             try:
                                 lanote=notes.get(eleve=User.objects.get(username=eleve.username))
-                                notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":lanote.note})
+                                notessemaine[item.groupe.numero].append({"user":eleve.username,"eleve":joli_nom(eleve),"note":lanote.note})
                             except:
-                                notessemaine[item.groupe.numero].append({"eleve":joli_nom(eleve),"note":''})
+                                notessemaine[item.groupe.numero].append({"user":eleve.username,"eleve":joli_nom(eleve),"note":''})
                     for eleve in User.objects.filter(groups=groupe_eleves).order_by("username"):
                     # ici on remet tout le monde et javascript gère ça facilement
                             try:
                                 lanote=notes.get(eleve=eleve)
-                                autresnotes[joli_nom(eleve)]=lanote.note
+                                autresnotes[eleve.username]={"eleve":joli_nom(eleve),"note":lanote.note}
                             except:
-                                autresnotes[joli_nom(eleve)]=''
+                                autresnotes[eleve.username]={"eleve":joli_nom(eleve),"note":''}
                     response_data["notessemaine"]=notessemaine
                     response_data["autresnotes"]=autresnotes
     except:
