@@ -126,12 +126,11 @@ def creation_colloscope(context):
             valeurautre=valeurmath
             # on évite la colle lundi 17h pour le groupe 1
             if groupe==1 and valeurmath==11: valeurmath=5
-            if groupe==9 and valeurmath==5: valeurmath=11
+            if groupe==11 and valeurmath==5: valeurmath=11
             # on évite la colle lundi 18h pour les groupes 2- qui ont LV2
-            listlv2=[2,3,4,5,6,7]
+            listlv2=[2,3,4,5,7,8]
             if groupe in listlv2 and valeurmath==9: valeurmath=1
             if groupe-8 in listlv2 and valeurmath==1: valeurmath=9
-            print("groupe : ",groupe,valeurmath,valeurautre)
             collemath=CreneauxColleurs.objects.get(numero=valeurmath,matière="math")
             item=Colloscope(creneau=collemath,groupe=legroupe,semaine=lasemaine)
             item.save()
