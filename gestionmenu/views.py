@@ -527,13 +527,19 @@ def download(request,letype,pk):
         if len(l)==1:
             return ""
         return "."+l[-1]
+    def aux(nomfichier):  # pour enlever les caractères bizarres !
+        res=""
+        for x in nomfichier:
+            if ord(x)<256:
+                res+=x
+        return res
     if letype=="file":
         try : 
             obj=Fichier.objects.get(id=pk)
             if autorise_menu(request.user,obj.menu):
                 document = open('private_files/fichiers/'+str(pk)+extension(obj.nomfichier),'rb')
                 response = HttpResponse(FileWrapper(document),content_type='application/octet-stream')
-                response['Content-Disposition'] = 'attachment; filename="'+obj.nomfichier+'"'
+                response['Content-Disposition'] = 'attachment; filename="'+aux(obj.nomfichier)+'"'
                 return response
         except: #fichier absent avec icone téléchargement?
             return redirect('/home')
