@@ -29,6 +29,7 @@ class Fichier(models.Model):
     nomfichier=models.CharField(max_length=100,null=True,blank=True)
     ordre=models.IntegerField(null=True,blank=True)
     menu=models.ForeignKey(Menu,on_delete=models.CASCADE,blank=True,null=True)
+    date_parution=models.DateField(blank=True,null=True)
 
     def __str__(self):
         return str(self.nomfichier)+" : "+str(self.description)

@@ -7,7 +7,9 @@
 <form method="POST" enctype="multipart/form-data" action="">
     {% csrf_token %}
     {{formdescription.as_p}}
-    <input type="submit" value="Soumettre le changement de description"/>
+    <label for="id_date_parution">Date parution:</label>
+    <input type="date" name="date_parution" id="id_date_parution" value="{{ date_parution }}">
+    <input type="submit" value="Soumettre le changement de description et/ou date de parution"/>
 </form>
 
 <form method="POST" enctype="multipart/form-data" action="">

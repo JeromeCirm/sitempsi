@@ -34,6 +34,7 @@
                         </svg>
                       </a>
                       {% endif %}
+                      {% if gestionnaire and item.date_parution %} <span style="color:red">parution le {{ item.date_parution }}</span>{% endif %}
                       {{ item.description }}
                 </div>
                 {% if gestionnaire %}

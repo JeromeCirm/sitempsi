@@ -83,9 +83,13 @@ def liste_fichiers(request,numero,context):
         item.nom=parent.nom+' : '+item.nom
     context['lemenu']=item
     # on récupère la liste des fichiers de la page
-    context['fichier']=Fichier.objects.filter(menu=numero)
+    gestionnaire=est_gestionnaire_menu(request.user,item)
+    if gestionnaire:
+        context['fichier']=Fichier.objects.filter(menu=numero)
+    else:
+        context['fichier']=Fichier.objects.filter(menu=numero).exclude(date_parution__gt=datetime.datetime.now())
     # on détermine si l'utilisateur est un gestionnaire de cette page
-    context['gestionnaire']=est_gestionnaire_menu(request.user,item)
+    context['gestionnaire']=gestionnaire
     return render(request,'gestionmenu/listefichiers.html',context)
 
 def creation_compte(login,password,liste_groupe=[]):

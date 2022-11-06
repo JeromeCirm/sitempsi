@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from sqlalchemy import null
 from base.fonctions import auth
 from .models import Menu
 from .forms import *
@@ -106,7 +107,12 @@ def ajout_fichier(request,pk):
                 new_fichier.ordre=1
             if 'fichier' in request.FILES:
                 new_fichier.nomfichier=request.FILES['fichier']
-            new_fichier.save()
+            new_fichier.date_parution=request.POST["date_parution"]
+            try:
+                new_fichier.save()
+            except:
+                new_fichier.date_parution=datetime.datetime.now()
+                new_fichier.save()
             return redirect('/menu/'+str(pk))
     context={"menu":menu_navigation(request)}
     context["titresite"]=TITRE_SITE
@@ -125,6 +131,12 @@ def modifie_fichier(request,pk):
                     form=FichierForm(request.POST,instance=obj)
                     if form.is_valid():
                         form.save()
+                        obj.date_parution=request.POST["date_parution"]
+                        try:
+                            obj.save()
+                        except:
+                            obj.date_parution=datetime.datetime.now()
+                            obj.save()
                 if 'fichier-clear' in request.POST:
                     obj.fichier.delete()
                 elif 'fichier' in request.FILES:
@@ -143,6 +155,7 @@ def modifie_fichier(request,pk):
         formfichier=FichierFormFichier(instance=obj)
         context['formdescription']=formdescription
         context['formfichier']=formfichier
+        context["date_parution"]=str(obj.date_parution)
         return render(request,'gestionmenu/modifie_fichier.html',context)
     except:
         return redirect('/home')
