@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',    
     'gestionmenu.apps.GestionmenuConfig', 
+    'etudedossier2022.apps.Etudedossier2022Config', 
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,9 @@ ROOT_URLCONF = 'sitempsi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/'base/templates/base',BASE_DIR/'gestionmenu/templates/gestionmenu'],
+        'DIRS': [BASE_DIR/'base/templates/base',BASE_DIR/'gestionmenu/templates/gestionmenu',
+                 BASE_DIR/'etudedossier2022/templates/etudedossier2022'
+               ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

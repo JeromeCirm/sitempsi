@@ -15,10 +15,12 @@ locale.setlocale(locale.LC_ALL,'fr_FR')
 import sys
 sys.path.append("..")
 from config_generale import *
+from etudedossier2022.views import selection
+
 # liste des fonctions correspondant à un menu perso
 # à cela, on ajouter la fonction "liste_fichier" 
 # qui correspond à un menu générique créé par un gestionnaire de menu
-liste_menu=liste_generic + liste_classe+['fichier_unique']
+liste_menu=liste_generic + liste_classe+['fichier_unique','parcoursup2022']
 
 try:
     from .hors_git.fonctions_hors_git import * 
@@ -27,18 +29,21 @@ except:
     print("pas d'hors-git trouvé")
     pass
 
+def parcoursup2022(request,numero,context):
+    return selection(request)
+
 @auth(None)
 def menu(request,numero):
     context={"menu":menu_navigation(request)}
     context["titresite"]=TITRE_SITE
-    if True: #try:
+    try:
         lemenu=Menu.objects.get(pk=numero)
         if autorise_menu(request.user,lemenu):
             nom_fonction=str(lemenu.fonction)
             if nom_fonction in liste_menu:
                 return globals()[str(nom_fonction)](request,numero,context)
         return redirect('/home')
-    #except:
+    except:
         print('erreur dans la fonction : enlever try except de la fonction menu de views.py')
         return redirect('/home')
 

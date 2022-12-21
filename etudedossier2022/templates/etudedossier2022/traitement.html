@@ -1,0 +1,319 @@
+{% extends 'basedossier.html' %}
+
+
+{% block body %} 
+
+<SCRIPT>
+var liste_des_notes=[{% for x in lesnotes %}{{ x }},{% endfor %}]  
+var ligneactuelle={{ ligne }}  
+var categorie="{{ dossier.categorieDossier }}"
+</SCRIPT>
+ 
+<DIV class="gestion">
+    <a href="{% url 'selection_etudedossier2022' %}">Retour à l'index </a>
+    <button type="button" onclick="change_numero({{ ligne|add:"-1" }})">dossier précédent</button>
+    <button type="button" onclick="change_numero({{ ligne|add:"1" }})">dossier suivant</button>
+    <FORM method="post" action="" id="Formulaire" autocomplete="off">
+        {% csrf_token %}
+        Numéro de dossier : <INPUT id="NumeroLigne" size=5 name="NumeroLigne" onchange="change_numero()" value="{{ ligne }}"> / {{ maxligne }}
+    <input type="hidden" id="CategorieDossier" name="CategorieDossier" value="{{ dossier.categorieDossier }}">
+    <input type="hidden" id="NoteAChanger" name="NoteAChanger" value="false">
+    <input type="hidden" id="AncienNumeroDossier" name="NumeroDossier" value="{{ dossier.numeroDossier }}">
+{% if pasexpert %} <input type="checkbox" name="pasexpert" checked hidden> {% endif %}
+{% if boursier %} <input type="checkbox" name="boursier" checked hidden> {% endif %}
+{% for x in orderby %} <input type="hidden" name="ordre[]" value="{{ x }}"> {% endfor %}
+{% for x in nomcolonne %} <input type="hidden" name="nomcolonne[]" value="{{ x }}"> {% endfor %}
+{% for x in valeurcolonne %} <input type="hidden" name="valeur[]" value="{{ x }}"> {% endfor %}
+    </FORM>
+    <input type="range" min="1" max="{{ maxligne }}" value="{{ ligne }}" step="1" onchange="change_select_numero(this)">
+    boursiers : {{ tauxBoursier }} % avant 1500
+</DIV>
+
+
+<DIV class="containeur">
+    <DIV>
+        <TABLE id="TableLycée1">
+        <TR><TD>Niveau de la classe : </TD><TD>{{ dossier.niveauClasse }}</TD></TR>
+        <TR><TD>Avis du proviseur : </TD><TD>{{ dossier.avisProviseur }}</TD></TR>
+        <TABLE id="TableLycée1b">
+            <TR><TH> Année </TH><TH> Effectif </TH><TH> Réussite </TH><TH> Mention </TH></TR>
+            <TR><TD> 2018 : </TD><TD> {{ statslycee.Presents2018 }} </TD><TD> {{ statslycee.Reussite2018 }} </TD><TD> {{ statslycee.Mentions2018 }} </TD></TR>
+            <TR><TD> 2019 : </TD><TD> {{ statslycee.Presents2019 }} </TD><TD> {{ statslycee.Reussite2019 }} </TD><TD> {{ statslycee.Mentions2019 }} </TD></TR>
+            <TR><TD> 2020 : </TD><TD> {{ statslycee.Presents2020 }} </TD><TD> {{ statslycee.Reussite2020 }} </TD><TD> {{ statslycee.Mentions2020 }} </TD></TR>
+            <TR><TD> 2021 : </TD><TD> {{ statslycee.Presents2021 }} </TD><TD> {{ statslycee.Reussite2021 }} </TD><TD> {{ statslycee.Mentions2021 }} </TD></TR>
+            </TABLE>
+           </TABLE>
+        <TABLE id="TableLycée2" style="display : none">
+        <TR><TD>modif à appliquer en math : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff math']]);?>;"><?php echo $res_lycée[$col_lycées['diff math']];?></TD></TR>
+        <TR><TD>modif à appliquer en physique : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff phys']]);?>;"><?php echo $res_lycée[$col_lycées['diff phys']];?></TD></TR>
+        <TR><TD>Avis détaillé : </TD><TD>{{ dossier.avisProviseurDetail }}</TD></TR>
+        <TR><TD>Méthode de travail : </TD><TD>{{ dossier.methodeTravail }}</TD></TR>
+        <TR><TD>Autonomie : </TD><TD>{{ dossier.autonomie }}</TD></TR>
+        <TR><TD>Capacité à s'investir : </TD><TD>{{ dossier.capaciteInvestir }}</TD></TR>
+        <TR><TD>Autres éléments : </TD><TD>{{ dossier.autresElements }}</TD></TR>
+        </TABLE>
+    </DIV>
+    <DIV > <span class="green"> {% if dossier.motclebon != None %}{{ dossier.motclebon }} {% endif %} </span> 
+           <span class="red"> {% if dossier.motclemauvais != None %}{{ dossier.motclemauvais }} {% endif %} </span>
+           {% if sauvegarde != "" %} <BR> <BR> <span style="color : blue;">rang fin phase 1 : {{ dossier.rangfinphase }} pour l'étude :{{ dossier.sauvegarde }} <BR>
+                rang final estimé: {{ rangfinalestime }}</span><BR><span>
+                {%for x,value in offset.items %}  {{ value }} - {{ x }} - {% endfor %}</span><BR>
+                <span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}</DIV>
+    <DIV>
+        <TABLE id="InfoGenerale">
+        <TR><TD>Nom : </TD><TD>{{ dossier.nom }}</TD></TR>
+        <TR><TD>Prénom : </TD><TD>{{ dossier.prenom }}</TD></TR>
+        <TR><TD>Date de naissance : </TD><TD>{{ dossier.dateNaissance }}</TD></TR>
+        <TR><TD>Boursier : </TD><TD {% if dossier.boursier != "Non boursier" %} style="color : red;"{% endif %}>{{ dossier.boursier }}</TD></TR>
+        <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
+        <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
+        <TR><TD>Dossiers de ce lycée : </TD><TD>{{ dossierLycée }}</TD></TR>
+        </TABLE>
+        <TABLE id="LettreMotiv" style="display : none">
+        <TR><TD>{{ dossier.lettreMotivation }}</TD></TR>
+        </TABLE>
+    </DIV>
+    <DIV>
+        <TABLE>
+        <TR><TH> Matière </TH><TH>Note</TH><TH>Rang</TH><TH> Matière </TH><TH>Note</TH><TH>Rang</TH></TR>
+        <TR><TD> Math Term: </TD><TD>{{ dossier.noteMathTerm }}/20</TD><TD>{{ dossier.rangMathTerme }}/{{ dossier.effectifMathTerm }}</TD>
+            <TD> LV1: </TD><TD>{{ dossier.noteLV1 }}/20</TD><TD>{{ dossier.rangLV1 }}/{{ dossier.effectifLV1 }}</TD></TR>
+        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD>{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}</TD>
+            <TD> Philo: </TD><TD>{{ dossier.notePhilo }}/20</TD><TD>{{ dossier.rangPhilo }}/{{ dossier.effectifPhilo }}</TD></TR>
+        <TR><TD> Math Expertes: </TD><TD>{{ dossier.noteMathExpertes }}/20</TD><TD>{{ dossier.rangMathExpertes }}/{{ dossier.effectifMathExpertes }}</TD>
+            <TD> Bac fr écrit: </TD><TD>{{ dossier.bacFrEcrit }}/20</TD></TR>
+        <TR><TD> Physique Term: </TD><TD>{{ dossier.notePhysiqueTerm }}/20</TD><TD>{{ dossier.rangPhysiqueTerm }}/{{ dossier.effectifPhysiqueTerm }}</TD>
+            <TD> Bac fr oral: </TD><TD>{{ dossier.bacFrOral }}/20</TD></TR>
+        <TR><TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD>{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}</TD>
+            </TR>
+        </TABLE>
+    </DIV>
+    <DIV class="red">  <BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMatc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
+        {% if dossier.dossierEtudie != "oui" %}  dossier non étudié !<BR> {% endif %}       
+                    <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2022' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2022' nompdf %}">Télécharger le PDF</a>
+    </DIV>
+    <DIV>
+        <TABLE id="TableScolarité1">
+        <TR><TD>Lycée : </TD><TD>{{ dossier.lycee }}</TD></TR>
+        <TR><TD>Ville : </TD><TD>{{ dossier.ville }}</TD></TR>
+        <TR><TD>Département : </TD><TD>{{ dossier.departement }}</TD></TR>
+        <TR><TD>Entrée en seconde : </TD><TD>{{ dossier.entreeSeconde }}</TD></TR>
+        <TR><TD>Type de classe : </TD><TD>{{ dossier.typeClasse }}</TD></TR>
+        <TR><TD>Nom de la classe : </TD><TD>{{ dossier.nomClasse }}</TD></TR>
+        </TABLE>
+        <TABLE id="TableScolarité2" style="display : none">
+        <TR><TD>Sexe : </TD><TD>{{ dossier.sexe }}</TD></TR>
+        <TR><TD>EDS terminale : </TD><TD>{{ dossier.edsTerm1 }}</TD></TR>
+        <TR><TD>EDS terminale : </TD><TD>{{ dossier.edsTerm2 }}</TD></TR>
+        <TR><TD>EDS première : </TD><TD>{{ dossier.eds1ere }}</TD></TR>
+        <TR><TD>ENCF : </TD><TD>{{ dossier.encf }}</TD></TR>
+        </TABLE>
+    </DIV>
+    <DIV>
+        <TABLE>
+        <TR><TD>Note calculée : </TD><TD>{{ dossier.noteautoGlobale }} (science : {{ dossier.noteautoScience }}, lettre : {{ dossier.noteautoLettre }}, moyenne : {{ dossier.noteautoMoyenne }})</TD></TR>
+        <TR><TD>Note actuelle : </TD><TD><SPAN id="NoteActuelle">{{ dossier.noteActuelle }}</SPAN></TD></TR>
+        <TR><TD>Rang actuel : </TD><TD><SPAN id="RangActuel"></SPAN></TD></TR>
+        <TR><TD>Catégorie dossier : </TD><TD style="color:{{ couleurCategorie }};">{{ dossier.categorieDossier }}</TD></TR>
+        <TR><TD>Nouveau Rang désiré :</TD><TD><input id="RangCherche" onkeyup="modif_rang()" value=""></TD></TR>
+        <TR><TD>Nouvelle note : </TD><TD><input form="Formulaire" id="NouvelleNote" name="NouvelleNote" onkeyup="modif_note()" value="{{ dossier.noteActuelle }}"></TD></TR>
+        <TR><TD>Rang associé : </TD><TD><SPAN id="NouveauRang"></SPAN></TD></TR>
+        </TABLE><BR>{% if dossier.encf != 'ECF' %}<SPAN style="color:red;""> dossier ENCF </SPAN>{% endif %}
+        <button type="button" id="ValideNote" onclick="validation_note()">Valider les modifications du dossier</button> <BR>
+            <button type="button" onclick="change_numero({{ ligne|add:"-1" }})">dossier précédent</button>
+            <button type="button" onclick="change_numero({{ ligne|add:"1" }})">dossier suivant</button>
+        
+    </DIV>
+    <DIV class="commentaire">binôme pour le dossier : {{ binome }} Commentaire justifiant l'étude : <BR> <BR> 
+         <textarea name="Commentaire" rows="7" cols="90" form="Formulaire">{{ dossier.commentaireTraitement }}</textarea>
+         <input form="Formulaire" type="checkbox" name="arevoir" {% if dossier.arevoir == "oui" %} checked {% endif %}>A revoir 
+         <input form="Formulaire" type="checkbox"  name="risque" {% if dossier.dossierRisque == "oui" %} checked {% endif %}>A revoir ensemble.<BR><BR>
+         échelle : 
+         <SPAN style="color:{{ couleurs.tresBon }}"> très bon ({{ categorie.tresBon }}</SPAN><SPAN style="color:{{ couleurs.bon }}">) bon ({{ categorie.bon }}</SPAN>
+         <SPAN style="color:{{ couleurs.moyenPlus }}">) moyen plus ({{ categorie.moyenPlus }}</SPAN><SPAN style="color:{{ couleurs.moyenMoins }}">) moyen moins ({{ categorie.moyenMoins }}</SPAN>
+         <SPAN style="color:{{ couleurs.aLaRigueur }}">) à la rigueur ({{ categorie.aLaRigueur }}</SPAN>
+         <SPAN style="color:{{ couleurs.pasBon }}">) pas bon ({{ categorie.pasBon }}</SPAN><SPAN style="color:{{ couleurs.surtoutPas }}">) surtout pas</SPAN><BR>
+         légende :
+         <SPAN style='color:#909090'>tres bon</SPAN>{{ categorie.tresBon }}eme<SPAN style='color:#909090'>bon</SPAN>{{ categorie.bon }}eme<SPAN style='color:#909090'>moyen plus</SPAN>
+         {{ categorie.moyenPlus }}eme<SPAN style='color:#909090'>moyen moins</SPAN>{{ categorie.moyenMoins }}eme<SPAN style='color:#909090'>a la rigueur</SPAN>{{ categorie.aLaRigueur }}eme<SPAN style='color:#909090'>pas bon</SPAN>{{ categorie.pasBon }}eme
+    </DIV>
+ </DIV>
+
+
+<SCRIPT>
+var Formulaire=document.getElementById("Formulaire")
+var NumeroLigne=document.getElementById("NumeroLigne")
+var TableScolarite1=document.getElementById("TableScolarité1")
+var TableScolarite2=document.getElementById("TableScolarité2")
+var TableLycee1=document.getElementById("TableLycée1")
+var TableLycee1b=document.getElementById("TableLycée1b")
+var TableLycee2=document.getElementById("TableLycée2")
+var InfoGenerale=document.getElementById("InfoGenerale")
+var LettreMotiv=document.getElementById("LettreMotiv")
+var NouvelleNote=document.getElementById("NouvelleNote")
+var NoteActuelle=document.getElementById("NoteActuelle")
+var NoteActuelle=document.getElementById("NoteActuelle")
+var maxligne={{ maxligne }}
+
+ function ouvre_pdf() {
+     
+ }
+/* function ouvre_pdf() {  //affiche le pdf du dossier
+    FenetreFichierPdf.style.display="block"
+}
+
+function ferme_pdf() { //ferme la fenêtre du pdf
+    FenetreFichierPdf.style.display="none"
+} */
+
+function trouve_categorie(rang) {
+        if (rang<{{ categorie.tresBon }}) { return "très bon"}
+        else if (rang<{{ categorie.bon }}) { return "bon"}
+        else if (rang<{{ categorie.moyenPlus }}) { return "moyen plus"}
+        else if (rang<{{ categorie.moyenMoins }}) { return "moyen moins"}
+        else if (rang<{{ categorie.aLaRigueur }}) { return "à la rigueur"}
+        else if (rang<{{ categorie.pasBon }}) { return "pas bon"}
+        return "surtout pas"
+}
+
+function change_numero(num=-1) { // demande une page avec le numéro indiqué. ou celui de l'input si pas de paramètre
+    //console.log(num)
+    if (num==-1) {
+        num=parseInt(NumeroLigne.value)
+    } else if (num==0) {
+        num=maxligne
+    } else if (num==maxligne+1) {
+        num=1
+    }
+    //console.log(num)
+    NumeroLigne.value=num
+    if (isNaN(num) || num<1 || num>maxligne) {
+        alert('nouveau numéro de dossier incorrect')
+    } else {
+        Formulaire.submit()
+    }
+}
+
+function change_select_numero(id) { // la valeur du select numéro a changé : mise à jour du numéro de dossier de l'input
+    NumeroLigne.value=id.value;
+    change_numero()
+}
+
+InfoGenerale.onclick = function() {
+    InfoGenerale.style.display="none";
+    LettreMotiv.style.display="inline"
+}
+
+LettreMotiv.onclick = function() {
+    LettreMotiv.style.display="none";
+    InfoGenerale.style.display="inline"
+}
+
+TableScolarite1.onclick = function() {
+    TableScolarite1.style.display="none";
+    TableScolarite2.style.display="inline"
+}
+
+TableScolarite2.onclick = function() {
+    TableScolarite2.style.display="none";
+    TableScolarite1.style.display="inline"
+}
+
+TableLycee1.onclick = function() {
+    TableLycee1.style.display="none";
+    TableLycee1b.style.display="none";
+    TableLycee2.style.display="inline"
+}
+
+TableLycee1b.onclick = function() {
+    TableLycee1.style.display="none";
+    TableLycee1b.style.display="none";
+    TableLycee2.style.display="inline"
+}
+
+TableLycee2.onclick = function() {
+    TableLycee2.style.display="none";
+    TableLycee1.style.display="inline"
+    TableLycee1b.style.display="inline"
+}
+
+function trouve_rang(note) { //trouve la place de la note par dichotomie dans la liste trié par ordre décroissant
+    /// ne gère par le fait qu'il faudrait d'abord enlever cette note de la liste avant
+    /// pour éviter un petit décalage si la nouvelle note est inférieure à l'ancienne
+    deb=0;
+    fin=liste_des_notes.length
+    while (deb<fin) {
+        mid=Math.trunc((deb+fin)/2)
+        if (liste_des_notes[mid]>note) {
+            deb=mid+1
+        } else {
+            fin=mid
+        } 
+    }
+    if (note>liste_des_notes[deb]) { 
+        return deb
+    } else {
+        return deb+1
+    }
+}
+
+function trouve_note(rang) { // trouve une note correspondant au rang anoncé
+    nb_notes=liste_des_notes.length
+    if (rang<2) { return liste_des_notes[0]+0.01}
+    if (rang>nb_notes) { return liste_des_notes[nb_notes-1]-0.01}
+    return Math.round((liste_des_notes[rang-1]+liste_des_notes[rang-2])*50)/100
+}
+
+function modif_rang() { // affiche la note correspondant au nouveau rang
+    res=parseInt(RangCherche.value)
+    if (!isNaN(res)) {
+        NouvelleNote.value=trouve_note(res)
+        modif_note()
+    }
+}
+
+function modif_note() { // Affiche le rang correspondant à la nouvelle note
+    res=parseFloat(NouvelleNote.value)
+    if (!isNaN(res)) { 
+       NouveauRang.textContent=trouve_rang(res) 
+    }
+}
+
+function verif_modif_note() {  //vérifie la nouvelle note rentrée en remplaçant la virgule par un point
+    NouvelleNote.value=NouvelleNote.value.replace(new RegExp(",","g"),".");
+    res=parseFloat(NouvelleNote.value)
+    if ( isNaN(res) || parseFloat(res.toString())!=NouvelleNote.value) {
+        alert('nouvelle note incorrecte')
+        return false
+    }
+    return true
+}
+
+function modif_note() { // Affiche le rang correspondant à la nouvelle note
+    res=parseFloat(NouvelleNote.value)
+    if (!isNaN(res)) { 
+       NouveauRang.textContent=trouve_rang(res) 
+    }
+}
+
+function validation_note() {  //vérifie que la nouvelle note est correcte avant de mettre à jour la bdd
+    if (verif_modif_note()) {
+        modif_note()
+        nouvelle_categorie=trouve_categorie(NouveauRang.textContent)
+        if (nouvelle_categorie!=categorie) {
+            if (confirm('La nouvelle note change la catégorie du dossier : actualiser la catégorie?')) {
+                CategorieDossier.value=nouvelle_categorie    
+            } 
+        }
+        NoteAChanger.value="true"
+        NumeroLigne.value=ligneactuelle
+        Formulaire.submit()
+    } 
+}
+
+RangActuel.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
+NouveauRang.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
+RangCherche.value=trouve_rang(parseFloat(NoteActuelle.textContent)) 
+</SCRIPT>
+
+{% endblock body %}
