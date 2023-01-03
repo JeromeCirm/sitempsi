@@ -29,5 +29,5 @@ creneaux_physique=perso_creneaux_physique
 creneaux_anglais=perso_creneaux_anglais
 
 annee_courante=2022  # année du mois de septembre en cours
-affiche_choix_option = False  # choix d'option fin du premier semestre
+affiche_choix_option = True  # choix d'option fin du premier semestre
 affiche_choix_orientation = False  # choix d'orientation de fin d'année
