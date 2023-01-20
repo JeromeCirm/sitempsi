@@ -6,7 +6,13 @@
 
 <form method="POST" action=""> <BR>
     {{ msg }}{% if not jolinom %} 
-    <input type="submit" value="Validation des modifications"/> {% endif %}
+    <input type="submit" value="Validation des modifications"/> {% endif %} {% if affiche_choix_option %} 
+    choix d'option : <select id="choixoption" onchange="change_option()" type="select">
+      <option value="X" > Sans choix </option> 
+      <option value="I" {% if choixoption == "I" %}selected="selected"{% endif %}> Informatique </option> 
+      <option value="S" {% if choixoption == "S" %}selected="selected"{% endif %}> SI sans TP </option> 
+      <option value="T" {% if choixoption == "T" %}selected="selected"{% endif %}> SI avec TP </option> 
+  </select>{% endif %}
     {% csrf_token %}<BR><BR>
         <p >
           <label for="prenomusage"> Prénom d'usage : </label>
@@ -20,4 +26,26 @@
     <input type="email" id="mail" name="mail" value="{{ mail }}" required>
     {{form.as_p}}
 </form>
+
+<script>
+  let choixoption=document.getElementById("choixoption")
+  
+  function change_option() {
+      var formData = new FormData();
+      formData.append('choixoption', choixoption.value);
+      csrf=document.getElementsByName('csrfmiddlewaretoken')[0]
+      formData.append('csrfmiddlewaretoken',csrf.value)
+      fetch("/modification_choix_option", {
+      method : 'POST',
+      headers : {
+      'Accept': 'application/json, text/plain, */*',
+        },
+        body: formData
+    }).then(function(res){ return res.json();})
+      .then(function(res){
+          
+       })
+        .catch(function(err){ console.log('Erreur requête', err);});
+  }
+</script>
 {% endblock body %}

@@ -539,6 +539,19 @@ def recuperation_informations_home(request):
         print("erreur")
     return HttpResponse(json.dumps(response_data), content_type="application/json")    
 
+def modification_choix_option(request):
+    response_data={}
+    try:
+        if request.method=="POST" and "choixoption" in request.POST:
+            choix=request.POST["choixoption"]
+            if choix in ["X","I","S","T"]:
+                obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
+                obj.option=choix
+                obj.save()
+    except:
+        print("erreur")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")    
+
 def download(request,letype,pk):
     def extension(nomfichier):
         l=nomfichier.split(".")

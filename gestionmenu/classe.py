@@ -211,6 +211,9 @@ def fiche_renseignements(request,id_menu,context):
         context["mail"]=request.user.email
         context["prenomusage"]=request.user.first_name
         context["nomusage"]=request.user.last_name
+        if affiche_choix_option:
+            context["choixoption"]=obj.option
+            context["affiche_choix_option"]=True
     except:
         return redirect('/home')
     context["jolinom"]=JOLI_NOM

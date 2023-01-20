@@ -24,4 +24,5 @@ urlpatterns = [
     path('recuperation_notes_colles',views.recuperation_notes_colles,name='recuperation_notes_colles'),
     path('maj_notes_colles',views.maj_notes_colles,name='maj_notes_colles'),
     path('recuperation_informations_home',views.recuperation_informations_home,name='recuperation_informations_home'),
+    path('modification_choix_option',views.modification_choix_option,name='modification_choix_option'),
     ]
