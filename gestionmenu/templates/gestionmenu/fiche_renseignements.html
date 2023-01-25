@@ -7,7 +7,7 @@
 <form method="POST" action=""> <BR>
     {{ msg }}{% if not jolinom %} 
     <input type="submit" value="Validation des modifications"/> {% endif %} {% if affiche_choix_option %} 
-    choix d'option : <select id="choixoption" onchange="change_option()" type="select">
+    choix d'option : <select id="choixoption" onchange="" type="select">
       <option value="X" > Sans choix </option> 
       <option value="I" {% if choixoption == "I" %}selected="selected"{% endif %}> Informatique </option> 
       <option value="S" {% if choixoption == "S" %}selected="selected"{% endif %}> SI sans TP </option> 
