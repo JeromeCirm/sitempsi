@@ -14,7 +14,7 @@ except:
     print("pas d'hors-git trouvé")
     pass
 
-liste_classe=['gestion_jerome','trombinoscope','emploi_du_temps','contacts','colloscope_s1',
+liste_classe=['gestion_jerome','trombinoscope','emploi_du_temps','contacts','colloscope_s1','colloscope_s2',
 'programme_colle_math','rentrer_notes_colles','lire_notes_colles','lire_notes_colleurs',
 'modifier_notes_colleurs','lire_fiches_eleves','fiche_renseignements',
 'creation_fichier_pronote','lien_bashton']
@@ -33,8 +33,12 @@ def gestion_jerome(request,id_menu,context):
             creation_groupes_colles_s2(context)
         if request.POST['action']=='creation_creneaux_colles':
             creation_creneaux_colles(context)
+        if request.POST['action']=='creation_creneaux_colles_s2':
+            creation_creneaux_colles_s2(context)
         if request.POST['action']=='creation_colloscope':
             creation_colloscope(context)
+        if request.POST['action']=='creation_colloscope_s2':
+            creation_colloscope_s2(context)
         if request.POST['action']=='export_renseignements':
             export_renseignements(context)
     return render(request,'gestionmenu/gestion_jerome.html',context)
@@ -54,7 +58,7 @@ def contacts(request,id_menu,context):
 
 def colloscope_s1(request,id_menu,context):
     lesgroupes=GroupeColles.objects.filter(numero__lte=16).order_by('numero')
-    lessemaines=Semaines.objects.filter(numero__lte=16).order_by('numero')
+    lessemaines=Semaines.objects.filter(numero__lte=15).order_by('numero')
     tableau=[] # le tableau des colles, une ligne par semaine
     for semaine in lessemaines:
         ligne=[]
@@ -74,14 +78,45 @@ def colloscope_s1(request,id_menu,context):
         tableau.append({"semaine" : {"numero":semaine.numero,"date":date_fr(semaine.date,True)},"ligne" : ligne})
     context["tableau"]=tableau
     context["lesgroupes"]=lesgroupes
-    context["colleurmath"]=CreneauxColleurs.objects.filter(matière="math").order_by('numero')
-    context["colleurphysique"]=CreneauxColleurs.objects.filter(matière="physique").order_by('numero')
-    context["colleuranglais"]=CreneauxColleurs.objects.filter(matière="anglais").order_by('numero')
+    context["colleurmath"]=CreneauxColleurs.objects.filter(matière="math",numero__lte=20).order_by('numero')
+    context["colleurphysique"]=CreneauxColleurs.objects.filter(matière="physique",numero__lte=20).order_by('numero')
+    context["colleuranglais"]=CreneauxColleurs.objects.filter(matière="anglais",numero__lte=20).order_by('numero')
     try:
         context["colloscope_informations"]=colloscope_informations()
     except:
         context["colloscope_informations"]=[]
     return render(request,'gestionmenu/colloscope.html',context)
+
+def colloscope_s2(request,id_menu,context):
+    lesgroupes=GroupeColles.objects.filter(numero__gte=20).order_by('numero')
+    lessemaines=Semaines.objects.filter(numero__gte=16).order_by('numero')
+    tableau=[] # le tableau des colles, une ligne par semaine
+    for semaine in lessemaines:
+        ligne=[]
+        for groupe in lesgroupes:
+            math=""
+            physique=""
+            anglais=""
+            lescolles=Colloscope.objects.filter(semaine=semaine,groupe=groupe)
+            for colle in lescolles:
+                if colle.creneau.matière=="math":
+                    math=str(colle.creneau.numero-20)
+                if colle.creneau.matière=="physique":
+                    physique="-"+chr(64+colle.creneau.numero-20)
+                if colle.creneau.matière=="anglais":
+                    anglais="-"+chr(96+colle.creneau.numero-20)
+            ligne.append(math+physique+anglais)
+        tableau.append({"semaine" : {"numero":semaine.numero,"date":date_fr(semaine.date,True)},"ligne" : ligne})
+    context["tableau"]=tableau
+    context["lesgroupes"]=lesgroupes
+    context["colleurmath"]=CreneauxColleurs.objects.filter(matière="math",numero__gte=20).order_by('numero')
+    context["colleurphysique"]=CreneauxColleurs.objects.filter(matière="physique",numero__gte=20).order_by('numero')
+    context["colleuranglais"]=CreneauxColleurs.objects.filter(matière="anglais",numero__gte=20).order_by('numero')
+    try:
+        context["colloscope_informations"]=colloscope_informations()
+    except:
+        context["colloscope_informations"]=[]
+    return render(request,'gestionmenu/colloscope2.html',context)
 
 def programme_colle_math(request,id_menu,context):
     # attention, ne doit apparaitre qu'une seule fois dans le menu !

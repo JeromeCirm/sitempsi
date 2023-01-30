@@ -1,0 +1,75 @@
+{% extends 'gestionmenu/base.html' %}
+{% load gestionmenutags %}
+
+{% block body %}
+<style>       
+    ul{
+      list-style-type: none;
+    }
+</style>
+<BR>
+    <DIV style="text-align:center">  Colloscope semestre 2 : version générale. <BR> <BR>
+    Chaque élève regarde la colonne associée à son numéro de groupe de colle. Chaque ligne lui indique alors les deux créneaux pour la semaine.
+    <style>
+    
+    table{
+        border-collapse: collapse;
+    }
+    #table1 td{
+        border: 1px solid black;
+        border-collapse: collapse;
+       padding: 6px
+    }
+    </style>
+    
+    <CENTER>
+    <TABLE id="table1">
+      <TBODY>
+      <TR> <BR> <BR>
+        <TD> semaine\ gr de colle </TD>  {% for ungroupe in lesgroupes %} <TD> {{ ungroupe.numero|tempint:-20 }} </TD>  {% endfor %}   </TR>
+      <TR>
+
+        {% for uneligne in tableau %}
+        <TR> <TD> n°- {{ uneligne.semaine.numero }} débute le {{ uneligne.semaine.date }} </TD> 
+        {% for item in uneligne.ligne %}<TD> {{ item }}  </TD>{% endfor %} 
+        </TR>{% endfor %}
+</TBODY></TABLE></CENTER> <BR>
+    
+
+<TABLE>
+    <TBODY>
+        <TR>
+            <TD>
+                <PRE>  <B>                        GROUPES DE COLLE:  </B>       
+<DIV style="padding : 0px;display:inline-block;text-align:left">
+ <ul>{% for ungroupe in lesgroupes %} <li> {{ ungroupe.numero|tempint:-20 }} : {% for eleve in ungroupe.eleves.all %} {{ eleve.username }},{% endfor %}</li><BR>{% endfor %}
+</ul>
+</DIV>
+                </PRE>
+            </TD>      
+            <TD>
+                <PRE><B>              COLLEURS de math:   </B>          
+<DIV style="padding : 0px;display:inline-block;text-align:left">
+<ul>{% for creneau in colleurmath %}<li> {{ creneau.numero|tempint:-20 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}      
+</ul>
+</DIV>
+                </PRE>
+            </TD>      
+            <TD>
+                <PRE><B>             COLLEURS de physique(majuscule)-anglais(minuscule) :   </B>          
+<DIV style="padding : 0px;display:inline-block;text-align:left">
+<ul>{% for creneau in colleurphysique %}<li> {{  creneau.numero|tempchr:44 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
+</ul>
+<ul>{% for creneau in colleuranglais %}<li> {{  creneau.numero|tempchr:76 }} : {{ creneau.colleur.username }} : {{ creneau.jour }} à {{ creneau.horaire }} en {{ creneau.salle }}</li><BR>{% endfor %}
+</ul>
+</DIV>
+                </PRE>
+            </TD>
+        </TR>
+    </TBODY>
+</TABLE><BR>   {% for line in colloscope_informations %} {{ line }} <BR> {% endfor %}
+<BR>
+      <BR>
+
+
+{% endblock body %}

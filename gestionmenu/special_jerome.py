@@ -84,8 +84,8 @@ def creation_groupes_colles_s1(context):
     context["msg"]="groupes de colles créés pour le semestre 1"
 
 def creation_groupes_colles_s2(context):
-    GroupeColles.objects.filter(numero__gte=17).delete()
-    numero=17
+    GroupeColles.objects.filter(numero__gte=20).delete()
+    numero=21
     for ungroupe in perso_groupes_colles_s2:
         groupe=GroupeColles(numero=numero)
         groupe.save()
@@ -110,6 +110,19 @@ def creation_creneaux_colles(context):
                 context["msg"]="erreur lors de la création du créneau "+str(creneau)
                 return
     context["msg"]="créneaux de colles créés"
+
+def creation_creneaux_colles_s2(context):
+    CreneauxColleurs.objects.filter(numero__gte=20).delete()
+    liste=[(creneaux_math_s2,"math"),(creneaux_physique_s2,"physique"),(creneaux_anglais_s2,"anglais")]
+    for liste_creneaux,matiere in liste:
+        for numero,creneau in enumerate(liste_creneaux,start=21):
+            try:
+                CreneauxColleurs(colleur=User.objects.get(username=creneau[0]),jour=creneau[1],
+                horaire=creneau[2],salle=creneau[3],numero=numero,matière=matiere).save()
+            except:
+                context["msg"]="erreur lors de la création du créneau "+str(creneau)
+                return
+    context["msg"]="créneaux de colles semestre 2 créés"
 
 def creation_colloscope(context):
     # à revoir avec la nouvelle gestion des créneaux
@@ -143,6 +156,40 @@ def creation_colloscope(context):
                     valeurautre=(1+semaine-1)%16+1 # prend la place du groupe 1
                 print(valeurautre)
                 autrecolle=CreneauxColleurs.objects.get(numero=valeurautre//2,matière="anglais")
+            item=Colloscope(creneau=autrecolle,groupe=legroupe,semaine=lasemaine)
+            item.save()
+    context["msg"]="colloscope créé"
+
+def creation_colloscope_s2(context):
+    # à revoir avec la nouvelle gestion des créneaux
+    # physique/anglais sont séparés dans la base de données maintenant
+    # et non à la suite mélangés
+    Colloscope.objects.filter(semaine__numero__gte=16).delete()
+    lessemaines=Semaines.objects.filter(numero__gte=16)
+    for lasemaine in lessemaines:
+        semaine=lasemaine.numero
+        for groupe in range(1,16):
+            legroupe=GroupeColles.objects.get(numero=groupe+20)
+            valeurmath=(semaine+groupe-2)%16+1
+            valeurautre=valeurmath
+            if groupe%2==0 and (valeurmath==3 or valeurmath==16):
+                valeurmath=(semaine+16-2)%16+1
+            collemath=CreneauxColleurs.objects.get(numero=valeurmath+20,matière="math")
+            item=Colloscope(creneau=collemath,groupe=legroupe,semaine=lasemaine)
+            item.save()
+            if valeurautre%2==1: # colle de physique
+                autrecolle=CreneauxColleurs.objects.get(numero=(valeurautre+1)//2+20,matière="physique")
+            else:
+                if groupe<9:
+                    valeurautre=(semaine+groupe)%14+1
+                elif groupe>9:
+                    if groupe%2==1:
+                        valeurautre=(semaine+groupe-2)%14+1
+                    else:
+                        valeurautre=(semaine+groupe)%14+1
+                else:
+                    valeurautre=16
+                autrecolle=CreneauxColleurs.objects.get(numero=valeurautre//2+20,matière="anglais")
             item=Colloscope(creneau=autrecolle,groupe=legroupe,semaine=lasemaine)
             item.save()
     context["msg"]="colloscope créé"

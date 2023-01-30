@@ -27,6 +27,9 @@ groupes_colles_s2=perso_groupes_colles_s2 # liste de listes de login
 creneaux_math =perso_creneaux_math  # liste de créneaux  ["username","jour","heure","salle"]
 creneaux_physique=perso_creneaux_physique
 creneaux_anglais=perso_creneaux_anglais
+creneaux_math_s2 =perso_creneaux_math_s2  # liste de créneaux  ["username","jour","heure","salle"]
+creneaux_physique_s2=perso_creneaux_physique_s2
+creneaux_anglais_s2=perso_creneaux_anglais_s2
 
 annee_courante=2022  # année du mois de septembre en cours
 affiche_choix_option = True  # choix d'option fin du premier semestre
