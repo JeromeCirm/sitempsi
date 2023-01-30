@@ -528,8 +528,11 @@ def recuperation_informations_home(request):
     try:
         lesgroupes=request.user.groups.all()
         if groupe_eleves in lesgroupes:
-            lasemaine=Semaines.objects.get(numero=request.POST["semaine"])   
-            groupe=GroupeColles.objects.get(eleves=request.user)
+            lasemaine=Semaines.objects.get(numero=request.POST["semaine"])  
+            if lasemaine.numero<16: 
+                groupe=GroupeColles.objects.get(eleves=request.user,numero__lte=19)
+            else:
+                groupe=GroupeColles.objects.get(eleves=request.user,numero__gte=20)
             try:
                 msg=info_page_accueil(request.user,groupe,lasemaine)
             except:
