@@ -2,7 +2,7 @@
 
 {% block body %} 
 
-<a href="selection">Retour à l'index </a><BR><BR>
+<a href="{% url 'selection_etudedossier2023' %}">Retour à l'index </a><BR><BR>
     
     <DIV class="containeur_tableau_recap">
     <TABLE class="tableau_recap">
@@ -28,9 +28,6 @@
         </TR> {% endfor %}
     </TBODY>
     </TABLE>
-    </DIV>
-    echo "<TD>".calcule_rang($row[$col['noteactuelle']],$les_vraies_notes)."</TD>";
-    echo "<TD>".$i."</TD>";
-    
+    </DIV>    
 
 {% endblock body %}
