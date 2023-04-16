@@ -127,7 +127,7 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD>Nouvelle note : </TD><TD><input form="Formulaire" id="NouvelleNote" name="NouvelleNote" onkeyup="modif_note()" value="{{ dossier.noteActuelle }}"></TD></TR>
         <TR><TD>Rang associé : </TD><TD><SPAN id="NouveauRang"></SPAN></TD></TR>
         </TABLE><BR>{% if dossier.encf != 'ECF' %}<SPAN style="color:red;""> dossier ENCF </SPAN>{% endif %}
-        <button type="button" id="ValideNote" onclick="validation_note()">Valider les modifications du dossier (inactif)</button> <BR>
+        <button type="button" id="ValideNote" onclick="validation_note()">Valider les modifications du dossier</button> <BR>
             <button type="button" onclick="change_numero({{ ligne|add:"-1" }})">dossier précédent</button>
             <button type="button" onclick="change_numero({{ ligne|add:"1" }})">dossier suivant</button>
         
@@ -317,7 +317,8 @@ function modif_note() { // Affiche le rang correspondant à la nouvelle note
 }
 
 function validation_note() {  //vérifie que la nouvelle note est correcte avant de mettre à jour la bdd
-    return
+    // return //
+    // rendre inactif pour les années suivantes //
     if (verif_modif_note()) {
         modif_note()
         nouvelle_categorie=trouve_categorie(NouveauRang.textContent)
