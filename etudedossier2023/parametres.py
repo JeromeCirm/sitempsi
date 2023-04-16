@@ -399,15 +399,11 @@ def lire_un_dossier(request,context):
         if ligne>len(res): return False  # pas assez de ligne
         row=res[ligne-1]  # une seule ligne normalement
         dossier={}
-        fin=False
         for x in associationColonnes:
             try:
                 dossier[x]=row[associationColonnes[x]]
             except:
-                fin=True
                 print(associationColonnes[x]," non trouvée")
-        if fin:
-            print(1/0)
         context["dossier"]=dossier
         context["categorie"]=categorie_dic
         context["couleurs"]=couleurs_dic
