@@ -9,3 +9,5 @@ config_generale_perso.py
 gestionmenu/hors_git/*
 etudedossier2022/fiches/*
 etudedossier2022/stockage/*
+etudedossier2023/fiches/*
+etudedossier2023/stockage/*
