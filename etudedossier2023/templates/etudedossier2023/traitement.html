@@ -76,7 +76,7 @@ var categorie="{{ dossier.categorieDossier }}"
         </TABLE>
     </DIV>
     <DIV>
-        <TABLE>
+        <TABLE id="NotesAnnees">
         <TR><TH> Matière </TH><TH>Note</TH><TH>Rang</TH><TH> Matière </TH><TH>Note</TH><TH>Rang</TH></TR>
         <TR><TD> Math Term: </TD><TD>{{ dossier.noteMathTerm }}/20</TD><TD>{{ dossier.rangMathTerme }}/{{ dossier.effectifMathTerm }}</TD>
             <TD> LV1: </TD><TD>{{ dossier.noteLV1 }}/20</TD><TD>{{ dossier.rangLV1 }}/{{ dossier.effectifLV1 }}</TD></TR>
@@ -89,7 +89,13 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD>{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}</TD>
             </TR>
         </TABLE>
-    </DIV>
+        <TABLE id="NotesBac"  style="display : none">
+            <TR><TH> Matière </TH><TH>Note</TH></TR>
+            <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD></TR>
+            <TR><TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
+            <TR><TD> Bac NSI: </TD><TD>{{ dossier.noteBacNSI }}/20</TD></TR>
+            <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
+        </TABLE>    </DIV>
     <DIV class="red">  <BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMatc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
         {% if dossier.dossierEtudie != "oui" %}  dossier non étudié !<BR> {% endif %}       
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2023' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2023' nompdf %}">Télécharger le PDF</a>
@@ -155,6 +161,8 @@ var LettreMotiv=document.getElementById("LettreMotiv")
 var NouvelleNote=document.getElementById("NouvelleNote")
 var NoteActuelle=document.getElementById("NoteActuelle")
 var NoteActuelle=document.getElementById("NoteActuelle")
+var NotesAnnees=document.getElementById("NotesAnnees")
+var NotesBac=document.getElementById("NotesBac")
 var maxligne={{ maxligne }}
 
  function ouvre_pdf() {
@@ -237,6 +245,16 @@ TableLycee2.onclick = function() {
     TableLycee2.style.display="none";
     TableLycee1.style.display="inline"
     TableLycee1b.style.display="inline"
+}
+
+NotesAnnees.onclick = function() {
+    NotesAnnees.style.display="none";
+    NotesBac.style.display="inline"
+}
+
+NotesBac.onclick = function() {
+    NotesBac.style.display="none";
+    NotesAnnees.style.display="inline"
 }
 
 function trouve_rang(note) { //trouve la place de la note par dichotomie dans la liste trié par ordre décroissant

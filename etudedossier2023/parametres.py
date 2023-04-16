@@ -67,6 +67,11 @@ associationColonnes={
     "rangfinphase" : "rangfinphase",
     "rangfinal" : "rangfinal",
 
+    "noteBacMath" : "noteBacMath",
+    "noteBacPhys" : "noteBacPhys",
+    "noteBacNSI" : "noteBacNSI",
+    "noteBacSI" : "noteBacSI",
+
     "noteMathTerm" : "noteMathTerm",
     "rangMathTerme" : "rangMathTerme",
     "effectifMathTerm" : "effectifMathTerm",
