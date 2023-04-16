@@ -57,6 +57,7 @@ def gestion(request):
                 form.save()
                 context["message"]="fichier uploadé"
         if request.POST["valeur"]=='convertir_excel':
+            #convertion_excel()
             context["message"]="convertion interdite en ce moment"
         if request.POST["valeur"]=='sauvegarde_generale':
             sauvegarde_phase_generale()

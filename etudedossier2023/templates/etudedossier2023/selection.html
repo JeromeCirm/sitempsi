@@ -1,0 +1,122 @@
+{% extends 'basedossier2023.html' %}
+
+
+{% block body %} 
+<a href="{% url 'home' %}" style="float:left;">Retour au site principal</a>
+<a href="{% url 'gestion_etudedossier2023' %}" style="float:left;">Gestion</a>
+
+<BR> {% if erreur == "oui" %} <span style="color : red;""> Pas de dossiers pour cette sélection</span>{% endif %}<BR>
+    <DIV class="gestion"><BR><BR><BR>
+                <form id="FormulaireBis" method="post" action=""> 
+                    {% csrf_token %}
+                <div>Champs de sélection : <BR><BR>
+                <TABLE> {% for key,value in champs.items %}
+                    <TR><TD> <input hidden  name="nomcolonne[]" value="{{ value.0 }}"> {{ key }} : </TD><TD><input name="valeur[]" value="{{ value.1}}"></TD></TR>{% endfor %}
+                </TABLE>
+                <input type="checkbox" name="pasexpert" {% if pasexpert == "oui" %} checked {% endif %}>dossiers sans math experte/physique
+                <input type="checkbox" name="boursier" {% if boursier == "oui" %} checked {% endif %}> Boursiers
+                </div>
+                <div>Items de tri (maximum 10): <BR><BR>
+                    <ul id="ItemDeTri"></ul> 
+                    <button type="button" onclick=ajout_tri()>Ajouter un tri par </button>
+                    <select id="ListeChoix"> {% for key,value in listechoix.items %}
+                        <option value="{{ value }}">{{ key }}</option> {% endfor %}
+                    </select> selon un ordre
+                    <select id="SensChoix">
+                        <option value="croissant">croissant</option>
+                        <option value="décroissant">décroissant</option>
+                    </select>
+                </div>
+                <input type="hidden"  name="NoteAChanger" value="false">
+                <input type="hidden" id="choixAction" name="choixAction" value="sauvegarde">
+                <input type="hidden" name="pileDossier" value="{{ pile }}">
+                <input type="hidden" name="indicePileDossier" value={{ indicePile }}>
+                </form>
+                <button type="button" onclick="charge_selection()">Charger la sélection</button>
+                <button type="button" onclick="efface_selection()">Effacer la sélection</button>
+                <button type="button" onclick="enregistre_selection()">Enregistrer la sélection</button>
+                <button type="button" onclick="etude_dossier_bis()">Etudier cette sélection de dossier</button>
+                <button type="button" onclick="tous_les_dossiers()">Afficher l'ensemble de ces dossiers</button><BR>
+                pour les binômes : {% for key,value in binome.items %} {{ key }} : {{ value }} {% endfor %}<BR>
+                pour les etiquettes : {% for key,value in etiquettes.items %}  {{ value }}, {% endfor %}<BR><BR>
+
+<!--                 <form  method="post" action=""> {% csrf_token %} RNE du lycée : <input name='RNE'> % au bac : <input name='pourcentbac'> % de mention<input name='pourcentmention'>
+                <input type="submit" value="valider ces stats de lycée : à finir"></form>   
+ --></DIV>
+
+<SCRIPT>
+
+    var FormulaireBis=document.getElementById("FormulaireBis")
+    var Selection=document.getElementsByName('selection[]') // inutile?
+    var Valeur=document.getElementsByName('valeur[]') // inutlie?
+    var ItemDeTri=document.getElementById('ItemDeTri')
+    var ListeChoix=document.getElementById('ListeChoix')
+    var SensChoix=document.getElementById('SensChoix')
+    var choixAction=document.getElementById('choixAction')
+    var listItemDeTri=[]
+    {% for x in ordre %}
+    {% if x.1 == 1 %} listItemDeTri.push([-(1+{{ x.0 }}),ListeChoix.options[{{ x.0 }}].text+' par ordre '+SensChoix.options[1].text]) {% endif %}
+    {% if x.1 == 0 %} listItemDeTri.push([{{ x.0 }},ListeChoix.options[{{ x.0 }}].text+' par ordre '+SensChoix.options[0].text]) {% endif %}
+    {% endfor %}
+    maj_listetri()    
+
+    function charge_selection() {
+        FormulaireBis.action=""
+        choixAction.value="charge"
+        FormulaireBis.submit()
+    }
+
+    function efface_selection() {
+        FormulaireBis.action=""
+        choixAction.value="efface"
+        FormulaireBis.submit()
+    }
+
+    function enregistre_selection() {
+        FormulaireBis.action=""
+        choixAction.value="sauvegarde"
+        FormulaireBis.submit()
+    }
+
+    function etude_dossier_bis() { 
+        FormulaireBis.action="{% url 'traitement_etudedossier2023' %}"
+        FormulaireBis.submit() 
+    }
+    
+    function tous_les_dossiers() { 
+        FormulaireBis.action="{% url 'affichage_etudedossier2023' %}"
+        FormulaireBis.submit()
+        for (i=0;i<Selection.length;i++) {
+            if (Valeur[i].value=="") {
+                Selection[i].value=""
+            }
+        }
+    }
+    
+    function maj_listetri() {
+        ItemDeTri.innerHTML=""
+        for (i=0;i<listItemDeTri.length;i++) {
+            ItemDeTri.innerHTML+='<li> tri selon '+listItemDeTri[i][1]+' <input hidden name="ordre[]" value="'+listItemDeTri[i][0].toString()+'""><button class="petitbouton" type="button" onclick="supprime('+i.toString()+')">supprimer cet item</button></li>'
+        }
+    }
+    
+    function ajout_tri() {
+        if (listItemDeTri.length<10) {
+            if (SensChoix.selectedIndex==0) {
+                listItemDeTri.push([ListeChoix.selectedIndex,ListeChoix.options[ListeChoix.selectedIndex].text+' par ordre '+SensChoix.options[SensChoix.selectedIndex].text])
+            } else {
+                listItemDeTri.push([-(1+ListeChoix.selectedIndex),ListeChoix.options[ListeChoix.selectedIndex].text+' par ordre '+SensChoix.options[SensChoix.selectedIndex].text])
+            }
+                // le numéro de la colonne avec signe - devant pour tri décroissant, et le nom du tri pour un affichage ensuite
+            maj_listetri()
+        }
+    }
+    
+    function supprime(i) {
+        listItemDeTri.splice(i,1)
+        maj_listetri()
+    }
+    
+</SCRIPT>
+
+{% endblock body %}
