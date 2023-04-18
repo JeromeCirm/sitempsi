@@ -445,7 +445,8 @@ def convertion_excel():
         pass
     df=pd.read_excel('etudedossier2023/stockage/fichierinitial.xlsx')
     # pour modifier les colonnes passées en float avec valeurs nan par Marc
-    liste={"commentaireTraitement" : str,"arevoir" : str, "dossierEtudie" : str, "dossierRisque" : str}
+    # commentaireTraitement est maintenant directement mis par Marc
+    liste={"arevoir" : str, "dossierEtudie" : str, "dossierRisque" : str}
     df=df.astype({associationColonnes[x] : str for x in liste})
     df=df.assign(**{associationColonnes[x] : "" if x=="commentaireTraitement" else "non" for x in liste})
     ## *5 des notes auto
