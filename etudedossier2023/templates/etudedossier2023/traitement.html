@@ -79,16 +79,16 @@ var categorie="{{ dossier.categorieDossier }}"
         <TABLE id="NotesAnnees">
         <TR><TH> Matière </TH><TH>Note</TH><TH>Rang</TH><TH> Matière </TH><TH>Note</TH><TH>Rang</TH></TR>
         <TR><TD> Math Term: </TD><TD>{{ dossier.noteMathTerm }}/20</TD><TD>{{ dossier.rangMathTerme }}/{{ dossier.effectifMathTerm }}</TD>
-            <TD> LV1: </TD><TD>{{ dossier.noteLV1 }}/20</TD><TD>{{ dossier.rangLV1 }}/{{ dossier.effectifLV1 }}</TD></TR>
+            <TD> Physique Term: </TD><TD>{{ dossier.notePhysiqueTerm }}/20</TD><TD>{{ dossier.rangPhysiqueTerm }}/{{ dossier.effectifPhysiqueTerm }}</TD></TR>
         <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD>{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}</TD>
-            <TD> Philo: </TD><TD>{{ dossier.notePhilo }}/20</TD><TD>{{ dossier.rangPhilo }}/{{ dossier.effectifPhilo }}</TD></TR>
+            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD>{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}</TD></TR>
         <TR><TD> Math Expertes: </TD><TD>{{ dossier.noteMathExpertes }}/20</TD><TD>{{ dossier.rangMathExpertes }}/{{ dossier.effectifMathExpertes }}</TD>
-            <TD> Bac fr écrit: </TD><TD>{{ dossier.bacFrEcrit }}/20</TD></TR>
-        <TR><TD> Physique Term: </TD><TD>{{ dossier.notePhysiqueTerm }}/20</TD><TD>{{ dossier.rangPhysiqueTerm }}/{{ dossier.effectifPhysiqueTerm }}</TD>
-            <TD> Bac fr oral: </TD><TD>{{ dossier.bacFrOral }}/20</TD></TR>
-        <TR><TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD>{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}</TD>
-            <TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD></TR> 
-        <TR><TD></TD><TD></TD><TD></TD><TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
+            <TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
+        <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD></TD></TR>        
+        <TR><TD> Bac fr écrit: </TD><TD>{{ dossier.bacFrEcrit }}/20</TD><TD></TD>
+            <TD> Philo: </TD><TD>{{ dossier.notePhilo }}/20</TD><TD>{{ dossier.rangPhilo }}/{{ dossier.effectifPhilo }}</TD></TR>        
+        <TR><TD> Bac fr oral: </TD><TD>{{ dossier.bacFrOral }}/20</TD><TD></TD>
+            <TD> LV1: </TD><TD>{{ dossier.noteLV1 }}/20</TD><TD>{{ dossier.rangLV1 }}/{{ dossier.effectifLV1 }}</TD></TR>        
         </TABLE>
         <TABLE id="NotesBac"  style="display : none">
             <TR><TH> Matière </TH><TH>Note</TH></TR>

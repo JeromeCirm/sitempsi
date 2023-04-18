@@ -482,15 +482,24 @@ def convertion_excel():
             return False
         except:
             return True
+    # la partie qui suit est annulée : c'est MArc qui gère les lycées avec faible taux de mention/réussite 
+    # complètement
+    if False:
+        for index, row in df.iterrows():
+            rang=trouve_rang(les_notes,row[col_note])
+            if min_mention(row[associationColonnes['rneLycee']]):
+                if rang>categorie_dic["pasBon"]:
+                    df.at[index,col_cate]="surtout pas"
+                elif rang>categorie_dic["aLaRigueur"]:
+                    df.at[index,col_cate]="pas bon"
+                else:
+                    df.at[index,col_cate]="à la rigueur"
+    ## gèreles commentaire none/nan
+    col_comm=associationColonnes['commentaireTraitement']
+    df=df.astype({col_comm : str})
     for index, row in df.iterrows():
-        rang=trouve_rang(les_notes,row[col_note])
-        if min_mention(row[associationColonnes['rneLycee']]):
-            if rang>categorie_dic["pasBon"]:
-                df.at[index,col_cate]="surtout pas"
-            elif rang>categorie_dic["aLaRigueur"]:
-                df.at[index,col_cate]="pas bon"
-            else:
-                df.at[index,col_cate]="à la rigueur"
+        if row[col_comm] in ["nan","None"]:
+            df.at[index,col_comm]=""
     ## gérer les colonnes qui devraient être entière et qui ne le sont pas
     def convert_int(x,default=0):
         try:
