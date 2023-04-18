@@ -1,13 +1,30 @@
 #
 #     A revoir, chemins d'accès etc !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#   
+#
 #  https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729
-# 
+#
+
+import os
+os.chdir("/home/jerome/Documents/GitHub/sitempsi/etudedossier2023/aa_doc annexes")
 import pandas as pd
 
-annees=["2018","2019","2020","2021","2022"]
+annees=["2018","2019","2020","2021"]
 
 donnees={ annee : pd.read_csv('lycees'+annee+'.csv',sep=";") for annee in annees}
+
+# pour l'année 2022 (et les suivantes? ) :
+# le fichier contient en fait toutes les années : on ne garde que la nouvelle
+# éventuellement à terme ce fichier peut suffire?
+
+annee2022=pd.read_csv('lycees2022.csv',sep=";")
+a_garder=[]
+for i in range(len(annee2022)):
+    if annee2022.iat[i,1]==2022:
+        a_garder.append(i)
+annee2022=annee2022.loc[a_garder]
+donnees["2022"]= annee2022
+
+annees.append("2022")
 
 ## Extraits les colonnes intéressantes
 
