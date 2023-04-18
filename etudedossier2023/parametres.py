@@ -416,9 +416,11 @@ def lire_un_dossier(request,context):
         context["statslycee"]=lire_stat(dossier[associationColonnes["rneLycee"]])
         context["nompdf"]=nom_fichier_pdf()
         context["dossierLycée"]=nb_dossiers_lycee()
-        rg,offset=calcul_rang_final(row)
+        rg,offset,notes_offset=calcul_rang_final(row)
         context["rangfinalestime"]=rg
         context["offset"]=offset
+        context["notes_offset"]=notes_offset
+        #print(context["sauvegarde"])
         return True
 
 def recuperer_les_notes(cate=""):
@@ -575,17 +577,25 @@ def calcul_rang_final(row):
         lesnotes["pas bon"]=recuperer_les_notes("pas bon")
         lesnotes["surtout pas"]=recuperer_les_notes("surtout pas")
         offset={}
-        offset["très bon"]=0
-        offset["bon"]=offset["très bon"]+len(lesnotes["très bon"])
-        offset["moyen plus"]=offset["bon"]+len(lesnotes["bon"])
-        offset["moyen moins"]=offset["moyen plus"]+len(lesnotes["moyen plus"])
-        offset["à la rigueur"]=offset["moyen moins"]+len(lesnotes["moyen moins"])
-        offset["pas bon"]=offset["à la rigueur"]+len(lesnotes["à la rigueur"])
-        offset["surtout pas"]=offset["pas bon"]+len(lesnotes["pas bon"])
+        notes_offset={}
+        offset["très bon"]=0,lesnotes["très bon"][0]
+        notes_offset["très bon"]=lesnotes["très bon"][0]
+        offset["bon"]=offset["très bon"][0]+len(lesnotes["très bon"]),lesnotes["bon"][0]
+        notes_offset["bon"]=lesnotes["bon"][0]
+        offset["moyen plus"]=offset["bon"][0]+len(lesnotes["bon"]),lesnotes["moyen plus"][0]
+        notes_offset["moyen plus"]=lesnotes["moyen plus"][0]
+        offset["moyen moins"]=offset["moyen plus"][0]+len(lesnotes["moyen plus"]),lesnotes["moyen moins"][0]
+        notes_offset["moyen moins"]=lesnotes["moyen moins"][0]
+        offset["à la rigueur"]=offset["moyen moins"][0]+len(lesnotes["moyen moins"]),lesnotes["à la rigueur"][0]
+        notes_offset["à la rigueur"]=lesnotes["à la rigueur"][0]
+        offset["pas bon"]=offset["à la rigueur"][0]+len(lesnotes["à la rigueur"]),lesnotes["pas bon"][0]
+        notes_offset["pas bon"]=lesnotes["pas bon"][0]
+        offset["surtout pas"]=offset["pas bon"][0]+len(lesnotes["pas bon"]),lesnotes["surtout pas"][0]
+        notes_offset["surtout pas"]=lesnotes["surtout pas"][0]
         note=row[associationColonnes["noteActuelle"]]
         cate=row[associationColonnes["categorieDossier"]]
-        rg=trouve_rang(lesnotes[cate],note)+offset[cate]
-        return rg,offset       
+        rg=trouve_rang(lesnotes[cate],note)+offset[cate][0]
+        return rg,offset,0
         
 
 def rang_fin_phase():
