@@ -57,8 +57,8 @@ def gestion(request):
                 form.save()
                 context["message"]="fichier uploadé"
         if request.POST["valeur"]=='convertir_excel':
-            convertion_excel()
-            context["message"]="convertion de début de phase réalisée"
+            #convertion_excel()
+            context["message"]="convertion de début de phase inactive en ce moment !" #réalisée"
         if request.POST["valeur"]=='sauvegarde_generale':
             sauvegarde_phase_generale()
             context["message"]="sauvegarde fin de phase générale effectuée"

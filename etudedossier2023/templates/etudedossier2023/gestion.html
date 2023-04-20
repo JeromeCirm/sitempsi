@@ -10,7 +10,7 @@
     <ul > {% if request.user.username == "rezzouk" or request.user.username == "nizon" %}
     <li><button onclick="effectue_action('upload_initial')"> Charger le fichier (format xlsx) suivant sur le site</button>
     {{ form.as_p }}</li>
-    <li><button onclick="effectue_action('convertir_excel')"> Convertir le fichier xlsx en base de données : RESET de l'étude !</button></li>
+    <li><button onclick="effectue_action('convertir_excel')"> Convertir le fichier xlsx en base de données : RESET de l'étude ! (inactif)</button></li>
     <li><button onclick="effectue_action('sauvegarde_generale')"> Sauvegarde note/catégorie en fin de phase 1 (à faire avant ce qui suit)</button></li>
     <li><button onclick="effectue_action('rang_fin_phase')"> création du rang en fin de phase 1 (pour préparer la phase finale de révision)</button></li>
     <li><button onclick="effectue_action('rang_final')"> création du rang final sans égalité</button></li>{% endif %}
