@@ -55,7 +55,7 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD>Autres éléments : </TD><TD>{{ dossier.autresElements }}</TD></TR>
         </TABLE>
     </DIV>
-    <DIV > <span class="green"> {% if dossier.motclebon != None %}{{ dossier.motclebon }} {% endif %} </span> 
+    <DIV > <span style="color:{{ couleurs.tresBon }}"> {% if dossier.motclebon != None %}{{ dossier.motclebon }} {% endif %} </span> 
            <span class="red"> {% if dossier.motclemauvais != None %}{{ dossier.motclemauvais }} {% endif %} </span>
          <BR> <BR> <span style="color : blue;">{% if False %}rang fin phase 1 : {{ dossier.rangfinphase }} (avant ajustement : {{ dossier.sauvegarde }}) <BR>{% endif %}
                 rang final estimé: {{ rangfinalestime }}</span><BR><span>
