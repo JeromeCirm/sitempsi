@@ -265,6 +265,8 @@ def prepare_selection(context,request):
     context["etiquettes"]=categorieText_dic
 
 def creation_requete(request,context):
+    def echap(s):
+        return '"'+res+'"'
     def text(x):
         for z in listechoix:
             if x==0:
@@ -316,7 +318,7 @@ def creation_requete(request,context):
                     else:
                         selection=" WHERE "
                         deja_une_condition=True
-                    selection+=p(nomcolonne[i])+"='"+valeurcolonne[i]+"'"
+                    selection+=p(nomcolonne[i])+"='"+echap(valeurcolonne[i])+"'"
         except:
             selection=""
     return selection+orderby
