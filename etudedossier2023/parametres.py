@@ -383,8 +383,8 @@ def lire_un_dossier(request,context):
         numdossier=str(dossier[associationColonnes["numeroDossier"]])
         for x in lesfichiersPDF:
             if numdossier in x:
-                return base64.b64encode(bytes(x,"utf-8"))
-        return base64.b64encode(bytes("","utf-8"))
+                return base64.b32encode(bytes(x,"utf-8"))
+        return base64.b32encode(bytes("","utf-8"))
         #nom=dossier[associationColonnes["nom"]].replace(" ","").replace("'","")
         #return "dossiers_0750660K_MPSI-"+str(dossier[associationColonnes["numeroDossier"]])+"-"+nom+".pdf"
     def nb_dossiers_lycee():
