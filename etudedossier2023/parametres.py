@@ -358,7 +358,7 @@ def lire_tous_les_dossiers(request,context):
 
 def nb_boursier(limite=1500):
     with engine.connect() as conn :
-        cmd="SELECT count(*) FROM (SELECT * FROM parcoursup ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC LIMIT 1500) WHERE "+p(associationColonnes["boursier"])+"!='Non boursier'"
+        cmd="SELECT count(*) FROM (SELECT * FROM parcoursup ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC LIMIT "+str(limite)+") WHERE "+p(associationColonnes["boursier"])+"!='Non boursier'"
         #print(cmd)
         res=conn.execute(cmd).fetchall()
         #print(res[0][0])
@@ -416,7 +416,9 @@ def lire_un_dossier(request,context):
         context["maxligne"]=len(res)
         context["ligne"]=ligne
         context["lesnotes"]=recuperer_les_notes()
-        context["tauxBoursier"]=int(nb_boursier()/1.5)/10
+        context["tauxBoursier"]=int(nb_boursier(1500)/1.5)/10
+        context["tauxBoursier1750"]=int(nb_boursier(1750)/1.75)/10
+        context["tauxBoursier2000"]=int(nb_boursier(2000)/2)/10
         context["statslycee"]=lire_stat(dossier[associationColonnes["rneLycee"]])
         context["nompdf"]=nom_fichier_pdf()
         context["dossierLycée"]=nb_dossiers_lycee()

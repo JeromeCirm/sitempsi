@@ -26,7 +26,7 @@ var categorie="{{ dossier.categorieDossier }}"
 {% for x in valeurcolonne %} <input type="hidden" name="valeur[]" value="{{ x }}"> {% endfor %}
     </FORM>
     <input type="range" min="1" max="{{ maxligne }}" value="{{ ligne }}" step="1" onchange="change_select_numero(this)">
-    boursiers : {{ tauxBoursier }} % avant 1500
+    boursiers : {{ tauxBoursier }} % avant 1500, {{ tauxBoursier1750 }} % avant 1750, {{ tauxBoursier2000 }} % avant 2000
 </DIV>
 
 
