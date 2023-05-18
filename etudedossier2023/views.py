@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .parametres import rang_final,rang_fin_phase,sauvegarde_phase_generale,lire_un_dossier,lire_tous_les_dossiers,prepare_selection,convertion_excel,convertion_xslx,maj_dossier,patch
+from .parametres import rang_final,test_jerome,rang_fin_phase,convertion_xslx_minimal,sauvegarde_phase_generale,lire_un_dossier,lire_tous_les_dossiers,prepare_selection,convertion_excel,convertion_xslx,maj_dossier,patch
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 from django.contrib.auth.models import Group, User
@@ -71,7 +71,13 @@ def gestion(request):
         if request.POST["valeur"]=='creation_excel':
             convertion_xslx()
             context["message"]="convertion vers xlsx terminée"
-    context["form"]=form
+        if request.POST["valeur"]=='test':
+            test_jerome()
+            context["message"]="test terminé"
+        if request.POST["valeur"]=='creation_excel_minimal':
+            convertion_xslx_minimal()
+            context["message"]="convertion vers xlsx minimal terminée"
+        context["form"]=form
     return render(request,'etudedossier2023/gestion.html',context)
 
 @auth([groupe_etudedossier])

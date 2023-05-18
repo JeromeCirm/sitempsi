@@ -649,6 +649,11 @@ def rang_final():
             conn.execute(cmd)
         except:
             pass
+        try:
+            cmd='ALTER TABLE parcoursup MODIFY rangfinal INTEGER'
+            conn.execute(cmd)
+        except:
+            pass        
         cates=["très bon","bon","moyen plus","moyen moins","à la rigueur","pas bon","surtout pas"]
         rang=0
         encf=0
@@ -660,6 +665,8 @@ def rang_final():
                     rang+=1
                     cmd="UPDATE parcoursup SET rangfinal="+str(rang)+" WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
                     conn.execute(cmd)  
+                    #print(cmd)
+                    #print(1/0)
                 else:
                     encf+=1
                     cmd="UPDATE parcoursup SET rangfinal=5000 WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
@@ -700,4 +707,52 @@ def patch_old3():
             conn.execute(cmd)  
 
 def patch():
-    pass     
+    pass    
+
+def test_jerome():
+    def fgint(x):
+        try:
+            return int(x)
+        except:
+            return 8000
+    engine = create_engine('sqlite:///etudedossier2023/stockage/versionxls.db', echo=False)
+    with engine.connect() as conn:
+        df=pd.read_sql("SELECT * FROM parcoursup",conn)
+        c=associationColonnes["rangfinal"]
+        df["rangjerome"]=8000
+        for index, row in df.iterrows():
+            df.at[index,"rangjerome"]=int(df.at[index,c])
+        df.to_excel('etudedossier2023/stockage/fichierfinal.xlsx',sheet_name='parcoursup')    
+        #print(df.dtypes)
+        return
+        if False:
+            print(df.at[index,c],type(df.at[index,c]),int(df.at[index,c]),type(int(df.at[index,c])))
+            return
+        df.astype({associationColonnes["rangfinal"]:"int",associationColonnes["numeroDossier"]:"int"})
+        df["rangjerome"]=fgint(df[associationColonnes["rangfinal"]])
+        df.to_excel('etudedossier2023/stockage/fichierfinal.xlsx',sheet_name='parcoursup')    
+        if False:
+            rang=trouve_rang(les_notes,row[col_note])
+            if min_mention(row[associationColonnes['rneLycee']]):
+                if rang>categorie_dic["pasBon"]:
+                    df.at[index,col_cate]="surtout pas"
+                elif rang>categorie_dic["aLaRigueur"]:
+                    df.at[index,col_cate]="pas bon"
+                else:
+                    df.at[index,col_cate]="à la rigueur"
+
+def convertion_xslx_minimal():
+    with engine.connect() as conn:
+        df=pd.read_sql("SELECT * FROM parcoursup",conn)
+        c=associationColonnes["rangfinal"]
+        df["classement"]=""
+        for index, row in df.iterrows():
+            if df.at[index,associationColonnes["encf"]]=="ENCF":
+                df.at[index,"classement"]="ENCF"
+            else:
+                rg=int(df.at[index,c])
+                if rg>3000:
+                    df.at[index,"classement"]="NC"
+                else:
+                    df.at[index,"classement"]=str(rg)
+        df.to_excel('etudedossier2023/stockage/fichierfinal.xlsx',sheet_name='parcoursup')    
