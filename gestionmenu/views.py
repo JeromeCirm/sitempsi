@@ -559,6 +559,38 @@ def modification_choix_option(request):
         print("erreur")
     return HttpResponse(json.dumps(response_data), content_type="application/json")    
 
+def modification_choix_orientation(request):
+    response_data={}
+    try:
+        if request.method=="POST":
+            if "choix1" in request.POST:
+                choix=request.POST["choix1"]
+                if choix in ["X","A","B","C","D","E"]:
+                    obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
+                    obj.choix1=choix
+                    obj.save()
+            elif "choix2" in request.POST:
+                choix=request.POST["choix2"]
+                if choix in ["X","A","B","C","D","E"]:
+                    obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
+                    obj.choix2=choix
+                    obj.save()
+            elif "choix3" in request.POST:
+                choix=request.POST["choix3"]
+                if choix in ["X","A","B","C","D","E"]:
+                    obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
+                    obj.choix3=choix
+                    obj.save()                    
+            elif "choix4" in request.POST:
+                choix=request.POST["choix4"]
+                if choix in ["X","A","B","C","D","E"]:
+                    obj=Renseignements.objects.get(login=request.user.username,année=annee_courante)
+                    obj.choix4=choix
+                    obj.save()
+    except:
+        print("erreur")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")   
+
 def download(request,letype,pk):
     def extension(nomfichier):
         l=nomfichier.split(".")

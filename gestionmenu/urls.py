@@ -25,4 +25,5 @@ urlpatterns = [
     path('maj_notes_colles',views.maj_notes_colles,name='maj_notes_colles'),
     path('recuperation_informations_home',views.recuperation_informations_home,name='recuperation_informations_home'),
     path('modification_choix_option',views.modification_choix_option,name='modification_choix_option'),
+    path('modification_choix_orientation',views.modification_choix_orientation,name='modification_choix_orientation'),
     ]

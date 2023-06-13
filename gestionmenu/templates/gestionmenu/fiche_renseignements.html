@@ -13,13 +13,37 @@
       <option value="S" {% if choixoption == "S" %}selected="selected"{% endif %}> SI sans TP </option> 
       <option value="T" {% if choixoption == "T" %}selected="selected"{% endif %}> SI avec TP </option> 
   </select>{% endif %}  {% if affiche_choix_orientation %} 
-  choix d'orientation 1 : <select id="choix1" onchange="" type="select">
+  choix d'orientation 1 : <select id="choix1" onchange="change_choix('choix1')" type="select">
     <option value="X" > Sans choix </option> 
     <option value="A" {% if choix1 == "A" %}selected="selected"{% endif %}> MP* </option> 
     <option value="B" {% if choix1 == "B" %}selected="selected"{% endif %}> MP</option> 
     <option value="C" {% if choix1 == "C" %}selected="selected"{% endif %}> PSI* </option> 
     <option value="D" {% if choix1 == "D" %}selected="selected"{% endif %}> PSI </option> 
     <option value="E" {% if choix1 == "E" %}selected="selected"{% endif %}> Réorientation </option> 
+</select>
+choix d'orientation 2 : <select id="choix2" onchange="change_choix('choix2')" type="select">
+  <option value="X" > Sans choix </option> 
+  <option value="A" {% if choix2 == "A" %}selected="selected"{% endif %}> MP* </option> 
+  <option value="B" {% if choix2 == "B" %}selected="selected"{% endif %}> MP</option> 
+  <option value="C" {% if choix2 == "C" %}selected="selected"{% endif %}> PSI* </option> 
+  <option value="D" {% if choix2 == "D" %}selected="selected"{% endif %}> PSI </option> 
+  <option value="E" {% if choix2 == "E" %}selected="selected"{% endif %}> Réorientation </option> 
+</select>
+choix d'orientation 3 : <select id="choix3" onchange="change_choix('choix3')" type="select">
+  <option value="X" > Sans choix </option> 
+  <option value="A" {% if choix3 == "A" %}selected="selected"{% endif %}> MP* </option> 
+  <option value="B" {% if choix3 == "B" %}selected="selected"{% endif %}> MP</option> 
+  <option value="C" {% if choix3 == "C" %}selected="selected"{% endif %}> PSI* </option> 
+  <option value="D" {% if choix3 == "D" %}selected="selected"{% endif %}> PSI </option> 
+  <option value="E" {% if choix3 == "E" %}selected="selected"{% endif %}> Réorientation </option> 
+</select>
+choix d'orientation 4 : <select id="choix4" onchange="change_choix('choix4')" type="select">
+  <option value="X" > Sans choix </option> 
+  <option value="A" {% if choix4 == "A" %}selected="selected"{% endif %}> MP* </option> 
+  <option value="B" {% if choix4 == "B" %}selected="selected"{% endif %}> MP</option> 
+  <option value="C" {% if choix4 == "C" %}selected="selected"{% endif %}> PSI* </option> 
+  <option value="D" {% if choix4 == "D" %}selected="selected"{% endif %}> PSI </option> 
+  <option value="E" {% if choix4 == "E" %}selected="selected"{% endif %}> Réorientation </option> 
 </select>{% endif %}
     {% csrf_token %}<BR><BR>
         <p >
@@ -44,6 +68,25 @@
       csrf=document.getElementsByName('csrfmiddlewaretoken')[0]
       formData.append('csrfmiddlewaretoken',csrf.value)
       fetch("/modification_choix_option", {
+      method : 'POST',
+      headers : {
+      'Accept': 'application/json, text/plain, */*',
+        },
+        body: formData
+    }).then(function(res){ return res.json();})
+      .then(function(res){
+          
+       })
+        .catch(function(err){ console.log('Erreur requête', err);});
+  }
+
+  function change_choix(s) {
+      var choix=document.getElementById(s)
+      var formData = new FormData();
+      formData.append(s, choix.value);
+      csrf=document.getElementsByName('csrfmiddlewaretoken')[0]
+      formData.append('csrfmiddlewaretoken',csrf.value)
+      fetch("/modification_choix_orientation", {
       method : 'POST',
       headers : {
       'Accept': 'application/json, text/plain, */*',
