@@ -249,6 +249,12 @@ def fiche_renseignements(request,id_menu,context):
         if affiche_choix_option:
             context["choixoption"]=obj.option
             context["affiche_choix_option"]=True
+        if affiche_choix_orientation:
+            context["choix1"]=obj.choix1
+            context["choix2"]=obj.choix2
+            context["choix3"]=obj.choix3
+            context["choix4"]=obj.choix4
+            context["affiche_choix_orientation"]=True
     except:
         return redirect('/home')
     context["jolinom"]=JOLI_NOM

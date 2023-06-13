@@ -12,7 +12,15 @@
       <option value="I" {% if choixoption == "I" %}selected="selected"{% endif %}> Informatique </option> 
       <option value="S" {% if choixoption == "S" %}selected="selected"{% endif %}> SI sans TP </option> 
       <option value="T" {% if choixoption == "T" %}selected="selected"{% endif %}> SI avec TP </option> 
-  </select>{% endif %}
+  </select>{% endif %}  {% if affiche_choix_orientation %} 
+  choix d'orientation 1 : <select id="choix1" onchange="" type="select">
+    <option value="X" > Sans choix </option> 
+    <option value="A" {% if choix1 == "A" %}selected="selected"{% endif %}> MP* </option> 
+    <option value="B" {% if choix1 == "B" %}selected="selected"{% endif %}> MP</option> 
+    <option value="C" {% if choix1 == "C" %}selected="selected"{% endif %}> PSI* </option> 
+    <option value="D" {% if choix1 == "D" %}selected="selected"{% endif %}> PSI </option> 
+    <option value="E" {% if choix1 == "E" %}selected="selected"{% endif %}> Réorientation </option> 
+</select>{% endif %}
     {% csrf_token %}<BR><BR>
         <p >
           <label for="prenomusage"> Prénom d'usage : </label>

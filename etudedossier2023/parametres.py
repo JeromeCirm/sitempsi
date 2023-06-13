@@ -746,6 +746,7 @@ def convertion_xslx_minimal():
         df=pd.read_sql("SELECT * FROM parcoursup",conn)
         c=associationColonnes["rangfinal"]
         df["classement"]=""
+        df["testjerome"]=8000
         for index, row in df.iterrows():
             if df.at[index,associationColonnes["encf"]]=="ENCF":
                 df.at[index,"classement"]="ENCF"
@@ -755,4 +756,5 @@ def convertion_xslx_minimal():
                     df.at[index,"classement"]="NC"
                 else:
                     df.at[index,"classement"]=str(rg)
+                df.at[index,"testjerome"]=rg
         df.to_excel('etudedossier2023/stockage/fichierfinal.xlsx',sheet_name='parcoursup')    
