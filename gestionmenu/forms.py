@@ -42,7 +42,7 @@ class RenseignementsForm(ModelForm):
             "accessordinateur" : "as-tu accès à un ordinateur personnel ?",
             "connexioninternet" : "as-tu possibilité de te connecter régulièrement à internet ?"
         }
-        exclude=('nomusage','prenomusage','login','année','option','choix1','choix2','choix3','choix4','pdf')
+        exclude=('nomusage','prenomusage','login','année','option','pdf')
 
 class MenuForm(ModelForm):
     type_de_menu=forms.ChoiceField(choices=[('l','liste de fichiers'),('f','fichier unique')])
