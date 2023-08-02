@@ -19,6 +19,8 @@ var categorie="{{ dossier.categorieDossier }}"
     <input type="hidden" id="CategorieDossier" name="CategorieDossier" value="{{ dossier.categorieDossier }}">
     <input type="hidden" id="NoteAChanger" name="NoteAChanger" value="false">
     <input type="hidden" id="AncienNumeroDossier" name="NumeroDossier" value="{{ dossier.numeroDossier }}">
+    <input type="hidden" id="extraction_donnees" name="extraction_donnees" value="">
+    <input type="hidden" id="extraction_donnees_login" name="extraction_donnees_login" value="">
 {% if pasexpert %} <input type="checkbox" name="pasexpert" checked hidden> {% endif %}
 {% if boursier %} <input type="checkbox" name="boursier" checked hidden> {% endif %}
 {% for x in orderby %} <input type="hidden" name="ordre[]" value="{{ x }}"> {% endfor %}
@@ -97,7 +99,7 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> Bac NSI: </TD><TD>{{ dossier.noteBacNSI }}/20</TD></TR>
             <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
         </TABLE>    </DIV>
-    <DIV class="red">  <BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
+    <DIV class="red">  {{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
         {% if dossier.dossierEtudie != "oui" %}  dossier non étudié !<BR> {% endif %}       
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2023' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2023' nompdf %}">Télécharger le PDF</a>
     </DIV>
@@ -164,6 +166,8 @@ var NoteActuelle=document.getElementById("NoteActuelle")
 var NoteActuelle=document.getElementById("NoteActuelle")
 var NotesAnnees=document.getElementById("NotesAnnees")
 var NotesBac=document.getElementById("NotesBac")
+var extraction_donnees=document.getElementById("extraction_donnees")
+var extraction_donnees_login=document.getElementById("extraction_donnees_login")
 var maxligne={{ maxligne }}
 
  function ouvre_pdf() {
@@ -334,9 +338,16 @@ function validation_note() {  //vérifie que la nouvelle note est correcte avant
     } 
 }
 
+function extrait_donnees() { //extrait les données pour une incorporation en fiches élèves
+    extraction_donnees_login.value=prompt("login pour l'extraction : ","")
+    extraction_donnees.value="oui"
+    Formulaire.submit()
+}
+
 RangActuel.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 NouveauRang.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 RangCherche.value=trouve_rang(parseFloat(NoteActuelle.textContent)) 
+
 </SCRIPT>
 
 {% endblock body %}
