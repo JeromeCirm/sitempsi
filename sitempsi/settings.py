@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',    
     'gestionmenu.apps.GestionmenuConfig', 
+    'etudedossier2021.apps.Etudedossier2021Config', 
     'etudedossier2022.apps.Etudedossier2022Config', 
     'etudedossier2023.apps.Etudedossier2023Config', 
 ]
@@ -60,6 +61,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR/'base/templates/base',BASE_DIR/'gestionmenu/templates/gestionmenu',
+                 BASE_DIR/'etudedossier2021/templates/etudedossier2021',
                  BASE_DIR/'etudedossier2022/templates/etudedossier2022',
                  BASE_DIR/'etudedossier2023/templates/etudedossier2023'
                ],

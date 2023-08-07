@@ -17,11 +17,12 @@ sys.path.append("..")
 from config_generale import *
 from etudedossier2022.views import selection as selection2022
 from etudedossier2023.views import selection as selection2023
+from etudedossier2021.views import selection as selection2021
 
 # liste des fonctions correspondant à un menu perso
 # à cela, on ajouter la fonction "liste_fichier" 
 # qui correspond à un menu générique créé par un gestionnaire de menu
-liste_menu=liste_generic + liste_classe+['fichier_unique','parcoursup2022','parcoursup2023']
+liste_menu=liste_generic + liste_classe+['fichier_unique','parcoursup2021','parcoursup2022','parcoursup2023']
 
 try:
     from .hors_git.fonctions_hors_git import * 
@@ -29,6 +30,9 @@ try:
 except:
     print("pas d'hors-git trouvé")
     pass
+
+def parcoursup2021(request,numero,context):
+    return selection2021(request)
 
 def parcoursup2022(request,numero,context):
     return selection2022(request)

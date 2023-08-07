@@ -1,0 +1,33 @@
+{% extends 'basedossier2021.html' %}
+
+{% block body %} 
+
+<a href="{% url 'selection_etudedossier2021' %}">Retour à l'index </a><BR><BR>
+    
+    <DIV class="containeur_tableau_recap">
+    <TABLE class="tableau_recap">
+    <THEAD>
+    <TR><TH>Nom</TH><TH>Prénom</TH><TH>Département</TH><TH>Ville</TH><TH>Lycée</TH><TH>Spécial Viré</TH><TH>Problème repéré</TH><TH>Perso Marc</TH><TH>Note actuelle</TH><TH>Rang actuel</TH><TH>Numéro Sélection</TH><TH>binôme</TH><TH>Commentaire </TH><TH>Numéro de dossier</TH><TH></TH></TR></THEAD>
+    <TBODY> {%for undossier in lesdossiers %}
+        <TR>
+            <TD> {{ undossier.nom }}</TD>
+            <TD> {{ undossier.prenom }}</TD>
+            <TD> {{ undossier.departement }}</TD>
+            <TD> {{ undossier.ville }}</TD>
+            <TD> {{ undossier.lycee }}</TD>
+            <TD> {{ undossier.specialVire }}</TD>
+            <TD> {{ undossier.problemeRepere }}</TD>
+            <TD> {{ undossier.persoMarc }}</TD>
+            <TD> {{ undossier.noteActuelle }}</TD>
+            <TD> {{ undossier.rangActuel }}</TD>
+            <TD> {{ undossier.compteur }}</TD>
+            <TD> {{ undossier.binome }}</TD>
+            <TD> {{ undossier.commentaireTraitement }}</TD>
+            <TD> {{ undossier.numeroDossier }}</TD>
+            <TD> {{ undossier.boursier }}</TD>
+        </TR> {% endfor %}
+    </TBODY>
+    </TABLE>
+    </DIV>  
+
+{% endblock body %}

@@ -18,6 +18,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path('adminj/', admin.site.urls),
+    path('etudedossier2021/', include('etudedossier2021.urls')),
     path('etudedossier2022/', include('etudedossier2022.urls')),
     path('etudedossier2023/', include('etudedossier2023.urls')),
     path('', include('gestionmenu.urls')),

@@ -7,6 +7,8 @@ gestionmenu/donnees_perso.py
 gestionmenu/hors_git.py
 config_generale_perso.py
 gestionmenu/hors_git/*
+etudedossier2021/fiches/*
+etudedossier2021/stockage/*
 etudedossier2022/fiches/*
 etudedossier2022/stockage/*
 etudedossier2023/fiches/*
