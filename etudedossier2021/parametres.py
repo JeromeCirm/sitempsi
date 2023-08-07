@@ -676,7 +676,7 @@ def patch():
 def extraction_donnees(request):
     context={}
     login=request.POST["extraction_donnees_login"]
-    if True: #try:
+    try:
         lire_un_dossier(request,context)
         donnees_a_extraire={}
         donnees_a_extraire["prenomofficiel"]=context["dossier"]["prenom"]
@@ -687,7 +687,7 @@ def extraction_donnees(request):
         donnees_a_extraire["lycee_officiel"]=context["dossier"]["lycee"]
         donnees_a_extraire["ville_officiel"]=context["dossier"]["ville"]
         donnees_a_extraire["departement_officiel"]=context["dossier"]["departement"]
-        donnees_a_extraire["date_naissance_officiel"]=context["dossier"]["dateNaissance"]
+        donnees_a_extraire["date_naissance_officiel"]=context["dossier"]["dateNaissance"] 
         donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
         lesnotes=recuperer_les_notes()
         donnees_a_extraire["rang"]=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
@@ -702,5 +702,5 @@ def extraction_donnees(request):
             if numdossier in x:
                 shutil.copy("etudedossier2021/fiches/"+x,"private_files/transfert_fiche/"+login+"_2021.pdf")
         return "extraction réussie pour "+login
-    #except:
+    except:
         return "extraction impossible pour "+login

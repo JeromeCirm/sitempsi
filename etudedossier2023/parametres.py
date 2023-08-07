@@ -773,6 +773,7 @@ def extraction_donnees(request):
         donnees_a_extraire["lycee_officiel"]=context["dossier"]["lycee"]
         donnees_a_extraire["ville_officiel"]=context["dossier"]["ville"]
         donnees_a_extraire["departement_officiel"]=context["dossier"]["departement"]
+        donnees_a_extraire["date_naissance_officiel"]=context["dossier"]["dateNaissance"] 
         donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
         lesnotes=recuperer_les_notes()
         donnees_a_extraire["rang"]=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
