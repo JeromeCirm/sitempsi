@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .parametres import rang_final,rang_fin_phase,sauvegarde_phase_generale,lire_un_dossier,lire_tous_les_dossiers,prepare_selection,convertion_excel,convertion_xslx,maj_dossier,patch
+from .parametres import extraction_donnees,rang_final,rang_fin_phase,sauvegarde_phase_generale,lire_un_dossier,lire_tous_les_dossiers,prepare_selection,convertion_excel,convertion_xslx,maj_dossier,patch
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 from django.contrib.auth.models import Group, User
@@ -31,7 +31,9 @@ def affichage(request):
 def traitement(request):
     context={}
     if request.method=='POST':
-        if "NoteAChanger" in request.POST and request.POST["NoteAChanger"]=="true":
+        if "extraction_donnees" in request.POST and request.POST["extraction_donnees"]=="oui":
+            context["extraction_msg"]=extraction_donnees(request)
+        elif "NoteAChanger" in request.POST and request.POST["NoteAChanger"]=="true":
             maj_dossier(request)
     if lire_un_dossier(request,context):
         return render(request,'etudedossier2021/traitement.html',context)

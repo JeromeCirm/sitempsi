@@ -681,15 +681,19 @@ def extraction_donnees(request):
         donnees_a_extraire["ville_officiel"]=context["dossier"]["ville"]
         donnees_a_extraire["departement_officiel"]=context["dossier"]["departement"]
         donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
+        lesnotes=recuperer_les_notes()
+        donnees_a_extraire["rang"]=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
+        donnees_a_extraire["modif auto"]=context["dossier"]["problemeRepere"]
         numdossier=str(context["dossier"]["numeroDossier"])
-        if not path.exists("etudedossier2022/transfert_fiche"):
-            mkdir("etudedossier2022/transfert_fiche")
-        f = open("etudedossier2022/transfert_fiche/"+login+"_2022json", "w")
+        if not path.exists("private_files/transfert_fiche"):
+            mkdir("private_files/transfert_fiche")
+        f = open("private_files/transfert_fiche/"+login+"_2022json", "w")
         dump(donnees_a_extraire,f)
         f.close()
         for x in lesfichiersPDF:
             if numdossier in x:
-                shutil.copy("etudedossier2022/fiches/"+x,"etudedossier2022/transfert_fiche/"+login+"_2022.pdf")
+                shutil.copy("etudedossier2022/fiches/"+x,"private_files/transfert_fiche/"+login+"_2022.pdf")
         return "extraction réussie pour "+login
     except:
         return "extraction impossible pour "+login
+

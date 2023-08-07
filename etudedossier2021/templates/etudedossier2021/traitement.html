@@ -19,7 +19,9 @@ var categorie="{{ dossier.categorieDossier }}"
     <input type="hidden" id="CategorieDossier" name="CategorieDossier" value="{{ dossier.categorieDossier }}">
     <input type="hidden" id="NoteAChanger" name="NoteAChanger" value="false">
     <input type="hidden" id="AncienNumeroDossier" name="NumeroDossier" value="{{ dossier.numeroDossier }}">
-{% if pasexpert %} <input type="checkbox" name="pasexpert" checked hidden> {% endif %}
+    <input type="hidden" id="extraction_donnees" name="extraction_donnees" value="">
+    <input type="hidden" id="extraction_donnees_login" name="extraction_donnees_login" value="">
+    {% if pasexpert %} <input type="checkbox" name="pasexpert" checked hidden> {% endif %}
 {% if boursier %} <input type="checkbox" name="boursier" checked hidden> {% endif %}
 {% for x in orderby %} <input type="hidden" name="ordre[]" value="{{ x }}"> {% endfor %}
 {% for x in nomcolonne %} <input type="hidden" name="nomcolonne[]" value="{{ x }}"> {% endfor %}
@@ -88,7 +90,7 @@ var categorie="{{ dossier.categorieDossier }}"
             </TR>
         </TABLE>
     </DIV>
-    <DIV class="red">  <BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMatc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
+    <DIV class="red">   {{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMatc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
         {% if dossier.dossierEtudie != "oui" %}  dossier non étudié !<BR> {% endif %}       
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2021' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2021' nompdf %}">Télécharger le PDF</a>
     </DIV>
@@ -153,6 +155,8 @@ var LettreMotiv=document.getElementById("LettreMotiv")
 var NouvelleNote=document.getElementById("NouvelleNote")
 var NoteActuelle=document.getElementById("NoteActuelle")
 var NoteActuelle=document.getElementById("NoteActuelle")
+var extraction_donnees=document.getElementById("extraction_donnees")
+var extraction_donnees_login=document.getElementById("extraction_donnees_login")
 var maxligne={{ maxligne }}
 
  function ouvre_pdf() {
@@ -310,6 +314,12 @@ function validation_note() {  //vérifie que la nouvelle note est correcte avant
         NumeroLigne.value=ligneactuelle
         Formulaire.submit()
     } 
+}
+
+function extrait_donnees() { //extrait les données pour une incorporation en fiches élèves
+    extraction_donnees_login.value=prompt("login pour l'extraction : ","")
+    extraction_donnees.value="oui"
+    Formulaire.submit()
 }
 
 RangActuel.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 

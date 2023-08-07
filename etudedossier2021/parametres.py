@@ -1,10 +1,12 @@
 from sqlalchemy import create_engine
 import pandas as pd
-from os import remove,listdir
+from os import remove,listdir,mkdir,path
 from django.contrib.auth.models import Group, User
 from .models import SauvegardeSelection2021
-from json import dumps,loads
+from json import dumps,loads,dump
 import base64
+import shutil
+
 
 engine=create_engine('sqlite:///etudedossier2021/stockage/versionxls.db',echo=False)
 fichier_lycee=pd.read_csv('etudedossier2021/aa_doc annexes/lycees.csv',sep=";") 
@@ -348,6 +350,7 @@ def lire_tous_les_dossiers(request,context):
         context["lesdossiers"]=lesdossiers
 
 def nb_boursier(limite=1500):
+    return 1
     with engine.connect() as conn :
         cmd="SELECT count(*) FROM (SELECT * FROM parcoursup ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC LIMIT 1500) WHERE "+p(associationColonnes["boursier"])+"!='Non boursier'"
         #print(cmd)
@@ -395,7 +398,10 @@ def lire_un_dossier(request,context):
         row=res[ligne-1]  # une seule ligne normalement
         dossier={}
         for x in associationColonnes:
-            dossier[x]=row[associationColonnes[x]]
+            try:
+                dossier[x]=row[associationColonnes[x]]
+            except:
+                pass
         context["dossier"]=dossier
         context["categorie"]=categorie_dic
         context["couleurs"]=couleurs_dic
@@ -412,6 +418,7 @@ def lire_un_dossier(request,context):
         context["rangfinalestime"]=rg
         context["offset"]=offset
         #print(context["statslycee"])
+        print(context)
         return True
 
 def recuperer_les_notes(cate=""):
@@ -547,6 +554,7 @@ def sauvegarde_phase_generale():
             conn.execute(cmd)
 
 def calcul_rang_final(row):
+        return 1,1
         lesnotes={}
         lesnotes["très bon"]=recuperer_les_notes("très bon")
         lesnotes["bon"]=recuperer_les_notes("bon")
@@ -664,3 +672,35 @@ def patch_old3():
 
 def patch():
     pass     
+
+def extraction_donnees(request):
+    context={}
+    login=request.POST["extraction_donnees_login"]
+    if True: #try:
+        lire_un_dossier(request,context)
+        donnees_a_extraire={}
+        donnees_a_extraire["prenomofficiel"]=context["dossier"]["prenom"]
+        donnees_a_extraire["nomofficiel"]=context["dossier"]["nom"]
+        donnees_a_extraire["rne_lycee"]=context["dossier"]["rneLycee"]
+        donnees_a_extraire["note_initiale"]=context["dossier"]["noteautoGlobale"]
+        donnees_a_extraire["note_finale"]=context["dossier"]["noteActuelle"]
+        donnees_a_extraire["lycee_officiel"]=context["dossier"]["lycee"]
+        donnees_a_extraire["ville_officiel"]=context["dossier"]["ville"]
+        donnees_a_extraire["departement_officiel"]=context["dossier"]["departement"]
+        donnees_a_extraire["date_naissance_officiel"]=context["dossier"]["dateNaissance"]
+        donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
+        lesnotes=recuperer_les_notes()
+        donnees_a_extraire["rang"]=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
+        donnees_a_extraire["modif auto"]=context["dossier"]["problemeRepere"]
+        numdossier=str(context["dossier"]["numeroDossier"])
+        if not path.exists("private_files/transfert_fiche"):
+            mkdir("private_files/transfert_fiche")
+        f = open("private_files/transfert_fiche/"+login+"_2021json", "w")
+        dump(donnees_a_extraire,f)
+        f.close()
+        for x in lesfichiersPDF:
+            if numdossier in x:
+                shutil.copy("etudedossier2021/fiches/"+x,"private_files/transfert_fiche/"+login+"_2021.pdf")
+        return "extraction réussie pour "+login
+    #except:
+        return "extraction impossible pour "+login
