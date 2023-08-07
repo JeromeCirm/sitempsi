@@ -1,10 +1,11 @@
 from sqlalchemy import create_engine
 import pandas as pd
-from os import remove,listdir
+from os import remove,listdir,mkdir,path
 from django.contrib.auth.models import Group, User
 from .models import SauvegardeSelection2023
-from json import dumps,loads
+from json import dumps,loads,dump
 import base64
+import shutil
 
 engine=create_engine('sqlite:///etudedossier2023/stockage/versionxls.db',echo=False)
 fichier_lycee=pd.read_csv('etudedossier2023/aa_doc annexes/lycees.csv',sep=";")
@@ -426,7 +427,6 @@ def lire_un_dossier(request,context):
         context["rangfinalestime"]=rg
         context["offset"]=offset
         context["notes_offset"]=notes_offset
-        #print(context["sauvegarde"])
         return True
 
 def recuperer_les_notes(cate=""):
@@ -758,3 +758,31 @@ def convertion_xslx_minimal():
                     df.at[index,"classement"]=str(rg)
                 df.at[index,"testjerome"]=rg
         df.to_excel('etudedossier2023/stockage/fichierfinal.xlsx',sheet_name='parcoursup')    
+
+def extraction_donnees(request):
+    context={}
+    login=request.POST["extraction_donnees_login"]
+    if True: #try:
+        lire_un_dossier(request,context)
+        donnees_a_extraire={}
+        donnees_a_extraire["prenomofficiel"]=context["dossier"]["prenom"]
+        donnees_a_extraire["nomofficiel"]=context["dossier"]["nom"]
+        donnees_a_extraire["rne_lycee"]=context["dossier"]["rneLycee"]
+        donnees_a_extraire["note_initiale"]=context["dossier"]["noteautoGlobale"]
+        donnees_a_extraire["note_finale"]=context["dossier"]["noteActuelle"]
+        donnees_a_extraire["lycee_officiel"]=context["dossier"]["lycee"]
+        donnees_a_extraire["ville_officiel"]=context["dossier"]["ville"]
+        donnees_a_extraire["departement_officiel"]=context["dossier"]["departement"]
+        donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
+        numdossier=str(context["dossier"]["numeroDossier"])
+        if not path.exists("etudedossier2023/transfert_fiche"):
+            mkdir("etudedossier2023/transfert_fiche")
+        f = open("etudedossier2023/transfert_fiche/"+login+"_2023json", "w")
+        dump(donnees_a_extraire,f)
+        f.close()
+        for x in lesfichiersPDF:
+            if numdossier in x:
+                shutil.copy("etudedossier2023/fiches/"+x,"etudedossier2023/transfert_fiche/"+login+"_2023.pdf")
+        return "extraction réussie pour "+login
+    #except:
+        return "extraction impossible pour "+login

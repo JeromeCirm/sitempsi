@@ -1,10 +1,11 @@
 from sqlalchemy import create_engine
 import pandas as pd
-from os import remove,listdir
+from os import remove,listdir,mkdir,path
 from django.contrib.auth.models import Group, User
 from .models import SauvegardeSelection
-from json import dumps,loads
+from json import dumps,loads,dump
 import base64
+import shutil
 
 engine=create_engine('sqlite:///etudedossier2022/stockage/versionxls.db',echo=False)
 fichier_lycee=pd.read_csv('etudedossier2022/aa_doc annexes/lycees.csv',sep=";")
@@ -664,3 +665,31 @@ def patch_old3():
 
 def patch():
     pass     
+
+def extraction_donnees(request):
+    context={}
+    login=request.POST["extraction_donnees_login"]
+    try:
+        lire_un_dossier(request,context)
+        donnees_a_extraire={}
+        donnees_a_extraire["prenomofficiel"]=context["dossier"]["prenom"]
+        donnees_a_extraire["nomofficiel"]=context["dossier"]["nom"]
+        donnees_a_extraire["rne_lycee"]=context["dossier"]["rneLycee"]
+        donnees_a_extraire["note_initiale"]=context["dossier"]["noteautoGlobale"]
+        donnees_a_extraire["note_finale"]=context["dossier"]["noteActuelle"]
+        donnees_a_extraire["lycee_officiel"]=context["dossier"]["lycee"]
+        donnees_a_extraire["ville_officiel"]=context["dossier"]["ville"]
+        donnees_a_extraire["departement_officiel"]=context["dossier"]["departement"]
+        donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
+        numdossier=str(context["dossier"]["numeroDossier"])
+        if not path.exists("etudedossier2022/transfert_fiche"):
+            mkdir("etudedossier2022/transfert_fiche")
+        f = open("etudedossier2022/transfert_fiche/"+login+"_2022json", "w")
+        dump(donnees_a_extraire,f)
+        f.close()
+        for x in lesfichiersPDF:
+            if numdossier in x:
+                shutil.copy("etudedossier2022/fiches/"+x,"etudedossier2022/transfert_fiche/"+login+"_2022.pdf")
+        return "extraction réussie pour "+login
+    except:
+        return "extraction impossible pour "+login
