@@ -691,7 +691,7 @@ def extraction_donnees(request):
         donnees_a_extraire["numero_dossier_parcoursup"]=context["dossier"]["numeroDossier"]
         lesnotes=recuperer_les_notes()
         donnees_a_extraire["rang"]=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
-        donnees_a_extraire["modif auto"]=context["dossier"]["problemeRepere"]
+        donnees_a_extraire["modif_auto"]=context["dossier"]["problemeRepere"]
         numdossier=str(context["dossier"]["numeroDossier"])
         if not path.exists("private_files/transfert_fiche"):
             mkdir("private_files/transfert_fiche")
