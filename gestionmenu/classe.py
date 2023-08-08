@@ -41,6 +41,8 @@ def gestion_jerome(request,id_menu,context):
             creation_colloscope_s2(context)
         if request.POST['action']=='export_renseignements':
             export_renseignements(context)
+        if request.POST['action']=='export_renseignements_v2':
+            export_renseignements_v2(context)
     return render(request,'gestionmenu/gestion_jerome.html',context)
 
 def contacts(request,id_menu,context):

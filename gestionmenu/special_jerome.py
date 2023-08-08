@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .donnees_classe import *
 from .generic import *
 from .models import *
+from json import dump
 
 # on garde login déjà existants et profs,en vérifiant que ce ne sont pas des élèves
 # suppression des "vieux" login profs
@@ -246,3 +247,19 @@ def export_renseignements(context):
         obj.option=row["option"]
         obj.pdf.set([])
         obj.save()
+
+def export_renseignements_v2(context):
+    fiches=Renseignements.objects.all()
+    donnees=[]
+    for unefiche in fiches:
+        d={}
+        #print(unefiche.__dict__)
+        for key,val in unefiche.__dict__.items():
+            if key[0]!='_' and key!='naissance':
+                d[key]=val
+        donnees.append(d)
+    #print(donnees)
+    f = open("private_files/fiches_renseignements.json", "w")
+    dump(donnees,f)
+    f.close()
+    pass

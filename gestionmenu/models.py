@@ -94,7 +94,7 @@ class Renseignements(models.Model):
     notesbac=models.TextField(null=True,blank=True)
     def uploadpath(self,filename):
         return 'private_files/fichiers/'+str(self.id)+extension(self.nomfichier)
-    pdf=models.ManyToManyField(Fichier)
+    pdf=models.ManyToManyField(Fichier, blank=True, null=True)
     choix1=models.CharField(max_length=1,choices=[['A','MP*'],['B','MP'],['C','PSI*'],['D','PSI'],['E','Réorientation']],null=True,blank=True)
     choix2=models.CharField(max_length=1,choices=[['A','MP*'],['B','MP'],['C','PSI*'],['D','PSI'],['E','Réorientation']],null=True,blank=True)
     choix3=models.CharField(max_length=1,choices=[['A','MP*'],['B','MP'],['C','PSI*'],['D','PSI'],['E','Réorientation']],null=True,blank=True)
