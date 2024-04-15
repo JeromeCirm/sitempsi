@@ -3,7 +3,7 @@
 
 {% block body %} 
 <a style="float:left;" href="{% url 'selection_etudedossier2021' %}">Retour à l'index </a><BR><BR>
-<h1> Page de gestion : {{ message }} </h1><BR>
+<h1> Page de gestion INACTIVE : {{ message }} </h1><BR>
 <form id="formulaire" method="POST" enctype="multipart/form-data" action="">
     {% csrf_token %}
     <input type="hidden" id="valeur" name="valeur" value="">

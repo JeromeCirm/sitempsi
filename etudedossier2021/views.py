@@ -44,7 +44,7 @@ def traitement(request):
 def gestion(request):
     context={}
     form=GestionDossier2021Form()
-    if request.method=='POST' and (request.user.username in ["nizon","rezzouk"]):
+    if False and request.method=='POST' and (request.user.username in ["nizon","rezzouk"]):
         if request.POST["valeur"]=='upload_initial':
             old=GestionDossier2021.objects.all()
             for x in old:

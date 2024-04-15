@@ -36,6 +36,7 @@ nouvelle année :
          - puis dans list_menu, ajouter "parcoursup2024"
          - puis juste après, créer une fonction "parcoursup2024"
 
+création du répertoire fiche si c'est après un git pull
 makemigrations/migrate
 
 en mode admin, créer un menu avec en lien "parcoursup2024"
