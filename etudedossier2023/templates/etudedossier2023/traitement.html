@@ -292,7 +292,7 @@ function trouve_note(rang) { // trouve une note correspondant au rang anoncé
 function modif_rang() { // affiche la note correspondant au nouveau rang
     res=parseInt(RangCherche.value)
     if (!isNaN(res)) {
-        NouvelleNote.value=trouve_note(res)
+        NouvelleNote.value= trouve_note(res)
         modif_note()
     }
 }
