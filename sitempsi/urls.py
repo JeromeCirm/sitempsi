@@ -21,6 +21,7 @@ urlpatterns = [
     path('etudedossier2021/', include('etudedossier2021.urls')),
     path('etudedossier2022/', include('etudedossier2022.urls')),
     path('etudedossier2023/', include('etudedossier2023.urls')),
+    path('etudedossier2024/', include('etudedossier2024.urls')),
     path('', include('gestionmenu.urls')),
     path('', include('base.urls')),
 ]

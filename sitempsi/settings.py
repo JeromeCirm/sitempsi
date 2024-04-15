@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'etudedossier2021.apps.Etudedossier2021Config', 
     'etudedossier2022.apps.Etudedossier2022Config', 
     'etudedossier2023.apps.Etudedossier2023Config', 
+    'etudedossier2024.apps.Etudedossier2024Config', 
 ]
 
 MIDDLEWARE = [
@@ -63,7 +64,8 @@ TEMPLATES = [
         'DIRS': [BASE_DIR/'base/templates/base',BASE_DIR/'gestionmenu/templates/gestionmenu',
                  BASE_DIR/'etudedossier2021/templates/etudedossier2021',
                  BASE_DIR/'etudedossier2022/templates/etudedossier2022',
-                 BASE_DIR/'etudedossier2023/templates/etudedossier2023'
+                 BASE_DIR/'etudedossier2023/templates/etudedossier2023',
+                 BASE_DIR/'etudedossier2024/templates/etudedossier2024',
                ],
         'APP_DIRS': True,
         'OPTIONS': {

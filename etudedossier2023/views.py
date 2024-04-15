@@ -44,7 +44,7 @@ def traitement(request):
 def gestion(request):
     context={}
     form=GestionDossier2023Form()
-    if request.method=='POST' and (request.user.username in ["nizon","rezzouk"]):
+    if False and request.method=='POST' and (request.user.username in ["nizon","rezzouk"]):
         if request.POST["valeur"]=='upload_initial':
             old=GestionDossier2023.objects.all()
             for x in old:
@@ -79,7 +79,7 @@ def gestion(request):
         if request.POST["valeur"]=='creation_excel_minimal':
             convertion_xslx_minimal()
             context["message"]="convertion vers xlsx minimal terminée"
-        context["form"]=form
+    context["form"]=form
     return render(request,'etudedossier2023/gestion.html',context)
 
 @auth([groupe_etudedossier])
