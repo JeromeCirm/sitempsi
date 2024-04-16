@@ -11,7 +11,7 @@ URL_COMPLETE = MY_URL_COMPLETE
 
 # Autorisation des pages de création de compte/récupération du mot de passe
 AUTORISE_CREATION = False
-AUTORISE_RECUPERATION = True
+AUTORISE_RECUPERATION = False
 
 # possibilité de ne pas envoyer le mail et d'afficher le texte en console
 ENVOIE_MAIL = MY_ENVOIE_MAIL
