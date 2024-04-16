@@ -4,27 +4,32 @@
 #  https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729
 #
 
+actuelle=2023 # l'année du fichier (donc -1 par rapport à l'année de traitement)
+
 import os
-os.chdir("/home/jerome/Documents/GitHub/sitempsi/etudedossier2023/aa_doc annexes")
+os.chdir("/home/jerome/Documents/GitHub/sitempsi/etudedossier"+str(actuelle+1)+"/aa_doc annexes")
 import pandas as pd
+from collections import defaultdict
 
 annees=["2018","2019","2020","2021"]
 
-donnees={ annee : pd.read_csv('lycees'+annee+'.csv',sep=";") for annee in annees}
+dtype={}
+donnees={ annee : pd.read_csv('lycees'+annee+'.csv',sep=";",dtype=dtype) for annee in annees}
 
 # pour l'année 2022 (et les suivantes? ) :
 # le fichier contient en fait toutes les années : on ne garde que la nouvelle
 # éventuellement à terme ce fichier peut suffire?
 
-annee2022=pd.read_csv('lycees2022.csv',sep=";")
-a_garder=[]
-for i in range(len(annee2022)):
-    if annee2022.iat[i,1]==2022:
-        a_garder.append(i)
-annee2022=annee2022.loc[a_garder]
-donnees["2022"]= annee2022
+annee_actuelle=pd.read_csv('lycees'+str(actuelle)+'.csv',sep=";")
+a_garder=defaultdict(list)
+for i in range(len(annee_actuelle)):
+    if annee_actuelle.iat[i,1]>=2022:
+        a_garder[annee_actuelle.iat[i,1]].append(i)
+for une_annee in range(2022,actuelle+1):
+    annee_actuelle_tmp=annee_actuelle.loc[a_garder[une_annee]]
+    donnees[str(une_annee)]= annee_actuelle_tmp
 
-annees.append("2022")
+annees.extend(str(x) for x in range(2022,actuelle+1))
 
 ## Extraits les colonnes intéressantes
 

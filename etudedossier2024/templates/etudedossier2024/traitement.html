@@ -44,12 +44,14 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> 2020 : </TD><TD> {{ statslycee.Presents2020 }} </TD><TD> {{ statslycee.Reussite2020 }} </TD><TD> {{ statslycee.Mentions2020 }} </TD></TR>
             <TR><TD> 2021 : </TD><TD> {{ statslycee.Presents2021 }} </TD><TD> {{ statslycee.Reussite2021 }} </TD><TD> {{ statslycee.Mentions2021 }} </TD></TR>
             <TR><TD> 2022 : </TD><TD> {{ statslycee.Presents2022 }} </TD><TD> {{ statslycee.Reussite2022 }} </TD><TD> {{ statslycee.Mentions2022 }} </TD></TR>            
+            <TR><TD> 2023 : </TD><TD> {{ statslycee.Presents2023 }} </TD><TD> {{ statslycee.Reussite2023 }} </TD><TD> {{ statslycee.Mentions2023 }} </TD></TR>            
             </TABLE>           
 
            </TABLE>
         <TABLE id="TableLycée2" style="display : none">
-        <TR><TD>modif à appliquer en math : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff math']]);?>;"><?php echo $res_lycée[$col_lycées['diff math']];?></TD></TR>
+        <!--<TR><TD>modif à appliquer en math : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff math']]);?>;"><?php echo $res_lycée[$col_lycées['diff math']];?></TD></TR>
         <TR><TD>modif à appliquer en physique : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff phys']]);?>;"><?php echo $res_lycée[$col_lycées['diff phys']];?></TD></TR>
+        reste du fichier de julien : non utilisé maintenant ?-->
         <TR><TD>Avis détaillé : </TD><TD>{{ dossier.avisProviseurDetail }}</TD></TR>
         <TR><TD>Méthode de travail : </TD><TD>{{ dossier.methodeTravail }}</TD></TR>
         <TR><TD>Autonomie : </TD><TD>{{ dossier.autonomie }}</TD></TR>

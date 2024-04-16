@@ -99,6 +99,8 @@ associationColonnes={
     "noteMathComplementaires" : "noteMathComplementaires",
     "rangMathComplementaires" : "rangMathComplementaires",
     "effectifMathComplementaires" : "effectifMathComplementaires",
+
+    "NBmotmauvais" : "NBmotmauvais", # nombre de mots-clefs en rouge
 }
 
 associationColonnesLycees= {
@@ -163,6 +165,7 @@ listechoix={ # liste des items de tris dans sélection
         "le nom de la classe" : associationColonnes["nomClasse"],
         "le binôme" : associationColonnes["binome"],
         "le rang en phase principale" : associationColonnes["rangfinphase"],
+        "le nombre de mots-clefs en rouge" : associationColonnes["NBmotmauvais"],
 }
 
 def couleur(txt):
@@ -460,7 +463,7 @@ def convertion_excel():
     ## *5 des notes auto
     def fois_5(x):
         try:
-            return int(5*x*100)/100
+            return int(5*x*1000)/1000
         except:
             return 0
     liste={ "noteautoScience","noteautoLettre","noteautoMoyenne","noteautoGlobale"}
