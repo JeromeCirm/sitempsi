@@ -69,12 +69,14 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD>Prénom : </TD><TD>{{ dossier.prenom }}</TD></TR>
         <TR><TD>Date de naissance : </TD><TD>{{ dossier.dateNaissance }}</TD></TR>
         <TR><TD>Boursier : </TD><TD {% if dossier.boursier != "Non boursier" %} style="color : red;"{% endif %}>{{ dossier.boursier }}</TD></TR>
-        <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
-        <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
         <TR><TD>Dossiers de ce lycée : </TD><TD>{{ dossierLycée }}</TD></TR>
         </TABLE>
         <TABLE id="LettreMotiv" style="display : none">
         <TR><TD>{{ dossier.lettreMotivation }}</TD></TR>
+        </TABLE>
+        <TABLE>
+            <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
+            <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
         </TABLE>
     </DIV>
     <DIV>
@@ -82,8 +84,8 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TH> Matière </TH><TH>Note</TH><TH>Rang</TH><TH> Matière </TH><TH>Note</TH><TH>Rang</TH></TR>
         <TR><TD> Math Term: </TD><TD>{{ dossier.noteMathTerm }}/20</TD><TD>{{ dossier.rangMathTerme }}/{{ dossier.effectifMathTerm }}</TD>
             <TD> Physique Term: </TD><TD>{{ dossier.notePhysiqueTerm }}/20</TD><TD>{{ dossier.rangPhysiqueTerm }}/{{ dossier.effectifPhysiqueTerm }}</TD></TR>
-        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD>{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}</TD>
-            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD>{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}</TD></TR>
+        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD><!--{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}--></TD>
+            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD><!--{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}--></TD></TR>
         <TR><TD> Math Expertes: </TD><TD>{{ dossier.noteMathExpertes }}/20</TD><TD>{{ dossier.rangMathExpertes }}/{{ dossier.effectifMathExpertes }}</TD>
             <TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
         <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD></TD></TR>        
