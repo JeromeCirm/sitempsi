@@ -35,6 +35,10 @@ nouvelle année :
          - au début : "from etudedossier2024.views import selection as selection2024"
          - puis dans list_menu, ajouter "parcoursup2024"
          - puis juste après, créer une fonction "parcoursup2024"
+-optionnel : gestion des lycées : 
+    - partie aa_doc annexes à modifier/lancer (quelques warning : vérifier un jour)
+    - modifier traitement.html pour faire apparaitre la nouvelle année
+    
 
 création du répertoire fiche si c'est après un git pull
 makemigrations/migrate
