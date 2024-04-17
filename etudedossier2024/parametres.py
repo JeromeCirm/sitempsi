@@ -145,9 +145,9 @@ couleurs_dic={
 
 associe_binome_dic = {
     "B1" : "Catherine - Jérôme",
-    "B2" : "Pierre B - Marc",
-    "B3" : "Florent - Pierre C",
-    "B4" : "Frédéric - Tommy"
+    "B2" : "Pierre B - Frédéric",
+    "B3" : "Florent - Marc",
+    "B4" : "Pierre C - Tommy"
 }
 
 listechoix={ # liste des items de tris dans sélection
