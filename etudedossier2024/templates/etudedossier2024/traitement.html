@@ -64,7 +64,9 @@ var categorie="{{ dossier.categorieDossier }}"
          <BR> <BR> <span style="color : blue;">{% if False %}rang fin phase 1 : {{ dossier.rangfinphase }} (avant ajustement : {{ dossier.sauvegarde }}) <BR>{% endif %}
                 rang final estimé: {{ rangfinalestime }}</span><BR><span>
                 {%for x,value in offset.items %}  {{ value.0 }} ({{ value.1 }})- {{ x }}  - {% endfor %}</span><BR>
-                    {% if False %}<span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}</DIV>
+                    {% if False %}<span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}
+        {% if dossier.dossierEtudie != "oui" %} <br><br><br><h2 style="color : blue"> dossier non étudié ! </h2> {% endif %}  
+    </DIV>
     <DIV>
         <TABLE id="InfoGenerale">
         <TR><TD>Nom : </TD><TD>{{ dossier.nom }}</TD></TR>
@@ -104,7 +106,7 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
         </TABLE>    </DIV>
     <DIV class="red">  {{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
-        {% if dossier.dossierEtudie != "oui" %}  dossier non étudié !<BR> {% endif %}       
+             
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2024' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2024' nompdf %}">Télécharger le PDF</a>
     </DIV>
     <DIV>

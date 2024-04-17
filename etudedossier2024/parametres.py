@@ -540,8 +540,22 @@ def convertion_excel():
 def eng(str): # échapper les guillements
     return  str.replace('"',"'")
 
+def est_encf(num_dossier):
+    # renvoie vrai si le dossier est ENCF ou en cas d'erreur
+    try:
+        with engine.connect() as conn :
+            res=conn.execute("SELECT * FROM parcoursup WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(num_dossier)+"'").fetchall()
+            if len(res)!=1:
+                return True
+            row=res[0] # une seule ligne normalement
+            return row[associationColonnes["encf"]]=="ENCF"
+    except:
+        return True
+
 def maj_dossier(request):
     with engine.connect() as conn :
+        if est_encf(request.POST['NumeroDossier']):  # patch pour ne pas modifier les ENCF 
+            return
         if "arevoir" in request.POST: arevoir="oui"
         else : arevoir="non"
         if "risque" in request.POST: risque="oui"
