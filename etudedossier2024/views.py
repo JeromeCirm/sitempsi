@@ -92,7 +92,7 @@ def download(request,nom):
             nom=(base64.b32decode(nom)).decode("utf-8")
             document=open('etudedossier2024/fiches/'+nom,'rb')
         response = HttpResponse(FileWrapper(document),content_type='application/octet-stream')
-        response['Content-Disposition'] = 'attachment; filename="'+nom+'"'
+        response['Content-Disposition'] = 'attachment; filename="dossier.pdf"' # problème de nom parfois : on le supprime
         return response    
     except:
         return HttpResponse("impossible de trouver le fichier")
