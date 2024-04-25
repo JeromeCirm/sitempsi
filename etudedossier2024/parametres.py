@@ -384,7 +384,7 @@ def lire_stat(rne):
 
 def lire_un_dossier(request,context):
     def nom_fichier_pdf():
-        numdossier=str(dossier[associationColonnes["numeroDossier"]])+"-"
+        numdossier="-"+str(dossier[associationColonnes["numeroDossier"]])+"-"
         for x in lesfichiersPDF:
             if numdossier in x:
                 return base64.b32encode(bytes(x,"utf-8"))
