@@ -61,7 +61,7 @@ var categorie="{{ dossier.categorieDossier }}"
     </DIV>
     <DIV > <span style="color:{{ couleurs.tresBon }}"> {% if dossier.motclebon != None %}{{ dossier.motclebon }} {% endif %} </span> 
            <span class="red"> {% if dossier.motclemauvais != None %}{{ dossier.motclemauvais }} {% endif %} </span>
-         <BR> <BR> <span style="color : blue;">{% if False %}rang fin phase 1 : {{ dossier.rangfinphase }} (avant ajustement : {{ dossier.sauvegarde }}) <BR>{% endif %}
+         <BR> <BR> <span style="color : blue;">{% if True %}rang fin phase 1 : {{ dossier.rangfinphase }} (avant ajustement : {{ dossier.sauvegarde }}) <BR>{% endif %}
                 rang final estimé: {{ rangfinalestime }}</span><BR><span>
                 {%for x,value in offset.items %}  {{ value.0 }} ({{ value.1 }})- {{ x }}  - {% endfor %}</span><BR>
                     {% if False %}<span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}
