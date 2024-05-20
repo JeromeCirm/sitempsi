@@ -34,7 +34,7 @@ def traitement(request):
         if "extraction_donnees" in request.POST and request.POST["extraction_donnees"]=="oui":
             context["extraction_msg"]=extraction_donnees(request)
         else:
-            return # empeche les modification de notes
+            pass # empeche les modification de notes
         #elif "NoteAChanger" in request.POST and request.POST["NoteAChanger"]=="true":
         #    maj_dossier(request)                   
     if lire_un_dossier(request,context):
