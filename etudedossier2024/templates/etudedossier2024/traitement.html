@@ -81,6 +81,7 @@ var categorie="{{ dossier.categorieDossier }}"
         <TABLE>
             <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
             <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
+            {% if nb_anciens_eleves %} <TR><TD><span style="color : blue;"> anciens élèves :{{ nb_anciens_eleves }}</span> <button onclick="ancien_eleves()"> go</button></TD></TR> {% endif %}
         </TABLE>
     </DIV>
     <DIV>
@@ -345,7 +346,7 @@ function validation_note() {  //vérifie que la nouvelle note est correcte avant
 }
 
 function extrait_donnees() { //extrait les données pour une incorporation en fiches élèves
-    extraction_donnees_login.value=prompt("login pour l'extraction : ","")
+    extraction_donnees_login.value=prompt("commentaire pour l'extraction : ","")
     extraction_donnees.value="oui"
     Formulaire.submit()
 }
@@ -354,6 +355,14 @@ RangActuel.textContent=trouve_rang(parseFloat(NoteActuelle.textContent))
 NouveauRang.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 RangCherche.value=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 
+let anciens_eleves_str=""
+{% for line in anciens_eleves %}
+anciens_eleves_str+="{{line.annee}} : {{line.prenom}} {{line.nom}}, init: {{line.note_initiale}} final: {{line.note_initiale}} rang: {{line.rang}}, {{line.commentaire}}\n"
+{% endfor %}
+
+function ancien_eleves() {
+ alert(anciens_eleves_str)
+}
 </SCRIPT>
 
 {% endblock body %}

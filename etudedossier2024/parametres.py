@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 from os import remove,listdir,mkdir,path
 from django.contrib.auth.models import Group, User
-from .models import SauvegardeSelection2024
+from .models import SauvegardeSelection2024,AnciensEleves
 from json import dumps,loads,dump
 import base64
 import shutil
@@ -430,6 +430,8 @@ def lire_un_dossier(request,context):
         context["rangfinalestime"]=rg
         context["offset"]=offset
         context["notes_offset"]=notes_offset
+        context["anciens_eleves"]=recup_anciens(dossier["rneLycee"])
+        context["nb_anciens_eleves"]=len(context["anciens_eleves"])
         return True
 
 def recuperer_les_notes(cate=""):
@@ -807,3 +809,33 @@ def extraction_donnees(request):
         return "extraction réussie pour "+login
     except:
         return "extraction impossible pour "+login
+
+def extraction_donnees(request):
+    context={}
+    commentaire=request.POST["extraction_donnees_login"]
+    try:
+        lire_un_dossier(request,context)
+        num_dossier=context["dossier"]["numeroDossier"]
+        prenom=context["dossier"]["prenom"]
+        nom=context["dossier"]["nom"]
+        rne=context["dossier"]["rneLycee"]
+        note_initiale=context["dossier"]["noteautoGlobale"]
+        note_finale=context["dossier"]["noteActuelle"]
+        lesnotes=recuperer_les_notes()
+        rang=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
+        modif_auto=context["dossier"]["problemeRepere"]
+        numdossier=str(context["dossier"]["numeroDossier"])
+        try:
+            obj=AnciensEleves.objects.get(annee=2024,num_dossier=num_dossier)
+            obj.commentaire=commentaire
+            obj.save()
+        except:
+            AnciensEleves(annee=2024,num_dossier=num_dossier,rne=rne,prenom=prenom,nom=nom,note_initiale=note_initiale,note_finale=note_finale,
+        rang=rang,modif_auto=modif_auto,commentaire=commentaire).save()
+        return "extraction réussie "
+    except:
+        return "extraction impossible"
+
+def recup_anciens(rne):
+    return AnciensEleves.objects.filter(rne=rne)
+

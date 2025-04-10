@@ -14,4 +14,18 @@ class SauvegardeSelection2024(models.Model):
     ordre=models.TextField(default="")
     boursier=models.BooleanField(default=False)
     pasexpert=models.BooleanField(default=False)
+
+class AnciensEleves(models.Model):
+    annee=models.TextField(default="")
+    num_dossier=models.TextField(default="")
+    rne=models.TextField(default="")
+    prenom=models.TextField(default="")
+    nom=models.TextField(default="")
+    note_initiale=models.TextField(default="")
+    note_finale=models.TextField(default="")
+    rang=models.TextField(default="")
+    modif_auto=models.TextField(default="")
+    commentaire=models.TextField(default="")
+
+
     

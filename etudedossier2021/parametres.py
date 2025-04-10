@@ -6,6 +6,7 @@ from .models import SauvegardeSelection2021
 from json import dumps,loads,dump
 import base64
 import shutil
+from etudedossier2024.models import AnciensEleves
 
 
 engine=create_engine('sqlite:///etudedossier2021/stockage/versionxls.db',echo=False)
@@ -704,3 +705,32 @@ def extraction_donnees(request):
         return "extraction réussie pour "+login
     except:
         return "extraction impossible pour "+login
+
+def extraction_donnees(request):
+    context={}
+    commentaire=request.POST["extraction_donnees_login"]
+    try:
+        lire_un_dossier(request,context)
+        num_dossier=context["dossier"]["numeroDossier"]
+        prenom=context["dossier"]["prenom"]
+        nom=context["dossier"]["nom"]
+        rne=context["dossier"]["rneLycee"]
+        note_initiale=context["dossier"]["noteautoGlobale"]
+        note_finale=context["dossier"]["noteActuelle"]
+        lesnotes=recuperer_les_notes()
+        rang=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
+        modif_auto=context["dossier"]["problemeRepere"]
+        numdossier=str(context["dossier"]["numeroDossier"])
+        try:
+            obj=AnciensEleves.objects.get(annee=2021,num_dossier=num_dossier)
+            obj.commentaire=commentaire
+            obj.save()
+        except:
+            AnciensEleves(annee=2021,num_dossier=num_dossier,rne=rne,prenom=prenom,nom=nom,note_initiale=note_initiale,note_finale=note_finale,
+        rang=rang,modif_auto=modif_auto,commentaire=commentaire).save()
+        return "extraction réussie "
+    except:
+        return "extraction impossible"
+
+def recup_anciens(rne):
+    return AnciensEleves.objects.filter(rne=rne)
