@@ -813,7 +813,7 @@ def extraction_donnees(request):
 def extraction_donnees(request):
     context={}
     commentaire=request.POST["extraction_donnees_login"]
-    if True: #try:
+    try:
         lire_un_dossier(request,context)
         num_dossier=context["dossier"]["numeroDossier"]
         prenom=context["dossier"]["prenom"]
@@ -839,7 +839,7 @@ def extraction_donnees(request):
             AnciensEleves(annee=2024,classe=classe,num_dossier=num_dossier,rne=rne,prenom=prenom,nom=nom,note_initiale=note_initiale,note_finale=note_finale,
         rang=rang,modif_auto=modif_auto,commentaire=commentaire).save()
         return "extraction réussie "
-    #except:
+    except:
         return "extraction impossible"
 
 def recup_anciens(rne):
