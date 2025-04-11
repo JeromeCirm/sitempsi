@@ -357,7 +357,7 @@ RangCherche.value=trouve_rang(parseFloat(NoteActuelle.textContent))
 
 let anciens_eleves_str=""
 {% for line in anciens_eleves %}
-anciens_eleves_str+="{{line.annee}} : {{line.prenom}} {{line.nom}}, init: {{line.note_initiale}} final: {{line.note_initiale}} rang: {{line.rang}}, {{line.commentaire}}\n"
+anciens_eleves_str+="{{line.annee}},{{line.classe}} : {{line.prenom}} {{line.nom}}, init: {{line.note_initiale}} final: {{line.note_initiale}} rang: {{line.rang}}, {{line.commentaire}}\n"
 {% endfor %}
 
 function ancien_eleves() {

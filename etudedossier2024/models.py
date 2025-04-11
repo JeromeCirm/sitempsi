@@ -17,6 +17,7 @@ class SauvegardeSelection2024(models.Model):
 
 class AnciensEleves(models.Model):
     annee=models.TextField(default="")
+    classe=models.TextField(default="")
     num_dossier=models.TextField(default="")
     rne=models.TextField(default="")
     prenom=models.TextField(default="")

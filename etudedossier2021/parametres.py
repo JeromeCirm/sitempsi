@@ -721,12 +721,18 @@ def extraction_donnees(request):
         rang=trouve_rang(lesnotes,context["dossier"]["noteActuelle"])
         modif_auto=context["dossier"]["problemeRepere"]
         numdossier=str(context["dossier"]["numeroDossier"])
+        if request.user.username in ["nizon","bouissou"]:
+            classe="MPSI1"
+        elif request.user.username in ["connault","kopp"]:
+            classe="MPSI2"
+        else:
+            classe=""
         try:
             obj=AnciensEleves.objects.get(annee=2021,num_dossier=num_dossier)
             obj.commentaire=commentaire
             obj.save()
         except:
-            AnciensEleves(annee=2021,num_dossier=num_dossier,rne=rne,prenom=prenom,nom=nom,note_initiale=note_initiale,note_finale=note_finale,
+            AnciensEleves(annee=2021,classe=classe,num_dossier=num_dossier,rne=rne,prenom=prenom,nom=nom,note_initiale=note_initiale,note_finale=note_finale,
         rang=rang,modif_auto=modif_auto,commentaire=commentaire).save()
         return "extraction réussie "
     except:
