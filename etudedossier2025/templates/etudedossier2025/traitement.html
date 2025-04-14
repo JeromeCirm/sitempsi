@@ -39,13 +39,17 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD>Avis du proviseur : </TD><TD>{{ dossier.avisProviseur }}</TD></TR>
         <TABLE id="TableLycée1b">
             <TR><TH> Année </TH><TH> Effectif </TH><TH> Réussite </TH><TH> Mention </TH></TR>
-            <TR><TD> 2018 : </TD><TD> {{ statslycee.Presents2018 }} </TD><TD> {{ statslycee.Reussite2018 }} </TD><TD> {{ statslycee.Mentions2018 }} </TD></TR>
-            <TR><TD> 2019 : </TD><TD> {{ statslycee.Presents2019 }} </TD><TD> {{ statslycee.Reussite2019 }} </TD><TD> {{ statslycee.Mentions2019 }} </TD></TR>
-            <TR><TD> 2020 : </TD><TD> {{ statslycee.Presents2020 }} </TD><TD> {{ statslycee.Reussite2020 }} </TD><TD> {{ statslycee.Mentions2020 }} </TD></TR>
-            <TR><TD> 2021 : </TD><TD> {{ statslycee.Presents2021 }} </TD><TD> {{ statslycee.Reussite2021 }} </TD><TD> {{ statslycee.Mentions2021 }} </TD></TR>
-            <TR><TD> 2022 : </TD><TD> {{ statslycee.Presents2022 }} </TD><TD> {{ statslycee.Reussite2022 }} </TD><TD> {{ statslycee.Mentions2022 }} </TD></TR>            
-            <TR><TD> 2023 : </TD><TD> {{ statslycee.Presents2023 }} </TD><TD> {{ statslycee.Reussite2023 }} </TD><TD> {{ statslycee.Mentions2023 }} </TD></TR>            
-            </TABLE>           
+        </TABLE>
+        <TABLE id="TableLycée1b">
+
+            <TR><TD> 2018 : </TD><TD> {{ statslycee.Presents2018 }} </TD><TD> {{ statslycee.Reussite2018 }} </TD><TD> {{ statslycee.Mentions2018 }} </TD><!--</TR>
+            <TR>--><TD> ** 2019 : </TD><TD> {{ statslycee.Presents2019 }} </TD><TD> {{ statslycee.Reussite2019 }} </TD><TD> {{ statslycee.Mentions2019 }} </TD></TR>
+            <TR><TD> 2020 : </TD><TD> {{ statslycee.Presents2020 }} </TD><TD> {{ statslycee.Reussite2020 }} </TD><TD> {{ statslycee.Mentions2020 }} </TD><!--</TR>
+            <TR>--><TD> ** 2021 : </TD><TD> {{ statslycee.Presents2021 }} </TD><TD> {{ statslycee.Reussite2021 }} </TD><TD> {{ statslycee.Mentions2021 }} </TD></TR>
+            <TR><TD> 2022 : </TD><TD> {{ statslycee.Presents2022 }} </TD><TD> {{ statslycee.Reussite2022 }} </TD><TD> {{ statslycee.Mentions2022 }} </TD><!--</TR>            
+            <TR>--><TD> ** 2023 : </TD><TD> {{ statslycee.Presents2023 }} </TD><TD> {{ statslycee.Reussite2023 }} </TD><TD> {{ statslycee.Mentions2023 }} </TD></TR>            
+            <TR><TD> 2024 : </TD><TD> {{ statslycee.Presents2024 }} </TD><TD> {{ statslycee.Reussite2024 }} </TD><TD> {{ statslycee.Mentions2024 }} </TD></TR>            
+        </TABLE>           
 
            </TABLE>
         <TABLE id="TableLycée2" style="display : none">
@@ -92,8 +96,8 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD><!--{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}--></TD>
             <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD><!--{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}--></TD></TR>
         <TR><TD> Math Expertes: </TD><TD>{{ dossier.noteMathExpertes }}/20</TD><TD>{{ dossier.rangMathExpertes }}/{{ dossier.effectifMathExpertes }}</TD>
-            <TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
-        <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD></TD></TR>        
+           <!--<TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
+        <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD>--></TD></TR>        
         <TR><TD> Bac fr écrit: </TD><TD>{{ dossier.bacFrEcrit }}/20</TD><TD></TD>
             <TD> Philo: </TD><TD>{{ dossier.notePhilo }}/20</TD><TD>{{ dossier.rangPhilo }}/{{ dossier.effectifPhilo }}</TD></TR>        
         <TR><TD> Bac fr oral: </TD><TD>{{ dossier.bacFrOral }}/20</TD><TD></TD>

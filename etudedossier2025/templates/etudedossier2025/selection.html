@@ -37,7 +37,7 @@
                 <button type="button" onclick="enregistre_selection()">Enregistrer la sélection</button>
                 <button type="button" onclick="etude_dossier_bis()">Etudier cette sélection de dossier</button>
                 <button type="button" onclick="tous_les_dossiers()">Afficher l'ensemble de ces dossiers</button><BR>
-                pour les binômes : {% for key,value in binome.items %} {{ key }} : {{ value }} {% endfor %}<BR>
+                pour les binômes : {% for key,value in binome.items %} {{ key }} : {{ value }} , {% endfor %}<BR>
                 pour les etiquettes : {% for key,value in etiquettes.items %}  {{ value }}, {% endfor %}<BR><BR>
 
 <!--                 <form  method="post" action=""> {% csrf_token %} RNE du lycée : <input name='RNE'> % au bac : <input name='pourcentbac'> % de mention<input name='pourcentmention'>

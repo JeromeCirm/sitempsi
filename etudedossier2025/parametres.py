@@ -146,9 +146,9 @@ couleurs_dic={
 
 associe_binome_dic = {
     "B1" : "Catherine - Jérôme",
-    "B2" : "Pierre B - Frédéric",
-    "B3" : "Florent - Marc",
-    "B4" : "Pierre C - Tommy"
+    "B2" : "Pierre B - Marc",
+    "B3" : "Florent - Pierre C",
+    "B4" : "Frédéric - Tommy"
 }
 
 listechoix={ # liste des items de tris dans sélection
@@ -844,6 +844,4 @@ def extraction_donnees(request):
         return "extraction impossible"
 
 def recup_anciens(rne):
-    print(rne,len(AnciensEleves.objects.filter(rne=rne)))
-    print(AnciensEleves.objects.all())
     return AnciensEleves.objects.filter(rne=rne)

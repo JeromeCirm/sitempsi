@@ -3,13 +3,17 @@
 #
 #  https://www.education.gouv.fr/les-indicateurs-de-resultats-des-colleges-et-des-lycees-377729
 #
+# ne pas prendre les ival ou ivac de l'année  mais, juste en dessous, "Voie générale et technologique" qui  a toutes les années en format plus agréable
 
-actuelle=2023 # l'année du fichier (donc -1 par rapport à l'année de traitement)
+actuelle=2024 # l'année du fichier (donc -1 par rapport à l'année de traitement)
 
 import os
-os.chdir("/home/jerome/Documents/GitHub/sitempsi/etudedossier"+str(actuelle+1)+"/aa_doc annexes")
+#os.chdir("/home/jerome/Documents/GitHub/sitempsi/etudedossier"+str(actuelle+1)+"/aa_doc annexes")
+os.chdir("/home/jerome/Bureau/aa_doc/") # linux portable 2025
+
 import pandas as pd
 from collections import defaultdict
+
 
 annees=["2018","2019","2020","2021"]
 
@@ -20,26 +24,42 @@ donnees={ annee : pd.read_csv('lycees'+annee+'.csv',sep=";",dtype=dtype) for ann
 # le fichier contient en fait toutes les années : on ne garde que la nouvelle
 # éventuellement à terme ce fichier peut suffire?
 
-annee_actuelle=pd.read_csv('lycees'+str(actuelle)+'.csv',sep=";")
+actuelle_old=2023
+annee_actuelle=pd.read_csv('lycees'+str(actuelle_old)+'.csv',sep=";")
 a_garder=defaultdict(list)
 for i in range(len(annee_actuelle)):
     if annee_actuelle.iat[i,1]>=2022:
         a_garder[annee_actuelle.iat[i,1]].append(i)
-for une_annee in range(2022,actuelle+1):
+for une_annee in range(2022,actuelle_old+1):
     annee_actuelle_tmp=annee_actuelle.loc[a_garder[une_annee]]
     donnees[str(une_annee)]= annee_actuelle_tmp
 
-annees.extend(str(x) for x in range(2022,actuelle+1))
+annees.extend(str(x) for x in range(2022,actuelle_old+1))
+
+annee_actuelle=pd.read_csv('lycees'+str(actuelle)+'.csv',sep=";")
+a_garder=defaultdict(list)
+for i in range(len(annee_actuelle)):
+    if annee_actuelle.iat[i,1]>=2024:
+        a_garder[annee_actuelle.iat[i,1]].append(i)
+for une_annee in range(2024,actuelle+1):
+    annee_actuelle_tmp=annee_actuelle.loc[a_garder[une_annee]]
+    donnees[str(une_annee)]= annee_actuelle_tmp
+
+annees.extend(str(x) for x in range(2024,actuelle+1))
 
 ## Extraits les colonnes intéressantes
 
 list_colonnes_old={  'Presents - S' : "Presents", 'Taux de reussite - S' : "Reussite" , 'Taux de mentions - S' : "Mentions" }
-list_colonnes={ 'Presents - Toutes series' : "Presents", 'Taux de reussite - Toutes series' : "Reussite" , 'Taux de mentions - Toutes series' : "Mentions"}
+list_colonnes_old2022={ 'Presents - Toutes series' : "Presents", 'Taux de reussite - Toutes series' : "Reussite" , 'Taux de mentions - Toutes series' : "Mentions"}
+list_colonnes={ 'Présents - Toutes séries' : "Presents", 'Taux de réussite - Toutes séries' : "Reussite" , 'Taux de mentions - Toutes séries' : "Mentions"}
+
 
 donnees_extraites={}
 for annee in annees:
     if int(annee)<2021:
         colonnes=list_colonnes_old
+    elif int(annee)<2024:
+        colonnes=list_colonnes_old2022
     else:
         colonnes=list_colonnes
     donnees_extraites[annee]=donnees[annee][['UAI',*colonnes]].copy()
