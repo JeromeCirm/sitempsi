@@ -33,10 +33,10 @@ def traitement(request):
     if request.method=='POST':
         if "extraction_donnees" in request.POST and request.POST["extraction_donnees"]=="oui":
             context["extraction_msg"]=extraction_donnees(request)
-        else:
-            pass # empeche les modification de notes
-        #elif "NoteAChanger" in request.POST and request.POST["NoteAChanger"]=="true":
-        #    maj_dossier(request)
+        #else:
+            #pass # empeche les modification de notes
+        elif "NoteAChanger" in request.POST and request.POST["NoteAChanger"]=="true":
+            maj_dossier(request)
     if lire_un_dossier(request,context):
         return render(request,'etudedossier2025/traitement.html',context)
     else:
