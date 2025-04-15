@@ -820,7 +820,7 @@ def extraction_donnees(request):
         except:
             AnciensEleves(annee=2023,classe=classe,num_dossier=num_dossier,rne=rne,prenom=prenom,nom=nom,note_initiale=note_initiale,note_finale=note_finale,
         rang=rang,modif_auto=modif_auto,commentaire=commentaire).save()
-        return "extraction réussie "
+        return "extraction réussie avec comme commentaire : "+str(commentaire)
     except:
         return "extraction impossible"
 
