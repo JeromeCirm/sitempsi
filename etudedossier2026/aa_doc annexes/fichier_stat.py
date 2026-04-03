@@ -8,8 +8,8 @@
 actuelle=2025 # l'année du fichier (donc -1 par rapport à l'année de traitement)
 
 import os
-os.chdir("C://Users/jerom/Documents/GitHub/sitempsi/etudedossier"+str(actuelle+1)+"/aa_doc annexes")
-#os.chdir("/home/jerome/Bureau/aa_doc/") # linux portable 2025
+#os.chdir("C://Users/jerom/Documents/GitHub/sitempsi/etudedossier"+str(actuelle+1)+"/aa_doc annexes")
+os.chdir("/home/jerome/Documents/GitHub/sitempsi/etudedossier2026/aa_doc annexes/") # linux portable 2025
 
 import pandas as pd
 from collections import defaultdict
@@ -39,8 +39,8 @@ annees.extend(str(x) for x in range(2022,actuelle_old+1))
 annee_actuelle=pd.read_csv('lycees'+str(actuelle)+'.csv',sep=";")
 a_garder=defaultdict(list)
 for i in range(len(annee_actuelle)):
-    if annee_actuelle.iat[i,1]>=2024:
-        a_garder[annee_actuelle.iat[i,1]].append(i)
+    if int(annee_actuelle.iat[i,0])>=2024:
+        a_garder[annee_actuelle.iat[i,0]].append(i)
 for une_annee in range(2024,actuelle+1):
     annee_actuelle_tmp=annee_actuelle.loc[a_garder[une_annee]]
     donnees[str(une_annee)]= annee_actuelle_tmp
