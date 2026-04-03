@@ -1,4 +1,4 @@
-{% extends 'basedossier2023.html' %}
+{% extends 'basedossier2026.html' %}
 
 
 {% block body %} 
@@ -10,7 +10,7 @@ var categorie="{{ dossier.categorieDossier }}"
 </SCRIPT>
  
 <DIV class="gestion">
-    <a href="{% url 'selection_etudedossier2023' %}">Retour à l'index </a>
+    <a href="{% url 'selection_etudedossier2026' %}">Retour à l'index </a>
     <button type="button" onclick="change_numero({{ ligne|add:"-1" }})">dossier précédent</button>
     <button type="button" onclick="change_numero({{ ligne|add:"1" }})">dossier suivant</button>
     <FORM method="post" action="" id="Formulaire" autocomplete="off">
@@ -39,17 +39,23 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD>Avis du proviseur : </TD><TD>{{ dossier.avisProviseur }}</TD></TR>
         <TABLE id="TableLycée1b">
             <TR><TH> Année </TH><TH> Effectif </TH><TH> Réussite </TH><TH> Mention </TH></TR>
-            <TR><TD> 2018 : </TD><TD> {{ statslycee.Presents2018 }} </TD><TD> {{ statslycee.Reussite2018 }} </TD><TD> {{ statslycee.Mentions2018 }} </TD></TR>
-            <TR><TD> 2019 : </TD><TD> {{ statslycee.Presents2019 }} </TD><TD> {{ statslycee.Reussite2019 }} </TD><TD> {{ statslycee.Mentions2019 }} </TD></TR>
-            <TR><TD> 2020 : </TD><TD> {{ statslycee.Presents2020 }} </TD><TD> {{ statslycee.Reussite2020 }} </TD><TD> {{ statslycee.Mentions2020 }} </TD></TR>
-            <TR><TD> 2021 : </TD><TD> {{ statslycee.Presents2021 }} </TD><TD> {{ statslycee.Reussite2021 }} </TD><TD> {{ statslycee.Mentions2021 }} </TD></TR>
-            <TR><TD> 2022 : </TD><TD> {{ statslycee.Presents2022 }} </TD><TD> {{ statslycee.Reussite2022 }} </TD><TD> {{ statslycee.Mentions2022 }} </TD></TR>            
-            </TABLE>           
+        </TABLE>
+        <TABLE id="TableLycée1b">
+
+            <TR><TD> 2018 : </TD><TD> {{ statslycee.Presents2018 }} </TD><TD> {{ statslycee.Reussite2018 }} </TD><TD> {{ statslycee.Mentions2018 }} </TD><!--</TR>
+            <TR>--><TD> ** 2019 : </TD><TD> {{ statslycee.Presents2019 }} </TD><TD> {{ statslycee.Reussite2019 }} </TD><TD> {{ statslycee.Mentions2019 }} </TD></TR>
+            <TR><TD> 2020 : </TD><TD> {{ statslycee.Presents2020 }} </TD><TD> {{ statslycee.Reussite2020 }} </TD><TD> {{ statslycee.Mentions2020 }} </TD><!--</TR>
+            <TR>--><TD> ** 2021 : </TD><TD> {{ statslycee.Presents2021 }} </TD><TD> {{ statslycee.Reussite2021 }} </TD><TD> {{ statslycee.Mentions2021 }} </TD></TR>
+            <TR><TD> 2022 : </TD><TD> {{ statslycee.Presents2022 }} </TD><TD> {{ statslycee.Reussite2022 }} </TD><TD> {{ statslycee.Mentions2022 }} </TD><!--</TR>            
+            <TR>--><TD> ** 2023 : </TD><TD> {{ statslycee.Presents2023 }} </TD><TD> {{ statslycee.Reussite2023 }} </TD><TD> {{ statslycee.Mentions2023 }} </TD></TR>            
+            <TR><TD> 2024 : </TD><TD> {{ statslycee.Presents2024 }} </TD><TD> {{ statslycee.Reussite2024 }} </TD><TD> {{ statslycee.Mentions2024 }} </TD></TR>            
+        </TABLE>           
 
            </TABLE>
         <TABLE id="TableLycée2" style="display : none">
-        <TR><TD>modif à appliquer en math : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff math']]);?>;"><?php echo $res_lycée[$col_lycées['diff math']];?></TD></TR>
+        <!--<TR><TD>modif à appliquer en math : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff math']]);?>;"><?php echo $res_lycée[$col_lycées['diff math']];?></TD></TR>
         <TR><TD>modif à appliquer en physique : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff phys']]);?>;"><?php echo $res_lycée[$col_lycées['diff phys']];?></TD></TR>
+        reste du fichier de julien : non utilisé maintenant ?-->
         <TR><TD>Avis détaillé : </TD><TD>{{ dossier.avisProviseurDetail }}</TD></TR>
         <TR><TD>Méthode de travail : </TD><TD>{{ dossier.methodeTravail }}</TD></TR>
         <TR><TD>Autonomie : </TD><TD>{{ dossier.autonomie }}</TD></TR>
@@ -59,22 +65,27 @@ var categorie="{{ dossier.categorieDossier }}"
     </DIV>
     <DIV > <span style="color:{{ couleurs.tresBon }}"> {% if dossier.motclebon != None %}{{ dossier.motclebon }} {% endif %} </span> 
            <span class="red"> {% if dossier.motclemauvais != None %}{{ dossier.motclemauvais }} {% endif %} </span>
-         <BR> <BR> <span style="color : blue;">{% if False %}rang fin phase 1 : {{ dossier.rangfinphase }} (avant ajustement : {{ dossier.sauvegarde }}) <BR>{% endif %}
+         <BR> <BR> <span style="color : blue;">{% if True %}rang fin phase 1 : {{ dossier.rangfinphase }} (avant ajustement : {{ dossier.sauvegarde }}) <BR>{% endif %}
                 rang final estimé: {{ rangfinalestime }}</span><BR><span>
                 {%for x,value in offset.items %}  {{ value.0 }} ({{ value.1 }})- {{ x }}  - {% endfor %}</span><BR>
-                    {% if False %}<span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}</DIV>
+                    {% if False %}<span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}
+        {% if dossier.dossierEtudie != "oui" %} <br><br><br><h2 style="color : blue"> dossier non étudié ! </h2> {% endif %}  
+    </DIV>
     <DIV>
         <TABLE id="InfoGenerale">
         <TR><TD>Nom : </TD><TD>{{ dossier.nom }}</TD></TR>
         <TR><TD>Prénom : </TD><TD>{{ dossier.prenom }}</TD></TR>
         <TR><TD>Date de naissance : </TD><TD>{{ dossier.dateNaissance }}</TD></TR>
         <TR><TD>Boursier : </TD><TD {% if dossier.boursier != "Non boursier" %} style="color : red;"{% endif %}>{{ dossier.boursier }}</TD></TR>
-        <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
-        <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
         <TR><TD>Dossiers de ce lycée : </TD><TD>{{ dossierLycée }}</TD></TR>
         </TABLE>
         <TABLE id="LettreMotiv" style="display : none">
         <TR><TD>{{ dossier.lettreMotivation }}</TD></TR>
+        </TABLE>
+        <TABLE>
+            <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
+            <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
+            {% if nb_anciens_eleves %} <TR><TD><span style="color : blue;"> anciens élèves :{{ nb_anciens_eleves }}</span> <button onclick="ancien_eleves()"> go</button></TD></TR> {% endif %}
         </TABLE>
     </DIV>
     <DIV>
@@ -82,11 +93,11 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TH> Matière </TH><TH>Note</TH><TH>Rang</TH><TH> Matière </TH><TH>Note</TH><TH>Rang</TH></TR>
         <TR><TD> Math Term: </TD><TD>{{ dossier.noteMathTerm }}/20</TD><TD>{{ dossier.rangMathTerme }}/{{ dossier.effectifMathTerm }}</TD>
             <TD> Physique Term: </TD><TD>{{ dossier.notePhysiqueTerm }}/20</TD><TD>{{ dossier.rangPhysiqueTerm }}/{{ dossier.effectifPhysiqueTerm }}</TD></TR>
-        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD>{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}</TD>
-            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD>{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}</TD></TR>
+        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD><!--{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}--></TD>
+            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD><!--{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}--></TD></TR>
         <TR><TD> Math Expertes: </TD><TD>{{ dossier.noteMathExpertes }}/20</TD><TD>{{ dossier.rangMathExpertes }}/{{ dossier.effectifMathExpertes }}</TD>
-            <TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
-        <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD></TD></TR>        
+           <!--<TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
+        <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD>--></TD></TR>        
         <TR><TD> Bac fr écrit: </TD><TD>{{ dossier.bacFrEcrit }}/20</TD><TD></TD>
             <TD> Philo: </TD><TD>{{ dossier.notePhilo }}/20</TD><TD>{{ dossier.rangPhilo }}/{{ dossier.effectifPhilo }}</TD></TR>        
         <TR><TD> Bac fr oral: </TD><TD>{{ dossier.bacFrOral }}/20</TD><TD></TD>
@@ -100,8 +111,8 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
         </TABLE>    </DIV>
     <DIV class="red">  {{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
-        {% if dossier.dossierEtudie != "oui" %}  dossier non étudié !<BR> {% endif %}       
-                    <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2023' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2023' nompdf %}">Télécharger le PDF</a>
+             
+                    <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2026' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2026' nompdf %}">Télécharger le PDF</a>
     </DIV>
     <DIV>
         <TABLE id="TableScolarité1">
@@ -130,7 +141,7 @@ var categorie="{{ dossier.categorieDossier }}"
         <TR><TD>Nouvelle note : </TD><TD><input form="Formulaire" id="NouvelleNote" name="NouvelleNote" onkeyup="modif_note()" value="{{ dossier.noteActuelle }}"></TD></TR>
         <TR><TD>Rang associé : </TD><TD><SPAN id="NouveauRang"></SPAN></TD></TR>
         </TABLE><BR>{% if dossier.encf != 'ECF' %}<SPAN style="color:red;""> dossier ENCF </SPAN>{% endif %}
-        <button type="button" id="ValideNote" onclick="validation_note()">Valider les modifications du dossier (inactif)</button> <BR>
+        <button type="button" id="ValideNote" onclick="validation_note()">Valider les modifications du dossier</button> <BR>
             <button type="button" onclick="change_numero({{ ligne|add:"-1" }})">dossier précédent</button>
             <button type="button" onclick="change_numero({{ ligne|add:"1" }})">dossier suivant</button>
         
@@ -305,7 +316,6 @@ function modif_note() { // Affiche le rang correspondant à la nouvelle note
 }
 
 function verif_modif_note() {  //vérifie la nouvelle note rentrée en remplaçant la virgule par un point
-    return 
     NouvelleNote.value=NouvelleNote.value.replace(new RegExp(",","g"),".");
     res=parseFloat(NouvelleNote.value)
     if ( isNaN(res) || parseFloat(res.toString())!=NouvelleNote.value) {
@@ -324,7 +334,7 @@ function modif_note() { // Affiche le rang correspondant à la nouvelle note
 
 function validation_note() {  //vérifie que la nouvelle note est correcte avant de mettre à jour la bdd
     return //
-    // rendre inactif pour les années suivantes //
+    // rendre inactif pour les années suivantes  : modifier aussi le fichier serveur !!//
     if (verif_modif_note()) {
         modif_note()
         nouvelle_categorie=trouve_categorie(NouveauRang.textContent)
@@ -349,6 +359,14 @@ RangActuel.textContent=trouve_rang(parseFloat(NoteActuelle.textContent))
 NouveauRang.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 RangCherche.value=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 
+let anciens_eleves_str=""
+{% for line in anciens_eleves %}
+anciens_eleves_str+="{{line.annee}},{{line.classe}} : {{line.prenom}} {{line.nom}}, init: {{line.note_initiale}} final: {{line.note_initiale}} rang: {{line.rang}}, {{line.commentaire}}\n"
+{% endfor %}
+
+function ancien_eleves() {
+ alert(anciens_eleves_str)
+}
 </SCRIPT>
 
 {% endblock body %}

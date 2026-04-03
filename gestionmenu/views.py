@@ -20,11 +20,12 @@ from etudedossier2023.views import selection as selection2023
 from etudedossier2021.views import selection as selection2021
 from etudedossier2024.views import selection as selection2024
 from etudedossier2025.views import selection as selection2025
+from etudedossier2026.views import selection as selection2026
 
 # liste des fonctions correspondant à un menu perso
 # à cela, on ajouter la fonction "liste_fichier" 
 # qui correspond à un menu générique créé par un gestionnaire de menu
-liste_menu=liste_generic + liste_classe+['fichier_unique','parcoursup2025','parcoursup2024','parcoursup2021','parcoursup2022','parcoursup2023','download_fiches']
+liste_menu=liste_generic + liste_classe+['fichier_unique','parcoursup2026','parcoursup2025','parcoursup2024','parcoursup2021','parcoursup2022','parcoursup2023','download_fiches']
 
 try:
     from .hors_git.fonctions_hors_git import * 
@@ -47,6 +48,9 @@ def parcoursup2024(request,numero,context):
 
 def parcoursup2025(request,numero,context):
     return selection2025(request)
+
+def parcoursup2026(request,numero,context):
+    return selection2026(request)
 
 import os
 def download_fiches(request,numero,context):
