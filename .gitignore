@@ -6,6 +6,7 @@ base/config_mail_perso.py
 gestionmenu/donnees_perso.py
 gestionmenu/hors_git.py
 config_generale_perso.py
+*/migrations/*
 gestionmenu/hors_git/*
 etudedossier2021/fiches/*
 etudedossier2021/stockage/*

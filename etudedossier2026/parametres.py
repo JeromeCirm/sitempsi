@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,text
 import pandas as pd
 from os import remove,listdir,mkdir,path
 from django.contrib.auth.models import Group, User
@@ -349,7 +349,7 @@ def lire_tous_les_dossiers(request,context):
     lesnotes=recuperer_les_notes()
     i=0
     with engine.connect() as conn :
-        res=conn.execute("SELECT * FROM parcoursup "+fin_requete).fetchall()
+        res=conn.execute(text("SELECT * FROM parcoursup "+fin_requete)).fetchall()
         lesdossiers=[]
         for row in res:
             i+=1
@@ -365,7 +365,7 @@ def nb_boursier(limite=1500):
     with engine.connect() as conn :
         cmd="SELECT count(*) FROM (SELECT * FROM parcoursup ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC LIMIT "+str(limite)+") WHERE "+p(associationColonnes["boursier"])+"!='Non boursier'"
         #print(cmd)
-        res=conn.execute(cmd).fetchall()
+        res=conn.execute(text(cmd)).fetchall()
         #print(res[0][0])
         return (res[0][0])
  
@@ -393,7 +393,7 @@ def lire_un_dossier(request,context):
         #nom=dossier[associationColonnes["nom"]].replace(" ","").replace("'","")
         #return "dossiers_0750660K_MPSI-"+str(dossier[associationColonnes["numeroDossier"]])+"-"+nom+".pdf"
     def nb_dossiers_lycee():
-        res=conn.execute("SELECT COUNT(*) FROM parcoursup WHERE `"+associationColonnes["rneLycee"]+"`=\""+str(dossier[associationColonnes["rneLycee"]])+"\"").fetchall()
+        res=conn.execute(text("SELECT COUNT(*) FROM parcoursup WHERE `"+associationColonnes["rneLycee"]+"`=\""+str(dossier[associationColonnes["rneLycee"]])+"\"")).fetchall()
         return res[0][0]
     fin_requete=creation_requete(request,context)
     ligne=1
@@ -404,7 +404,7 @@ def lire_un_dossier(request,context):
             #print("POST[NumeroLigne] non définie")
             pass
     with engine.connect() as conn :
-        res=conn.execute("SELECT * FROM parcoursup "+fin_requete).fetchall()
+        res=conn.execute(text("SELECT * FROM parcoursup "+fin_requete)).fetchall()
         if ligne>len(res): return False  # pas assez de ligne
         row=res[ligne-1]  # une seule ligne normalement
         dossier={}
@@ -440,7 +440,7 @@ def recuperer_les_notes(cate=""):
         cmd="SELECT "+p(associationColonnes["noteActuelle"])+" FROM parcoursup "
         if cate!="":
             cmd+="WHERE "+p(associationColonnes["categorieDossier"])+"='"+cate+"'"
-        res=conn.execute(cmd).fetchall()
+        res=conn.execute(text(cmd)).fetchall()
         l=[]
         for x in res:
             try:
@@ -547,7 +547,7 @@ def est_encf(num_dossier):
     # renvoie vrai si le dossier est ENCF ou en cas d'erreur
     try:
         with engine.connect() as conn :
-            res=conn.execute("SELECT * FROM parcoursup WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(num_dossier)+"'").fetchall()
+            res=conn.execute(text("SELECT * FROM parcoursup WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(num_dossier)+"'")).fetchall()
             if len(res)!=1:
                 return True
             row=res[0] # une seule ligne normalement
@@ -571,7 +571,7 @@ def maj_dossier(request):
         cmd+=","+p(associationColonnes["categorieDossier"])+"='"+request.POST["CategorieDossier"]+"'"
         cmd+=" WHERE "+p(associationColonnes["numeroDossier"])+"='"+request.POST['NumeroDossier']+"'"
         #print(cmd)
-        conn.execute(cmd)
+        conn.execute(text(cmd))
 
 def convertion_xslx():
     engine = create_engine('sqlite:///etudedossier2026/stockage/versionxls.db', echo=False)
@@ -583,15 +583,15 @@ def sauvegarde_phase_generale():
     with engine.connect() as conn :
         try:
             cmd='ALTER TABLE parcoursup ADD sauvegarde VARCHAR(100)'
-            conn.execute(cmd)
+            conn.execute(text(cmd))
         except:
             pass
         lesnotes=recuperer_les_notes()
-        res=conn.execute("SELECT * FROM parcoursup ").fetchall()
+        res=conn.execute(text("SELECT * FROM parcoursup ")).fetchall()
         for row in res:
             cmd='UPDATE parcoursup SET sauvegarde="'+str(trouve_rang(lesnotes,row[associationColonnes["noteActuelle"]]))+' ('+row[associationColonnes["categorieDossier"]]+')"'
             cmd+=" WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
-            conn.execute(cmd)
+            conn.execute(text(cmd))
 
 def calcul_rang_final(row):
         lesnotes={}
@@ -630,7 +630,7 @@ def rang_fin_phase():
     with engine.connect() as conn :
         try:
             cmd='ALTER TABLE parcoursup ADD rangfinphase INTEGER'
-            conn.execute(cmd)
+            conn.execute(text(cmd))
         except:
             pass
         lesnotes={}
@@ -641,7 +641,7 @@ def rang_fin_phase():
         lesnotes["à la rigueur"]=recuperer_les_notes("à la rigueur")
         lesnotes["pas bon"]=recuperer_les_notes("pas bon")
         lesnotes["surtout pas"]=recuperer_les_notes("surtout pas")
-        res=conn.execute("SELECT * FROM parcoursup ").fetchall()
+        res=conn.execute(text("SELECT * FROM parcoursup ")).fetchall()
         offset={}
         offset["très bon"]=0
         offset["bon"]=offset["très bon"]+len(lesnotes["très bon"])
@@ -660,18 +660,18 @@ def rang_fin_phase():
             cmd+=" WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
             #print(cmd)
             #break
-            conn.execute(cmd)   
+            conn.execute(text(cmd))   
 
 def rang_final():
     with engine.connect() as conn :
         try:
             cmd='ALTER TABLE parcoursup ADD rangfinal INTEGER'
-            conn.execute(cmd)
+            conn.execute(text(cmd))
         except:
             pass
         try:
             cmd='ALTER TABLE parcoursup MODIFY rangfinal INTEGER'
-            conn.execute(cmd)
+            conn.execute(text(cmd))
         except:
             pass        
         cates=["très bon","bon","moyen plus","moyen moins","à la rigueur","pas bon","surtout pas"]
@@ -679,18 +679,18 @@ def rang_final():
         encf=0
         for cate in cates:
             cmd="SELECT * FROM parcoursup WHERE "+p(associationColonnes["categorieDossier"])+"='"+cate+"' ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC"
-            res=conn.execute(cmd).fetchall()        
+            res=conn.execute(text(cmd)).fetchall()        
             for row in res:
                 if row[associationColonnes['encf']]=='ECF':
                     rang+=1
                     cmd="UPDATE parcoursup SET rangfinal="+str(rang)+" WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
-                    conn.execute(cmd)  
+                    conn.execute(text(cmd))  
                     #print(cmd)
                     #print(1/0)
                 else:
                     encf+=1
                     cmd="UPDATE parcoursup SET rangfinal=5000 WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
-                    conn.execute(cmd)                    
+                    conn.execute(text(cmd))                    
             #print(cate,rang,encf) 
 
 
@@ -698,8 +698,8 @@ def patch_old1():
     # récupération des betises car Zoé et Catherine ont commencé en avance!
     with engine.connect() as conn:
         for txt in ["dossierRisque","dossierEtudie","arevoir"]:
-            conn.execute('UPDATE parcoursup SET '+p(associationColonnes[txt])+'="non" WHERE '+p(associationColonnes[txt])+'!="oui"')
-            conn.execute('UPDATE parcoursup SET '+p(associationColonnes[txt])+'="non" WHERE '+p(associationColonnes[txt])+' IS NULL')
+            conn.execute(text('UPDATE parcoursup SET '+p(associationColonnes[txt])+'="non" WHERE '+p(associationColonnes[txt])+'!="oui"'))
+            conn.execute(text('UPDATE parcoursup SET '+p(associationColonnes[txt])+'="non" WHERE '+p(associationColonnes[txt])+' IS NULL'))
 
 def patch_old2():
     # mise à jour des colonnes motclemauvais et problemeRepere en cours de route !
@@ -712,19 +712,19 @@ def patch_old2():
             cmd+="\" WHERE "+associationColonnes["numeroDossier"]+"="+eng(str(row[associationColonnes["numeroDossier"]]))
             #print(cmd)
             #break
-            conn.execute(cmd)
+            conn.execute(text(cmd))
 
 def patch_old3():
     # rajout de la colonne encf en cours de traitement
     df_new=pd.read_excel('etudedossier2026/stockage/fichierinitial.xlsx')
     engine = create_engine('sqlite:///etudedossier2026/stockage/versionxls.db', echo=False)
     with engine.connect() as conn:
-        conn.execute("ALTER TABLE parcoursup ADD encf VARCHAR(30)")
+        conn.execute(text("ALTER TABLE parcoursup ADD encf VARCHAR(30)"))
         for index, row in df_new.iterrows():
             cmd="UPDATE parcoursup SET encf=\""+row['ENCF']+"\" WHERE numeroDossier=\"" +str(row['numeroDossier'])+"\""
             #print(cmd)
             #break
-            conn.execute(cmd)  
+            conn.execute(text(cmd))  
 
 def patch():
     pass    
