@@ -110,7 +110,7 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> Bac NSI: </TD><TD>{{ dossier.noteBacNSI }}/20</TD></TR>
             <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
         </TABLE>    </DIV>
-    <DIV class="red">  {{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
+    <DIV class="red">  <!--{{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button>--><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
              
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2026' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2026' nompdf %}">Télécharger le PDF</a>
     </DIV>
