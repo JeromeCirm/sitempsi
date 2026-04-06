@@ -261,15 +261,15 @@ def prepare_selection(context,request):
     context["pile"]=dumps([])
     context["indicePile"]=0
     context["etiquettes"]=categorieText_dic
-    context["liste_mpsi1"]=liste_anciens(1)
-    context["liste_mpsi2"]=liste_anciens(2)
+    context["liste_mpsi1"],context["nb_mpsi1"]=liste_anciens(1)
+    context["liste_mpsi2"],context["nb_mpsi2"]=liste_anciens(2)
 
 def liste_anciens(n):
     liste=AnciensEleves.objects.filter(annee=2021,classe="MPSI"+str(n)).order_by("nom")
     l=[]
     for line in liste:
         l.append(line.prenom+" "+line.nom)
-    return "\n".join(l) 
+    return "\n".join(l),len(l)
 
 def creation_requete(request,context):
     def text(x):
@@ -394,6 +394,12 @@ def lire_un_dossier(request,context):
     def nb_dossiers_lycee():
         res=conn.execute("SELECT COUNT(*) FROM parcoursup WHERE `"+associationColonnes["rneLycee"]+"`=\""+str(dossier[associationColonnes["rneLycee"]])+"\"").fetchall()
         return res[0][0]
+    def trouve_com_ancien(annee, numero_dossier):
+        try:
+            obj=AnciensEleves.objects.get(annee=annee, num_dossier=numero_dossier)
+            return obj.commentaire
+        except:
+            return ""
     fin_requete=creation_requete(request,context)
     ligne=1
     try:
@@ -412,6 +418,7 @@ def lire_un_dossier(request,context):
                 dossier[x]=row[associationColonnes[x]]
             except:
                 pass
+        dossier["commentaire_ancien"]=trouve_com_ancien(2021,dossier["numeroDossier"])
         context["dossier"]=dossier
         context["categorie"]=categorie_dic
         context["couleurs"]=couleurs_dic
@@ -427,8 +434,7 @@ def lire_un_dossier(request,context):
         rg,offset=calcul_rang_final(row)
         context["rangfinalestime"]=rg
         context["offset"]=offset
-        #print(context["statslycee"])
-        print(context)
+        context["tous_les_anciens"],context["nb_anciens_eleves"]=recup_anciens(dossier["rneLycee"])
         return True
 
 def recuperer_les_notes(cate=""):
@@ -748,4 +754,7 @@ def extraction_donnees(request):
         return "extraction impossible"
 
 def recup_anciens(rne):
-    return AnciensEleves.objects.filter(rne=rne)
+    l=[]
+    for line in AnciensEleves.objects.filter(rne=rne).orderby("-annee,nom"):
+        l.append(str(line.annee)+","+str(line.classe)+" : "+line.prenom+" "+line.nom+", init: "+str(line.note_initiale)+" final: "+str(line.note_initiale)+" rang: "+str(line.rang)+",   "+line.commentaire)
+    return "\n".join(l),len(l)

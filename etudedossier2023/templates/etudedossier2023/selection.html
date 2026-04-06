@@ -4,8 +4,8 @@
 {% block body %} 
 <a href="{% url 'home' %}" style="float:left;">Retour au site principal</a>
 <a href="{% url 'gestion_etudedossier2023' %}" style="float:left;">Gestion</a>
-<button onclick="openDialog1()"> anciens MPSI1</button>
-<button onclick="openDialog2()"> anciens MPSI2</button> 
+<button onclick="openDialog1()"> anciens MPSI1 : {{ nb_mpsi1 }}</button>
+<button onclick="openDialog2()"> anciens MPSI2 : {{ nb_mpsi2 }}</button> 
 <style>
 
 textarea {

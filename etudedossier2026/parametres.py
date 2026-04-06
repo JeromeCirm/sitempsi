@@ -278,15 +278,15 @@ def prepare_selection(context,request):
     context["pile"]=dumps([])
     context["indicePile"]=0
     context["etiquettes"]=categorieText_dic
-    context["liste_mpsi1"]=liste_anciens(1)
-    context["liste_mpsi2"]=liste_anciens(2)
+    context["liste_mpsi1"],context["nb_mpsi1"]=liste_anciens(1)
+    context["liste_mpsi2"],context["nb_mpsi2"]=liste_anciens(2)
 
 def liste_anciens(n):
     liste=AnciensEleves.objects.filter(annee=2026,classe="MPSI"+str(n)).order_by("nom")
     l=[]
     for line in liste:
         l.append(line.prenom+" "+line.nom)
-    return "\n".join(l) 
+    return "\n".join(l),len(l)
 
 def creation_requete(request,context):
     def echap(s):
@@ -883,6 +883,6 @@ def extraction_donnees(request):
 
 def recup_anciens(rne):
     l=[]
-    for line in AnciensEleves.objects.filter(rne=rne):
+    for line in AnciensEleves.objects.filter(rne=rne).orderby("-annee,nom"):
         l.append(str(line.annee)+","+str(line.classe)+" : "+line.prenom+" "+line.nom+", init: "+str(line.note_initiale)+" final: "+str(line.note_initiale)+" rang: "+str(line.rang)+",   "+line.commentaire)
-    return " ".join(l),len(l)
+    return "\n".join(l),len(l)
