@@ -271,6 +271,9 @@ def liste_anciens(n):
     return "\n".join(l),len(l)
 
 def creation_requete(request,context):
+    def echap(s):
+        res='"'+s+'"'
+        return res
     def text(x):
         for z in listechoix:
             if x==0:
