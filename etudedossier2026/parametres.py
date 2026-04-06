@@ -112,8 +112,6 @@ associationColonnes={
     "noteSIPhysique" : "noteSIPhysique",
     "rangSIPhysique" : "rangSIPhysique",
     "effectifSIPhysique" : "effectifSIPhysique",
-
-
 }
 
 associationColonnesLycees= {
@@ -280,6 +278,15 @@ def prepare_selection(context,request):
     context["pile"]=dumps([])
     context["indicePile"]=0
     context["etiquettes"]=categorieText_dic
+    context["liste_mpsi1"]=liste_anciens(1)
+    context["liste_mpsi2"]=liste_anciens(2)
+
+def liste_anciens(n):
+    liste=AnciensEleves.objects.filter(annee=2026,classe="MPSI"+str(n)).order_by("nom")
+    l=[]
+    for line in liste:
+        l.append(line.prenom+" "+line.nom)
+    return "\n".join(l) 
 
 def creation_requete(request,context):
     def echap(s):
@@ -364,7 +371,6 @@ def lire_tous_les_dossiers(request,context):
     fin_requete=creation_requete(request,context)
     lesnotes=recuperer_les_notes()
     i=0
-    print("hi")
     with engine.connect() as conn :
         res=conn.execute(text("SELECT * FROM parcoursup "+fin_requete)).fetchall()
         lesdossiers=[]
@@ -420,6 +426,12 @@ def lire_un_dossier(request,context):
                 dossier["rang2"]=dossier[rang]
                 dossier["effectif2"]=dossier[eff]
                 return
+    def trouve_com_ancien(annee, numero_dossier):
+        try:
+            obj=AnciensEleves.objects.get(annee=annee, num_dossier=numero_dossier)
+            return obj.commentaire
+        except:
+            return ""
     fin_requete=creation_requete(request,context)
     ligne=1
     try:
@@ -438,10 +450,11 @@ def lire_un_dossier(request,context):
                 dossier[x]=row[associationColonnes[x]]
             except:
                 print(associationColonnes[x]," non trouvée")
+        dossier["commentaire_ancien"]=trouve_com_ancien(2026,dossier["numeroDossier"])
         context["dossier"]=dossier
         context["categorie"]=categorie_dic
         context["couleurs"]=couleurs_dic
-        context["couleurCategorie"]=couleur(dossier["categorieDossier"])
+        context["couleurCategorie"]=couleur(dossier["categorieDossier"]) 
         context["binome"]=associe_binome_dic.get(dossier["binome"],"Tout le monde")
         context["maxligne"]=len(res)
         context["ligne"]=ligne
@@ -456,8 +469,7 @@ def lire_un_dossier(request,context):
         context["rangfinalestime"]=rg
         context["offset"]=offset
         context["notes_offset"]=notes_offset
-        context["anciens_eleves"]=recup_anciens(dossier["rneLycee"])
-        context["nb_anciens_eleves"]=len(context["anciens_eleves"])
+        context["tous_les_anciens"],context["nb_anciens_eleves"]=recup_anciens(dossier["rneLycee"])
         ajuste()
         return True
 
@@ -870,4 +882,7 @@ def extraction_donnees(request):
         return "extraction impossible"
 
 def recup_anciens(rne):
-    return AnciensEleves.objects.filter(rne=rne)
+    l=[]
+    for line in AnciensEleves.objects.filter(rne=rne):
+        l.append(str(line.annee)+","+str(line.classe)+" : "+line.prenom+" "+line.nom+", init: "+str(line.note_initiale)+" final: "+str(line.note_initiale)+" rang: "+str(line.rang)+",   "+line.commentaire)
+    return " ".join(l),len(l)

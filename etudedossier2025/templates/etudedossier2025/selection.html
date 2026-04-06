@@ -4,6 +4,31 @@
 {% block body %} 
 <a href="{% url 'home' %}" style="float:left;">Retour au site principal</a>
 <a href="{% url 'gestion_etudedossier2025' %}" style="float:left;">Gestion</a>
+<button onclick="openDialog1()"> anciens MPSI1</button>
+<button onclick="openDialog2()"> anciens MPSI2</button> 
+<style>
+
+textarea {
+  width: 90%;
+  height: 60%;       /* 👈 hauteur */
+  resize: vertical;    /* permet d’agrandir */
+  padding: 8px;
+  font-size: 14px;
+}
+
+dialog {
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  width: 600px;
+  height : 350px;
+}
+
+/* Fond sombre derrière */
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+</style>
 
 <BR> {% if erreur == "oui" %} <span style="color : red;""> Pas de dossiers pour cette sélection</span>{% endif %}<BR>
     <DIV class="gestion"><BR><BR><BR>
@@ -39,10 +64,25 @@
                 <button type="button" onclick="tous_les_dossiers()">Afficher l'ensemble de ces dossiers</button><BR>
                 pour les binômes : {% for key,value in binome.items %} {{ key }} : {{ value }} , {% endfor %}<BR>
                 pour les etiquettes : {% for key,value in etiquettes.items %}  {{ value }}, {% endfor %}<BR><BR>
+</DIV>
 
-<!--                 <form  method="post" action=""> {% csrf_token %} RNE du lycée : <input name='RNE'> % au bac : <input name='pourcentbac'> % de mention<input name='pourcentmention'>
-                <input type="submit" value="valider ces stats de lycée : à finir"></form>   
- --></DIV>
+<dialog id="dialog1">
+  <form method="dialog">
+    <label>Liste des MPSI1 commentés :</label><br><br>
+    <textarea id="inputText">{{ liste_mpsi1}}</textarea>
+    <br><br>
+    <button value="cancel">Fermer</button>
+  </form>
+</dialog>
+
+<dialog id="dialog2"> 
+  <form method="dialog">
+    <label>Liste des MPSI2 commentés  :</label><br><br>
+    <textarea id="inputText">{{ liste_mpsi2 }}</textarea> 
+    <br><br>
+    <button value="cancel">Fermer</button>
+  </form>
+</dialog>
 
 <SCRIPT>
 
@@ -117,6 +157,13 @@
         maj_listetri()
     }
     
+function openDialog1() {
+  document.getElementById("dialog1").showModal();
+}
+
+function openDialog2() {
+  document.getElementById("dialog2").showModal();
+}
 </SCRIPT>
 
 {% endblock body %}

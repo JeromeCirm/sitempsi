@@ -3,6 +3,30 @@
 
 {% block body %} 
 
+<style>
+
+textarea {
+  width: 90%;
+  height: 60%;       /* 👈 hauteur */
+  resize: vertical;    /* permet d’agrandir */
+  padding: 8px;
+  font-size: 14px;
+}
+
+dialog {
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  width: 600px;
+  height : 350px;
+}
+
+/* Fond sombre derrière */
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+</style>
+
 <SCRIPT>
 var liste_des_notes=[{% for x in lesnotes %}{{ x }},{% endfor %}]  
 var ligneactuelle={{ ligne }}  
@@ -85,8 +109,8 @@ var categorie="{{ dossier.categorieDossier }}"
         <TABLE>
             <TR><TD>Numéro de dossier : </TD><TD>{{ dossier.numeroDossier }}</TD></TR>
             <TR><TD>RNE du lycée : </TD><TD>{{ dossier.rneLycee }}</TD></TR>
-            {% if nb_anciens_eleves %} <TR><TD><span style="color : blue;"> anciens élèves :{{ nb_anciens_eleves }}</span> <button onclick="ancien_eleves()"> go</button></TD></TR> {% endif %}
-        </TABLE>
+            {% if nb_anciens_eleves %} <TR><TD><span style="color : blue;"> anciens élèves :{{ nb_anciens_eleves }}</span> <button onclick="openDialog_show()">voir les anciens élèves</button></TD></TR> {% endif %}
+        </TABLE> 
     </DIV>
     <DIV>
         <TABLE id="NotesAnnees">
@@ -110,7 +134,7 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> Bac NSI: </TD><TD>{{ dossier.noteBacNSI }}/20</TD></TR>
             <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
         </TABLE>    </DIV>
-    <DIV class="red">  {{ extraction_msg }}<button onclick="extrait_donnees()"> Extraction des données</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
+    <DIV class="red">  {{ extraction_msg }}<button onclick="openDialog()">Msg ancien élève</button><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
              
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2025' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2025' nompdf %}">Télécharger le PDF</a>
     </DIV>
@@ -161,6 +185,24 @@ var categorie="{{ dossier.categorieDossier }}"
     </DIV>
  </DIV>
 
+<dialog id="dialog">
+  <form method="dialog">
+    <label>Commentaire sur l'élève :</label><br><br>
+    <textarea id="inputText">{{ dossier.commentaire_ancien }}</textarea>
+    <br><br>
+    <button value="cancel">Annuler</button>
+    <button value="ok" onclick="valider_extraction()">Valider</button>
+  </form>
+</dialog>
+
+<dialog id="dialog_show">
+  <form method="dialog">
+    <label>Anciens élèves :</label><br><br>
+    <textarea id="inputText">{{ tous_les_anciens }}</textarea>
+    <br><br>
+    <button value="cancel">Fermer</button>
+  </form>
+</dialog>
 
 <SCRIPT>
 var Formulaire=document.getElementById("Formulaire")
@@ -350,23 +392,31 @@ function validation_note() {  //vérifie que la nouvelle note est correcte avant
 }
 
 function extrait_donnees() { //extrait les données pour une incorporation en fiches élèves
+    return
     extraction_donnees_login.value=prompt("commentaire pour l'extraction : ","")
     extraction_donnees.value="oui"
     Formulaire.submit()
+}
+
+function openDialog() {
+  document.getElementById("dialog").showModal();
+}
+
+function valider_extraction() {
+  const valeur = document.getElementById("inputText").value;
+  extraction_donnees_login.value=valeur;
+  extraction_donnees.value="oui";
+  Formulaire.submit();
+}
+
+function openDialog_show() {
+  document.getElementById("dialog_show").showModal();
 }
 
 RangActuel.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 NouveauRang.textContent=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 RangCherche.value=trouve_rang(parseFloat(NoteActuelle.textContent)) 
 
-let anciens_eleves_str=""
-{% for line in anciens_eleves %}
-anciens_eleves_str+="{{line.annee}},{{line.classe}} : {{line.prenom}} {{line.nom}}, init: {{line.note_initiale}} final: {{line.note_initiale}} rang: {{line.rang}}, {{line.commentaire}}\n"
-{% endfor %}
-
-function ancien_eleves() {
- alert(anciens_eleves_str)
-}
 </SCRIPT>
 
 {% endblock body %}

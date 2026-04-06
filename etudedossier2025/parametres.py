@@ -268,6 +268,15 @@ def prepare_selection(context,request):
     context["pile"]=dumps([])
     context["indicePile"]=0
     context["etiquettes"]=categorieText_dic
+    context["liste_mpsi1"]=liste_anciens(1)
+    context["liste_mpsi2"]=liste_anciens(2)
+
+def liste_anciens(n):
+    liste=AnciensEleves.objects.filter(annee=2025,classe="MPSI"+str(n)).order_by("nom")
+    l=[]
+    for line in liste:
+        l.append(line.prenom+" "+line.nom)
+    return "\n".join(l) 
 
 def creation_requete(request,context):
     def echap(s):
@@ -324,7 +333,7 @@ def creation_requete(request,context):
                     else:
                         selection=" WHERE "
                         deja_une_condition=True
-                    selection+=p(nomcolonne[i])+"="+echap(valeurcolonne[i])
+                    selection+="LOWER("+p(nomcolonne[i])+") LIKE "+echap(valeurcolonne[i].lower())
         except:
             print("erreur dans le select")
             selection=""
@@ -395,6 +404,12 @@ def lire_un_dossier(request,context):
     def nb_dossiers_lycee():
         res=conn.execute("SELECT COUNT(*) FROM parcoursup WHERE `"+associationColonnes["rneLycee"]+"`=\""+str(dossier[associationColonnes["rneLycee"]])+"\"").fetchall()
         return res[0][0]
+    def trouve_com_ancien(annee, numero_dossier):
+        try:
+            obj=AnciensEleves.objects.get(annee=annee, num_dossier=numero_dossier)
+            return obj.commentaire
+        except:
+            return ""
     fin_requete=creation_requete(request,context)
     ligne=1
     try:
@@ -413,6 +428,7 @@ def lire_un_dossier(request,context):
                 dossier[x]=row[associationColonnes[x]]
             except:
                 print(associationColonnes[x]," non trouvée")
+        dossier["commentaire_ancien"]=trouve_com_ancien(2025,dossier["numeroDossier"])
         context["dossier"]=dossier
         context["categorie"]=categorie_dic
         context["couleurs"]=couleurs_dic
@@ -431,9 +447,8 @@ def lire_un_dossier(request,context):
         context["rangfinalestime"]=rg
         context["offset"]=offset
         context["notes_offset"]=notes_offset
-        context["anciens_eleves"]=recup_anciens(dossier["rneLycee"])
-        context["nb_anciens_eleves"]=len(context["anciens_eleves"])
-        return True
+        context["tous_les_anciens"],context["nb_anciens_eleves"]=recup_anciens(dossier["rneLycee"])
+        return True 
 
 def recuperer_les_notes(cate=""):
     with engine.connect() as conn :
@@ -844,4 +859,8 @@ def extraction_donnees(request):
         return "extraction impossible"
 
 def recup_anciens(rne):
-    return AnciensEleves.objects.filter(rne=rne)
+    l=[]
+    for line in AnciensEleves.objects.filter(rne=rne):
+        l.append(str(line.annee)+","+str(line.classe)+" : "+line.prenom+" "+line.nom+", init: "+str(line.note_initiale)+" final: "+str(line.note_initiale)+" rang: "+str(line.rang)+",   "+line.commentaire)
+    return " ".join(l),len(l)
+            

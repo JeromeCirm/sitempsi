@@ -260,6 +260,15 @@ def prepare_selection(context,request):
     context["pile"]=dumps([])
     context["indicePile"]=0
     context["etiquettes"]=categorieText_dic
+    context["liste_mpsi1"]=liste_anciens(1)
+    context["liste_mpsi2"]=liste_anciens(2)
+
+def liste_anciens(n):
+    liste=AnciensEleves.objects.filter(annee=2022,classe="MPSI"+str(n)).order_by("nom")
+    l=[]
+    for line in liste:
+        l.append(line.prenom+" "+line.nom)
+    return "\n".join(l) 
 
 def creation_requete(request,context):
     def text(x):
@@ -313,7 +322,7 @@ def creation_requete(request,context):
                     else:
                         selection=" WHERE "
                         deja_une_condition=True
-                    selection+=p(nomcolonne[i])+"='"+valeurcolonne[i]+"'"
+                    selection+="LOWER("+p(nomcolonne[i])+") LIKE "+echap(valeurcolonne[i].lower())
         except:
             selection=""
     return selection+orderby
