@@ -861,7 +861,7 @@ def extraction_donnees(request):
 
 def recup_anciens(rne):
     l=[]
-    for line in AnciensEleves.objects.filter(rne=rne).orderby("-annee,nom"):
+    for line in AnciensEleves.objects.filter(rne=rne).order_by("-annee","nom"):
         l.append(str(line.annee)+","+str(line.classe)+" : "+line.prenom+" "+line.nom+", init: "+str(line.note_initiale)+" final: "+str(line.note_initiale)+" rang: "+str(line.rang)+",   "+line.commentaire)
     return "\n".join(l),len(l)
 
