@@ -54,9 +54,6 @@ var categorie="{{ dossier.categorieDossier }}"
 
            </TABLE>
         <TABLE id="TableLycée2" style="display : none">
-        <!--<TR><TD>modif à appliquer en math : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff math']]);?>;"><?php echo $res_lycée[$col_lycées['diff math']];?></TD></TR>
-        <TR><TD>modif à appliquer en physique : </TD><TD style="color:<?php echo couleur_diff($res_lycée[$col_lycées['diff phys']]);?>;"><?php echo $res_lycée[$col_lycées['diff phys']];?></TD></TR>
-        reste du fichier de julien : non utilisé maintenant ?-->
         <TR><TD>Avis détaillé : </TD><TD>{{ dossier.avisProviseurDetail }}</TD></TR>
         <TR><TD>Méthode de travail : </TD><TD>{{ dossier.methodeTravail }}</TD></TR>
         <TR><TD>Autonomie : </TD><TD>{{ dossier.autonomie }}</TD></TR>
@@ -93,12 +90,11 @@ var categorie="{{ dossier.categorieDossier }}"
         <TABLE id="NotesAnnees">
         <TR><TH> Matière </TH><TH>Note</TH><TH>Rang</TH><TH> Matière </TH><TH>Note</TH><TH>Rang</TH></TR>
         <TR><TD> Math Term: </TD><TD>{{ dossier.noteMathTerm }}/20</TD><TD>{{ dossier.rangMathTerme }}/{{ dossier.effectifMathTerm }}</TD>
-            <TD> Physique Term: </TD><TD>{{ dossier.notePhysiqueTerm }}/20</TD><TD>{{ dossier.rangPhysiqueTerm }}/{{ dossier.effectifPhysiqueTerm }}</TD></TR>
-        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD><!--{{ dossier.rangMath1ere }}/{{ dossier.effectifMath1ere }}--></TD>
-            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD><!--{{ dossier.rangPhysique1ere }}/{{ dossier.effectifPhysique1ere }}--></TD></TR>
+            <TD> {{ dossier.mat2 }}: </TD><TD>{{ dossier.note2 }}/20</TD><TD>{{ dossier.rang2 }}/{{ dossier.effectif2 }}</TD></TR>
+        <TR><TD> Math 1ère: </TD><TD>{{ dossier.noteMath1ere }}/20</TD><TD></TD>
+            <TD> Physique 1ère: </TD><TD>{{ dossier.notePhysique1ere }}/20</TD><TD></TD></TR>
         <TR><TD> Math Expertes: </TD><TD>{{ dossier.noteMathExpertes }}/20</TD><TD>{{ dossier.rangMathExpertes }}/{{ dossier.effectifMathExpertes }}</TD>
-           <!--<TD> Bac Physique: </TD><TD>{{ dossier.noteBacPhys }}/20</TD></TR>
-        <TR><TD> Bac Math: </TD><TD>{{ dossier.noteBacMath }}/20</TD><TD>--></TD></TR>        
+           </TD></TR>        
         <TR><TD> Bac fr écrit: </TD><TD>{{ dossier.bacFrEcrit }}/20</TD><TD></TD>
             <TD> Philo: </TD><TD>{{ dossier.notePhilo }}/20</TD><TD>{{ dossier.rangPhilo }}/{{ dossier.effectifPhilo }}</TD></TR>        
         <TR><TD> Bac fr oral: </TD><TD>{{ dossier.bacFrOral }}/20</TD><TD></TD>

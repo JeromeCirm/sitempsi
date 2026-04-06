@@ -102,6 +102,18 @@ associationColonnes={
     "effectifMathComplementaires" : "effectifMathComplementaires",
 
     "NBmotmauvais" : "NBmotmauvais", # nombre de mots-clefs en rouge
+
+    "noteSII" :  "noteSII",
+    "rangSII": "rangSII",
+    "effectifSII" : "effectifSII", 
+    "noteNSI" : "noteNSI",
+    "rangNSI" : "rangNSI",
+    "effectifNSI" : "effectifNSI",
+    "noteSIPhysique" : "noteSIPhysique",
+    "rangSIPhysique" : "rangSIPhysique",
+    "effectifSIPhysique" : "effectifSIPhysique",
+
+
 }
 
 associationColonnesLycees= {
@@ -145,9 +157,9 @@ couleurs_dic={
 }
 
 associe_binome_dic = {
-    "B1" : "Catherine - Jérôme",
-    "B2" : "Pierre B - Marc",
-    "B3" : "Florent - Pierre C",
+    "B1" : "Catherine - Pierre C",
+    "B2" : "Pierre B - Jérôme/Zoé",
+    "B3" : "Florent - Marc/Zoé",
     "B4" : "Frédéric - Tommy"
 }
 
@@ -324,7 +336,11 @@ def creation_requete(request,context):
                     else:
                         selection=" WHERE "
                         deja_une_condition=True
-                    selection+=p(nomcolonne[i])+"="+echap(valeurcolonne[i])
+                    selection+="LOWER("+p(nomcolonne[i])+") LIKE "+echap(valeurcolonne[i].lower())
+            if deja_une_condition:
+                selection+=" AND "+p(associationColonnes["encf"])+"='ECF'"
+            else:
+                selection+=" WHERE "+p(associationColonnes["encf"])+"='ECF'"
         except:
             print("erreur dans le select")
             selection=""
@@ -348,6 +364,7 @@ def lire_tous_les_dossiers(request,context):
     fin_requete=creation_requete(request,context)
     lesnotes=recuperer_les_notes()
     i=0
+    print("hi")
     with engine.connect() as conn :
         res=conn.execute(text("SELECT * FROM parcoursup "+fin_requete)).fetchall()
         lesdossiers=[]
@@ -390,11 +407,19 @@ def lire_un_dossier(request,context):
             if numdossier in x:
                 return base64.b32encode(bytes(x,"utf-8"))
         return base64.b32encode(bytes("","utf-8"))
-        #nom=dossier[associationColonnes["nom"]].replace(" ","").replace("'","")
-        #return "dossiers_0750660K_MPSI-"+str(dossier[associationColonnes["numeroDossier"]])+"-"+nom+".pdf"
     def nb_dossiers_lycee():
         res=conn.execute(text("SELECT COUNT(*) FROM parcoursup WHERE `"+associationColonnes["rneLycee"]+"`=\""+str(dossier[associationColonnes["rneLycee"]])+"\"")).fetchall()
         return res[0][0]
+    def ajuste():
+        d={"Physique Term": ["notePhysiqueTerm","rangPhysiqueTerm","effectifPhysiqueTerm"], "SI Term" : ["noteSII","rangSII","effectifSII"], "NSI Term" : ["noteNSI","rangNSI","effectifNSI"],   "SIPhysique" : ["noteSIPhysique","rangSIPhysique","effectifSIPhysique"]}
+        for x in d:
+            note,rang,eff=d[x]
+            if dossier[note]!=None:
+                dossier["mat2"]=x
+                dossier["note2"]=dossier[note]
+                dossier["rang2"]=dossier[rang]
+                dossier["effectif2"]=dossier[eff]
+                return
     fin_requete=creation_requete(request,context)
     ligne=1
     try:
@@ -433,6 +458,7 @@ def lire_un_dossier(request,context):
         context["notes_offset"]=notes_offset
         context["anciens_eleves"]=recup_anciens(dossier["rneLycee"])
         context["nb_anciens_eleves"]=len(context["anciens_eleves"])
+        ajuste()
         return True
 
 def recuperer_les_notes(cate=""):
