@@ -37,6 +37,8 @@ def traitement(request):
         #    pass # empeche les modification de notes
         elif "NoteAChanger" in request.POST and request.POST["NoteAChanger"]=="true":
             maj_dossier(request)
+        elif request.POST["valide_puis_next"]=="yes":
+            maj_dossier(request,sans_changement=True)
     if lire_un_dossier(request,context):
         return render(request,'etudedossier2026/traitement.html',context)
     else:

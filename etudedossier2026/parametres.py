@@ -593,23 +593,28 @@ def est_encf(num_dossier):
     except:
         return True
 
-def maj_dossier(request):
+def maj_dossier(request,sans_changement=False):
     with engine.connect() as conn :
         if est_encf(request.POST['NumeroDossier']):  # patch pour ne pas modifier les ENCF 
             return
-        if "arevoir" in request.POST: arevoir="oui"
-        else : arevoir="non"
-        if "risque" in request.POST: risque="oui"
-        else : risque="non"
-        cmd="UPDATE parcoursup SET "+p(associationColonnes["noteActuelle"])+"='"+request.POST["NouvelleNote"]+"'"
-        cmd+=","+p(associationColonnes["commentaireTraitement"])+"=\""+eng(request.POST["Commentaire"])+"\""
-        cmd+=","+p(associationColonnes["arevoir"])+"='"+arevoir+"'"
-        cmd+=","+p(associationColonnes["dossierRisque"])+"='"+risque+"'"
-        cmd+=","+p(associationColonnes["dossierEtudie"])+"='oui'"
-        cmd+=","+p(associationColonnes["categorieDossier"])+"='"+request.POST["CategorieDossier"]+"'"
-        cmd+=" WHERE "+p(associationColonnes["numeroDossier"])+"='"+request.POST['NumeroDossier']+"'"
-        #print(cmd)
-        conn.execute(text(cmd))
+        if sans_changement:
+            cmd="UPDATE parcoursup SET "+p(associationColonnes["dossierEtudie"])+"='oui' WHERE "+p(associationColonnes["numeroDossier"])+"='"+request.POST['NumeroDossier']+"'"
+            #print(cmd)
+            conn.execute(text(cmd))            
+        else:
+            if "arevoir" in request.POST: arevoir="oui"
+            else : arevoir="non"
+            if "risque" in request.POST: risque="oui"
+            else : risque="non"
+            cmd="UPDATE parcoursup SET "+p(associationColonnes["noteActuelle"])+"='"+request.POST["NouvelleNote"]+"'"
+            cmd+=","+p(associationColonnes["commentaireTraitement"])+"=\""+eng(request.POST["Commentaire"])+"\""
+            cmd+=","+p(associationColonnes["arevoir"])+"='"+arevoir+"'"
+            cmd+=","+p(associationColonnes["dossierRisque"])+"='"+risque+"'"
+            cmd+=","+p(associationColonnes["dossierEtudie"])+"='oui'"
+            cmd+=","+p(associationColonnes["categorieDossier"])+"='"+request.POST["CategorieDossier"]+"'"
+            cmd+=" WHERE "+p(associationColonnes["numeroDossier"])+"='"+request.POST['NumeroDossier']+"'"
+            #print(cmd)
+            conn.execute(text(cmd))
 
 def convertion_xslx():
     engine = create_engine('sqlite:///etudedossier2026/stockage/versionxls.db', echo=False)

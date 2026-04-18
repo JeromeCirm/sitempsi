@@ -35,6 +35,7 @@ dialog::backdrop {
                 <form id="FormulaireBis" method="post" action=""> 
                     {% csrf_token %}
                 <div>Champs de sélection : <BR><BR>
+                <input type="hidden" id="valide_puis_next" name="valide_puis_next" value="non">
                 <TABLE> {% for key,value in champs.items %}
                     <TR><TD> <input hidden  name="nomcolonne[]" value="{{ value.0 }}"> {{ key }} : </TD><TD><input name="valeur[]" value="{{ value.1}}"></TD></TR>{% endfor %}
                 </TABLE>

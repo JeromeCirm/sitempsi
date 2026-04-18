@@ -43,6 +43,7 @@ var categorie="{{ dossier.categorieDossier }}"
     <input type="hidden" id="AncienNumeroDossier" name="NumeroDossier" value="{{ dossier.numeroDossier }}">
     <input type="hidden" id="extraction_donnees" name="extraction_donnees" value="">
     <input type="hidden" id="extraction_donnees_login" name="extraction_donnees_login" value="">
+    <input type="hidden" id="valide_puis_next" name="valide_puis_next" value="non">
 {% if pasexpert %} <input type="checkbox" name="pasexpert" checked hidden> {% endif %}
 {% if boursier %} <input type="checkbox" name="boursier" checked hidden> {% endif %}
 {% for x in orderby %} <input type="hidden" name="ordre[]" value="{{ x }}"> {% endfor %}
@@ -89,7 +90,7 @@ var categorie="{{ dossier.categorieDossier }}"
                 rang final estimé: {{ rangfinalestime }}</span><BR><span>
                 {%for x,value in offset.items %}  {{ value.0 }} ({{ value.1 }})- {{ x }}  - {% endfor %}</span><BR>
                     {% if False %}<span style="color : blue;">rang final : {{ dossier.rangfinal }}</span>{% endif %}
-        {% if dossier.dossierEtudie != "oui" %} <br><br><br><h2 style="color : blue"> dossier non étudié ! </h2> {% endif %}  
+        {% if dossier.dossierEtudie != "oui" %} <br><br><br><button type="button" onclick="valide_suivant({{ ligne }})">ok+next</button><h2 style="color : blue"> dossier non étudié ! </h2> {% endif %}  
     </DIV>
     <DIV>
         <TABLE id="InfoGenerale">
@@ -217,6 +218,7 @@ var NotesBac=document.getElementById("NotesBac")
 var extraction_donnees=document.getElementById("extraction_donnees")
 var extraction_donnees_login=document.getElementById("extraction_donnees_login")
 var maxligne={{ maxligne }}
+var valide_puis_next=document.getElementById("valide_puis_next")
 
  function ouvre_pdf() {
      
@@ -255,6 +257,17 @@ function change_numero(num=-1) { // demande une page avec le numéro indiqué. o
     } else {
         Formulaire.submit()
     }
+}
+
+function valide_suivant(num=-1) { // valide le dossier sans modif et passe au suivant
+    valide_puis_next.value="yes"
+    num=num+1
+    if (num==maxligne+1) {
+        num=1
+    }
+    console.log(num)
+    NumeroLigne.value=num
+    Formulaire.submit()
 }
 
 function change_select_numero(id) { // la valeur du select numéro a changé : mise à jour du numéro de dossier de l'input
