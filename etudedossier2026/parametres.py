@@ -295,7 +295,10 @@ def creation_requete(request,context):
     def text(x):
         for z in listechoix:
             if x==0:
-                return listechoix[z]
+                if listechoix[z]=="niveauClasse":
+                    return "CASE niveauClasse WHEN 'Moyen' THEN 2 WHEN 'Assez bon' THEN 5 WHEN 'Bon' THEN 8  WHEN 'Très bon' THEN 11 END"
+                else:
+                    return listechoix[z]
             x-=1
     selection=""
     orderby=""
