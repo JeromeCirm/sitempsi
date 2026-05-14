@@ -619,6 +619,7 @@ def maj_dossier(request,sans_changement=False):
             #print(cmd)
             conn.execute(text(cmd))
 
+
 def convertion_xslx():
     engine = create_engine('sqlite:///etudedossier2026/stockage/versionxls.db', echo=False)
     with engine.connect() as conn:
@@ -716,7 +717,17 @@ def rang_final():
         except:
             pass
         try:
+            cmd='ALTER TABLE parcoursup ADD Classement TEXT'
+            conn.execute(text(cmd))
+        except:
+            pass
+        try:
             cmd='ALTER TABLE parcoursup MODIFY rangfinal INTEGER'
+            conn.execute(text(cmd))
+        except:
+            pass        
+        try:
+            cmd='ALTER TABLE parcoursup MODIFY Classement TEXT'
             conn.execute(text(cmd))
         except:
             pass        
@@ -730,14 +741,25 @@ def rang_final():
                 if row[associationColonnes['encf']]=='ECF':
                     rang+=1
                     cmd="UPDATE parcoursup SET rangfinal="+str(rang)+" WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
-                    conn.execute(text(cmd))  
-                    #print(cmd)
-                    #print(1/0)
+                    conn.execute(text(cmd)) 
                 else:
                     encf+=1
                     cmd="UPDATE parcoursup SET rangfinal=5000 WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
-                    conn.execute(text(cmd))                    
-            #print(cate,rang,encf) 
+                    conn.execute(text(cmd)) 
+        cmd="SELECT * FROM parcoursup ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC"
+        res=conn.execute(text(cmd)).fetchall()        
+        for row in res:
+                if row[associationColonnes['encf']]=='ECF':
+                    rang+=1
+                    if rang<=2000:
+                        cmd="UPDATE parcoursup SET rangfinal='"+str(rang)+"' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
+                    else:
+                        cmd="UPDATE parcoursup SET rangfinal='NC' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
+                    conn.execute(text(cmd)) 
+                else:
+                    encf+=1
+                    cmd="UPDATE parcoursup SET Classement='ENCF' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
+                    conn.execute(text(cmd)) 
 
 
 def patch_old1():
