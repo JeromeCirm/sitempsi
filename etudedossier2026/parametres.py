@@ -747,7 +747,8 @@ def rang_final():
                     cmd="UPDATE parcoursup SET rangfinal=5000 WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
                     conn.execute(text(cmd)) 
         cmd="SELECT * FROM parcoursup ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC"
-        res=conn.execute(text(cmd)).fetchall()        
+        res=conn.execute(text(cmd)).fetchall() 
+        rang=0       
         for row in res:
                 if row[associationColonnes['encf']]=='ECF':
                     rang+=1
