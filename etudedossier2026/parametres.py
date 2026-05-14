@@ -736,7 +736,7 @@ def rang_final():
         encf=0
         for cate in cates:
             cmd="SELECT * FROM parcoursup WHERE "+p(associationColonnes["categorieDossier"])+"='"+cate+"' ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC"
-            res=conn.execute(text(cmd)).fetchall()        
+            res=conn.execute(text(cmd)).fetchall()       
             for row in res:
                 if row[associationColonnes['encf']]=='ECF':
                     rang+=1
@@ -752,9 +752,9 @@ def rang_final():
                 if row[associationColonnes['encf']]=='ECF':
                     rang+=1
                     if rang<=2000:
-                        cmd="UPDATE parcoursup SET rangfinal='"+str(rang)+"' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
+                        cmd="UPDATE parcoursup SET Classement='"+str(rang)+"' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
                     else:
-                        cmd="UPDATE parcoursup SET rangfinal='NC' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
+                        cmd="UPDATE parcoursup SET Classement='NC' WHERE "+p(associationColonnes["numeroDossier"])+"='"+str(row[associationColonnes['numeroDossier']])+"'"
                     conn.execute(text(cmd)) 
                 else:
                     encf+=1
