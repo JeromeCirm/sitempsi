@@ -734,6 +734,7 @@ def rang_final():
         cates=["très bon","bon","moyen plus","moyen moins","à la rigueur","pas bon","surtout pas"]
         rang=0
         encf=0
+        cates=[]
         for cate in cates:
             cmd="SELECT * FROM parcoursup WHERE "+p(associationColonnes["categorieDossier"])+"='"+cate+"' ORDER BY "+p(associationColonnes["noteActuelle"])+" DESC"
             res=conn.execute(text(cmd)).fetchall()       
