@@ -130,7 +130,9 @@ var categorie="{{ dossier.categorieDossier }}"
             <TR><TD> Bac NSI: </TD><TD>{{ dossier.noteBacNSI }}/20</TD></TR>
             <TR><TD> Bac SI: </TD><TD>{{ dossier.noteBacSI }}/20</TD></TR>
         </TABLE>    </DIV>
-    <DIV class="red">  <!--{{ extraction_msg }}<button onclick="openDialog()">Msg ancien élève</button>--><BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
+    <DIV class="red">  <!--{{ extraction_msg }}<button onclick="openDialog()">Msg ancien élève</button>-->
+                        {{ extraction_msg }}<button onclick="extrait_donnees()">Extraction début d'année</button>
+        <BR>{{ dossier.specialvire }}<BR>{{ dossier.problemeRepere }}<BR>{% if dossier.persoMarc != None %}{{ dossier.persoMarc }}{% endif %}<BR><BR>
              
                     <button onclick="ouvre_pdf()">Fichier PDF</button> <a href="{% url 'download_etudedossier2026' nompdf %}">ouvrir le PDF</a><a download href="{% url 'download_etudedossier2026' nompdf %}">Télécharger le PDF</a>
     </DIV>
@@ -383,7 +385,7 @@ function modif_note() { // Affiche le rang correspondant à la nouvelle note
 }
 
 function validation_note() {  //vérifie que la nouvelle note est correcte avant de mettre à jour la bdd
-    // return //
+    return //
     // rendre inactif pour les années suivantes  : modifier aussi le fichier serveur !!//
     if (verif_modif_note()) {
         modif_note()
@@ -411,6 +413,7 @@ function openDialog() {
 }
 
 function valider_extraction() {
+  return // décommenter dès que ce n'est plus l'année en cours pour extraire les anciens élèves.
   const valeur = document.getElementById("inputText").value;
   extraction_donnees_login.value=valeur;
   extraction_donnees.value="oui";
