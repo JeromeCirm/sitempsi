@@ -849,7 +849,7 @@ def convertion_xslx_minimal():
                 df.at[index,"testjerome"]=rg
         df.to_excel('etudedossier2026/stockage/fichierfinal.xlsx',sheet_name='parcoursup')    
 
-def extraction_donnees(request):
+def extraction_donnees_nouveau(request):
     context={}
     login=request.POST["extraction_donnees_login"]
     try:
